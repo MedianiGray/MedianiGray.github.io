@@ -191,66 +191,149 @@ body {
   .cards { grid-template-columns: 1fr; }
 }
 </style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<div class="container">
+  <div class="brand">DAO DAO YUAN LING</div>
+
+  <div class="hero">
+    <h1 id="mainTitle"></h1>
+    <p class="slogan">以衡为核，万我归一</p>
+    <p class="sub">大道元灵 · 数字门户</p>
+  </div>
+
+  <div class="cards">
+    <a href="/" class="card fade-in">
+      <div class="card-icon">📝</div>
+      <h3>元博客</h3>
+      <p>技术分享、编程笔记、生活记录。Hexo静态博客，Butterfly主题。</p>
+      <span class="tag">技术 · 文章</span>
+    </a>
+    <a href="/tools/" class="card fade-in">
+      <div class="card-icon">🛠️</div>
+      <h3>元工具箱</h3>
+      <p>自制小工具集合，字数统计、时间戳转换、颜色选择器等实用工具。</p>
+      <span class="tag">实用 · 工具</span>
+    </a>
+    <a href="/about/" class="card fade-in">
+      <div class="card-icon">👤</div>
+      <h3>元档案</h3>
+      <p>关于 MedianiGray，网络工程专业，理性与自省并存的探索者。</p>
+      <span class="tag">关于 · 我</span>
+    </a>
+    <a href="/categories/" class="card fade-in">
+      <div class="card-icon">📂</div>
+      <h3>元分类</h3>
+      <p>文章分类浏览，技术、生活、教程等内容体系化整理。</p>
+      <span class="tag">导航 · 整理</span>
+    </a>
+    <a href="/archives/" class="card fade-in">
+      <div class="card-icon">🗂️</div>
+      <h3>元归档</h3>
+      <p>时间线归档，回顾一路走来的思考与记录。</p>
+      <span class="tag">时间 · 记忆</span>
+    </a>
+    <a href="/tags/" class="card fade-in">
+      <div class="card-icon">🏷️</div>
+      <h3>元标签</h3>
+      <p>标签云，快速找到你感兴趣的主题与方向。</p>
+      <span class="tag">索引 · 探索</span>
+    </a>
+  </div>
+
+  <div class="footer">
+    大道元灵 · Est. 2026<br>
+    MedianiGray
+  </div>
+</div>
 
 <script>
-// 3D粒子空间背景
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.domElement.style.position = 'fixed';
-renderer.domElement.style.top = '0';
-renderer.domElement.style.left = '0';
-renderer.domElement.style.zIndex = '-2';
-renderer.domElement.style.pointerEvents = 'none';
-document.body.appendChild(renderer.domElement);
-
-// 创建粒子
-const geometry = new THREE.BufferGeometry();
-const count = 2000;
-const positions = new Float32Array(count * 3);
-for (let i = 0; i < count * 3; i++) {
-  positions[i] = (Math.random() - 0.5) * 100;
+// 粒子背景
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
-geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-const material = new THREE.PointsMaterial({
-  color: 0x689F89,
-  size: 0.15,
-  transparent: true,
-  opacity: 0.6,
-});
-const particles = new THREE.Points(geometry, material);
-scene.add(particles);
-
-camera.position.z = 30;
-
-// 鼠标移动视差
-let mouseX = 0, mouseY = 0;
-document.addEventListener('mousemove', (e) => {
-  mouseX = (e.clientX / window.innerWidth - 0.5);
-  mouseY = (e.clientY / window.innerHeight - 0.5);
-});
-
-// 动画循环
+resize();
+window.addEventListener('resize', resize);
+for (let i = 0; i < 80; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + 0.5,
+    dx: (Math.random() - 0.5) * 0.3,
+    dy: (Math.random() - 0.5) * 0.3,
+    opacity: Math.random() * 0.5 + 0.1
+  });
+}
 function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.dx; p.y += p.dy;
+    if (p.x < 0 || p.x > canvas.width) p.dx = -p.dx;
+    if (p.y < 0 || p.y > canvas.height) p.dy = -p.dy;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(104, 159, 137,' + p.opacity + ')';
+    ctx.fill();
+  });
   requestAnimationFrame(animate);
-  particles.rotation.y += 0.0005;
-  particles.rotation.x += 0.0002;
-  camera.position.x += (mouseX * 5 - camera.position.x) * 0.05;
-  camera.position.y += (-mouseY * 5 - camera.position.y) * 0.05;
-  camera.lookAt(scene.position);
-  renderer.render(scene, camera);
 }
 animate();
 
-// 窗口大小
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+// 鼠标跟随光环
+const cursorGlow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', e => {
+  cursorGlow.style.left = e.clientX + 'px';
+  cursorGlow.style.top = e.clientY + 'px';
 });
-<\/script>
+
+// 标题逐字动画
+const titleText = '大道元灵';
+const titleEl = document.getElementById('mainTitle');
+titleText.split('').forEach((ch, i) => {
+  const span = document.createElement('span');
+  span.className = 'char';
+  span.textContent = ch;
+  span.style.transitionDelay = (i * 0.15) + 's';
+  titleEl.appendChild(span);
+  setTimeout(() => span.classList.add('visible'), 300);
+});
+
+// 卡片3D倾斜
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rx = ((y - cy) / cy) * -8;
+    const ry = ((x - cx) / cx) * 8;
+    card.style.transform = perspective(800px) rotateX(deg) rotateY(deg) translateY(-8px);
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+  });
+});
+
+// 滚动渐入
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.1) + 's';
+  observer.observe(el);
+});
+</script>
 </body>
 </html>
