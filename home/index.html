@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大道元灵 · 元门户</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --main: #689F89;
+  --bg: #0a0e14;
+  --text: #e0e6ed;
+  --text-dim: #8892a0;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Serif SC', serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+}
+.glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: -1;
+}
+.glow-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(104,159,137,0.12), transparent 70%);
+  top: -200px; left: -150px;
+}
+.glow-2 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(100,150,200,0.08), transparent 70%);
+  bottom: -250px; right: -200px;
+}
+.cursor-glow {
+  position: fixed;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(104,159,137,0.06), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  transform: translate(-50%, -50%);
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  position: relative;
+  z-index: 1;
+}
+.brand {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--main);
+  font-size: 0.9rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.hero {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  perspective: 1000px;
+}
+.hero h1 {
+  font-size: clamp(3rem, 10vw, 6rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff, var(--main));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .slogan {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  max-width: 500px;
+  line-height: 2;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+.hero .sub {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  opacity: 0.6;
+  margin-bottom: 50px;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin: 60px 0;
+}
+.card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 36px 28px;
+  backdrop-filter: blur(20px);
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.4s, border-color 0.4s;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--main), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.card:hover::before { opacity: 1; }
+.card:hover {
+  box-shadow: 0 20px 60px rgba(104,159,137,0.12);
+  border-color: rgba(104,159,137,0.3);
+}
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: var(--main);
+  letter-spacing: 0.05em;
+}
+.card p {
+  color: var(--text-dim);
+  line-height: 1.7;
+  font-size: 0.9rem;
+}
+.card .tag {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 4px 12px;
+  background: rgba(104,159,137,0.1);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  color: var(--main);
+}
+.char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.char.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.footer {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  opacity: 0.5;
+}
+@media (max-width: 768px) {
+  .cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<div class="container">
+  <div class="brand">DAO DAO YUAN LING</div>
+
+  <div class="hero">
+    <h1 id="mainTitle"></h1>
+    <p class="slogan">以衡为核，万我归一</p>
+    <p class="sub">大道元灵 · 数字门户</p>
+  </div>
+
+  <div class="cards">
+    <a href="/" class="card fade-in">
+      <div class="card-icon">📝</div>
+      <h3>元博客</h3>
+      <p>技术分享、编程笔记、生活记录。Hexo静态博客，Butterfly主题。</p>
+      <span class="tag">技术 · 文章</span>
+    </a>
+    <a href="/tools/" class="card fade-in">
+      <div class="card-icon">🛠️</div>
+      <h3>元工具箱</h3>
+      <p>自制小工具集合，字数统计、时间戳转换、颜色选择器等实用工具。</p>
+      <span class="tag">实用 · 工具</span>
+    </a>
+    <a href="/about/" class="card fade-in">
+      <div class="card-icon">👤</div>
+      <h3>元档案</h3>
+      <p>关于 MedianiGray，网络工程专业，理性与自省并存的探索者。</p>
+      <span class="tag">关于 · 我</span>
+    </a>
+    <a href="/categories/" class="card fade-in">
+      <div class="card-icon">📂</div>
+      <h3>元分类</h3>
+      <p>文章分类浏览，技术、生活、教程等内容体系化整理。</p>
+      <span class="tag">导航 · 整理</span>
+    </a>
+    <a href="/archives/" class="card fade-in">
+      <div class="card-icon">🗂️</div>
+      <h3>元归档</h3>
+      <p>时间线归档，回顾一路走来的思考与记录。</p>
+      <span class="tag">时间 · 记忆</span>
+    </a>
+    <a href="/tags/" class="card fade-in">
+      <div class="card-icon">🏷️</div>
+      <h3>元标签</h3>
+      <p>标签云，快速找到你感兴趣的主题与方向。</p>
+      <span class="tag">索引 · 探索</span>
+    </a>
+  </div>
+
+  <div class="footer">
+    大道元灵 · Est. 2026<br>
+    MedianiGray
+  </div>
+</div>
+
+<script>
+// 粒子背景
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+for (let i = 0; i < 80; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + 0.5,
+    dx: (Math.random() - 0.5) * 0.3,
+    dy: (Math.random() - 0.5) * 0.3,
+    opacity: Math.random() * 0.5 + 0.1
+  });
+}
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.dx; p.y += p.dy;
+    if (p.x < 0 || p.x > canvas.width) p.dx = -p.dx;
+    if (p.y < 0 || p.y > canvas.height) p.dy = -p.dy;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(104, 159, 137,' + p.opacity + ')';
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// 鼠标跟随光环
+const cursorGlow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', e => {
+  cursorGlow.style.left = e.clientX + 'px';
+  cursorGlow.style.top = e.clientY + 'px';
+});
+
+// 标题逐字动画
+const titleText = '大道元灵';
+const titleEl = document.getElementById('mainTitle');
+titleText.split('').forEach((ch, i) => {
+  const span = document.createElement('span');
+  span.className = 'char';
+  span.textContent = ch;
+  span.style.transitionDelay = (i * 0.15) + 's';
+  titleEl.appendChild(span);
+  setTimeout(() => span.classList.add('visible'), 300);
+});
+
+// 卡片3D倾斜
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rx = ((y - cy) / cy) * -8;
+    const ry = ((x - cx) / cx) * 8;
+    card.style.transform = perspective(800px) rotateX(deg) rotateY(deg) translateY(-8px);
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+  });
+});
+
+// 滚动渐入
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.1) + 's';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
