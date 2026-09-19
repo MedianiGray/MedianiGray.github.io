@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>大道元灵 · 元门户</title>
+<title>澶ч亾鍏冪伒 路 鍏冮棬鎴?/title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
@@ -24,14 +24,14 @@ body {
   min-height: 100vh;
   perspective: 1200px;
 }
-/* 粒子画布 */
+/* 绮掑瓙鐢诲竷 */
 #particles {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
   z-index: -2;
 }
-/* 背景光斑 */
+/* 鑳屾櫙鍏夋枒 */
 .glow {
   position: fixed;
   border-radius: 50%;
@@ -71,7 +71,7 @@ body {
   0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
   50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
 }
-/* 鼠标光环 */
+/* 榧犳爣鍏夌幆 */
 .cursor-glow {
   position: fixed;
   width: 500px; height: 500px;
@@ -82,7 +82,7 @@ body {
   transform: translate(-50%, -50%);
   transition: opacity 0.3s;
 }
-/* 容器 */
+/* 瀹瑰櫒 */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -90,7 +90,7 @@ body {
   position: relative;
   z-index: 1;
 }
-/* 品牌标识 */
+/* 鍝佺墝鏍囪瘑 */
 .brand {
   text-align: center;
   margin-bottom: 30px;
@@ -101,7 +101,7 @@ body {
   opacity: 0.6;
   font-weight: 300;
 }
-/* Hero区域 */
+/* Hero鍖哄煙 */
 .hero {
   min-height: 65vh;
   display: flex;
@@ -138,7 +138,7 @@ body {
   margin-bottom: 60px;
   letter-spacing: 0.2em;
 }
-/* 滚动提示 */
+/* 婊氬姩鎻愮ず */
 .scroll-hint {
   position: absolute;
   bottom: 30px;
@@ -153,14 +153,14 @@ body {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(10px); }
 }
-/* 卡片网格 */
+/* 鍗＄墖缃戞牸 */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 28px;
   margin: 80px 0;
 }
-/* 元艺术卡片 */
+/* 鍏冭壓鏈崱鐗?*/
 .card {
   background: var(--card-bg);
   border: 1px solid var(--glass-border);
@@ -177,7 +177,7 @@ body {
   position: relative;
   overflow: hidden;
 }
-/* 卡片顶部发光线 */
+/* 鍗＄墖椤堕儴鍙戝厜绾?*/
 .card::before {
   content: '';
   position: absolute;
@@ -187,7 +187,7 @@ body {
   opacity: 0;
   transition: opacity 0.5s;
 }
-/* 卡片内部光晕 */
+/* 鍗＄墖鍐呴儴鍏夋檿 */
 .card::after {
   content: '';
   position: absolute;
@@ -234,7 +234,7 @@ body {
   color: var(--main);
   letter-spacing: 0.1em;
 }
-/* 逐字动画 */
+/* 閫愬瓧鍔ㄧ敾 */
 .char {
   display: inline-block;
   opacity: 0;
@@ -245,7 +245,7 @@ body {
   opacity: 1;
   transform: translateY(0) rotateX(0);
 }
-/* 滚动渐入 */
+/* 婊氬姩娓愬叆 */
 .fade-in {
   opacity: 0;
   transform: translateY(60px);
@@ -255,7 +255,7 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
-/* 页脚 */
+/* 椤佃剼 */
 .footer {
   text-align: center;
   padding: 60px 0 40px;
@@ -289,60 +289,59 @@ body {
 
   <div class="hero">
     <h1 id="mainTitle"></h1>
-    <p class="slogan">以衡为核，万我归一</p>
-    <p class="sub">大道元灵 · 数字门户</p>
-    <div class="scroll-hint">▼ 向下探索</div>
+    <p class="slogan">浠ヨ　涓烘牳锛屼竾鎴戝綊涓€</p>
+    <p class="sub">澶ч亾鍏冪伒 路 鏁板瓧闂ㄦ埛</p>
+    <div class="scroll-hint">鈻?鍚戜笅鎺㈢储</div>
   </div>
 
   <div class="cards">
     <a href="/" class="card fade-in">
-      <div class="card-icon">📝</div>
-      <h3>元博客</h3>
-      <p>技术分享、编程笔记、生活记录。Hexo静态博客，Butterfly主题。</p>
-      <span class="tag">技术 · 文章</span>
+      <div class="card-icon">馃摑</div>
+      <h3>鍏冨崥瀹?/h3>
+      <p>鎶€鏈垎浜€佺紪绋嬬瑪璁般€佺敓娲昏褰曘€侶exo闈欐€佸崥瀹紝Butterfly涓婚銆?/p>
+      <span class="tag">鎶€鏈?路 鏂囩珷</span>
     </a>
     <a href="/tools/" class="card fade-in">
-      <div class="card-icon">🛠️</div>
-      <h3>元工具箱</h3>
-      <p>自制小工具集合，字数统计、时间戳转换、颜色选择器等实用工具。</p>
-      <span class="tag">实用 · 工具</span>
+      <div class="card-icon">馃洜锔?/div>
+      <h3>鍏冨伐鍏风</h3>
+      <p>鑷埗灏忓伐鍏烽泦鍚堬紝瀛楁暟缁熻銆佹椂闂存埑杞崲銆侀鑹查€夋嫨鍣ㄧ瓑瀹炵敤宸ュ叿銆?/p>
+      <span class="tag">瀹炵敤 路 宸ュ叿</span>
     </a>
     <a href="/about/" class="card fade-in">
-      <div class="card-icon">👤</div>
-      <h3>元档案</h3>
-      <p>关于 MedianiGray，网络工程专业，理性与自省并存的探索者。</p>
-      <span class="tag">关于 · 我</span>
+      <div class="card-icon">馃懁</div>
+      <h3>鍏冩。妗?/h3>
+      <p>鍏充簬 MedianiGray锛岀綉缁滃伐绋嬩笓涓氾紝鐞嗘€т笌鑷渷骞跺瓨鐨勬帰绱㈣€呫€?/p>
+      <span class="tag">鍏充簬 路 鎴?/span>
     </a>
     <a href="/categories/" class="card fade-in">
-      <div class="card-icon">📂</div>
-      <h3>元分类</h3>
-      <p>文章分类浏览，技术、生活、教程等内容体系化整理。</p>
-      <span class="tag">导航 · 整理</span>
+      <div class="card-icon">馃搨</div>
+      <h3>鍏冨垎绫?/h3>
+      <p>鏂囩珷鍒嗙被娴忚锛屾妧鏈€佺敓娲汇€佹暀绋嬬瓑鍐呭浣撶郴鍖栨暣鐞嗐€?/p>
+      <span class="tag">瀵艰埅 路 鏁寸悊</span>
     </a>
     <a href="/archives/" class="card fade-in">
-      <div class="card-icon">🗂️</div>
-      <h3>元归档</h3>
-      <p>时间线归档，回顾一路走来的思考与记录。</p>
-      <span class="tag">时间 · 记忆</span>
+      <div class="card-icon">馃梻锔?/div>
+      <h3>鍏冨綊妗?/h3>
+      <p>鏃堕棿绾垮綊妗ｏ紝鍥為【涓€璺蛋鏉ョ殑鎬濊€冧笌璁板綍銆?/p>
+      <span class="tag">鏃堕棿 路 璁板繂</span>
     </a>
     <a href="/tags/" class="card fade-in">
-      <div class="card-icon">🏷️</div>
-      <h3>元标签</h3>
-      <p>标签云，快速找到你感兴趣的主题与方向。</p>
-      <span class="tag">索引 · 探索</span>
+      <div class="card-icon">馃彿锔?/div>
+      <h3>鍏冩爣绛?/h3>
+      <p>鏍囩浜戯紝蹇€熸壘鍒颁綘鎰熷叴瓒ｇ殑涓婚涓庢柟鍚戙€?/p>
+      <span class="tag">绱㈠紩 路 鎺㈢储</span>
     </a>
   </div>
 
   <div class="footer">
     <div class="line"></div>
-    大道元灵 · Est. 2026<br>
-    MedianiGray · 以衡为核，万我归一
+    澶ч亾鍏冪伒 路 Est. 2026<br>
+    MedianiGray 路 浠ヨ　涓烘牳锛屼竾鎴戝綊涓€
   </div>
 </div>
 
 <script>
-// 粒子背景 - 带连线效果
-const canvas = document.getElementById('particles');
+// 绮掑瓙鑳屾櫙 - 甯﹁繛绾挎晥鏋?const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let particles = [];
 let mouseX = 0, mouseY = 0;
@@ -354,7 +353,7 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
-// 创建粒子
+// 鍒涘缓绮掑瓙
 const particleCount = 100;
 for (let i = 0; i < particleCount; i++) {
   particles.push({
@@ -367,7 +366,7 @@ for (let i = 0; i < particleCount; i++) {
   });
 }
 
-// 鼠标位置
+// 榧犳爣浣嶇疆
 document.addEventListener('mousemove', e => {
   mouseX = e.clientX;
   mouseY = e.clientY;
@@ -375,11 +374,11 @@ document.addEventListener('mousemove', e => {
   cursorGlow.style.top = e.clientY + 'px';
 });
 
-// 动画循环
+// 鍔ㄧ敾寰幆
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 更新粒子位置
+  // 鏇存柊绮掑瓙浣嶇疆
   particles.forEach(p => {
     p.x += p.dx;
     p.y += p.dy;
@@ -387,8 +386,7 @@ function animate() {
     if (p.y < 0 || p.y > canvas.height) p.dy = -p.dy;
   });
 
-  // 画连线
-  for (let i = 0; i < particles.length; i++) {
+  // 鐢昏繛绾?  for (let i = 0; i < particles.length; i++) {
     for (let j = i + 1; j < particles.length; j++) {
       const dx = particles[i].x - particles[j].x;
       const dy = particles[i].y - particles[j].y;
@@ -404,8 +402,7 @@ function animate() {
     }
   }
 
-  // 画粒子
-  particles.forEach(p => {
+  // 鐢荤矑瀛?  particles.forEach(p => {
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(104, 159, 137,' + p.opacity + ')';
@@ -416,8 +413,8 @@ function animate() {
 }
 animate();
 
-// 标题逐字动画
-const titleText = '大道元灵';
+// 鏍囬閫愬瓧鍔ㄧ敾
+const titleText = '澶ч亾鍏冪伒';
 const titleEl = document.getElementById('mainTitle');
 titleText.split('').forEach((ch, i) => {
   const span = document.createElement('span');
@@ -428,7 +425,7 @@ titleText.split('').forEach((ch, i) => {
   setTimeout(() => span.classList.add('visible'), 400);
 });
 
-// 卡片3D倾斜
+// 鍗＄墖3D鍊炬枩
 document.querySelectorAll('.card').forEach(card => {
   card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
@@ -445,7 +442,7 @@ document.querySelectorAll('.card').forEach(card => {
   });
 });
 
-// 滚动渐入
+// 婊氬姩娓愬叆
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -456,7 +453,7 @@ document.querySelectorAll('.fade-in').forEach((el, i) => {
   observer.observe(el);
 });
 
-// 滚动视差 - 背景光斑跟随
+// 婊氬姩瑙嗗樊 - 鑳屾櫙鍏夋枒璺熼殢
 let lastScroll = 0;
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY;
