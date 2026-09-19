@@ -8,69 +8,102 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
   --main: #689F89;
-  --bg: #0a0e14;
-  --text: #e0e6ed;
-  --text-dim: #8892a0;
-  --glass: rgba(255,255,255,0.04);
-  --glass-border: rgba(255,255,255,0.08);
+  --main-glow: rgba(104,159,137,0.4);
+  --bg: #07090d;
+  --text: #e8edf2;
+  --text-dim: #7a8595;
+  --glass: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.06);
+  --card-bg: rgba(12,16,24,0.6);
 }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Noto Serif SC', serif;
+  font-family: 'Noto Serif SC', 'Georgia', serif;
   overflow-x: hidden;
   min-height: 100vh;
+  perspective: 1200px;
 }
+/* 粒子画布 */
 #particles {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  z-index: -1;
+  z-index: -2;
 }
+/* 背景光斑 */
 .glow {
   position: fixed;
   border-radius: 50%;
-  filter: blur(120px);
+  filter: blur(100px);
   pointer-events: none;
   z-index: -1;
+  transition: transform 0.8s cubic-bezier(0.2,0.8,0.2,1);
 }
 .glow-1 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(104,159,137,0.12), transparent 70%);
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, var(--main-glow), transparent 70%);
   top: -200px; left: -150px;
+  animation: float1 20s ease-in-out infinite;
 }
 .glow-2 {
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(100,150,200,0.08), transparent 70%);
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(80,120,180,0.15), transparent 70%);
   bottom: -250px; right: -200px;
+  animation: float2 25s ease-in-out infinite;
 }
+.glow-3 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(150,100,180,0.08), transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: float3 30s ease-in-out infinite;
+}
+@keyframes float1 {
+  0%, 100% { transform: translate(0,0); }
+  50% { transform: translate(100px, 80px); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translate(0,0); }
+  50% { transform: translate(-120px, -100px); }
+}
+@keyframes float3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+}
+/* 鼠标光环 */
 .cursor-glow {
   position: fixed;
-  width: 400px; height: 400px;
+  width: 500px; height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(104,159,137,0.06), transparent 70%);
+  background: radial-gradient(circle, var(--main-glow), transparent 60%);
   pointer-events: none;
   z-index: 0;
   transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
 }
+/* 容器 */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 40px 24px;
   position: relative;
   z-index: 1;
 }
+/* 品牌标识 */
 .brand {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   color: var(--main);
-  font-size: 0.9rem;
-  letter-spacing: 0.5em;
+  font-size: 0.85rem;
+  letter-spacing: 0.6em;
   text-transform: uppercase;
-  opacity: 0.7;
+  opacity: 0.6;
+  font-weight: 300;
 }
+/* Hero区域 */
 .hero {
-  min-height: 70vh;
+  min-height: 65vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -79,43 +112,64 @@ body {
   perspective: 1000px;
 }
 .hero h1 {
-  font-size: clamp(3rem, 10vw, 6rem);
+  font-size: clamp(3.5rem, 12vw, 7rem);
   font-weight: 700;
-  letter-spacing: 0.1em;
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, #fff, var(--main));
+  letter-spacing: 0.15em;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, var(--main) 50%, #88c9b0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 0 40px var(--main-glow));
 }
 .hero .slogan {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: var(--text-dim);
   max-width: 500px;
   line-height: 2;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-style: italic;
+  letter-spacing: 0.1em;
 }
 .hero .sub {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-dim);
-  opacity: 0.6;
-  margin-bottom: 50px;
+  opacity: 0.5;
+  margin-bottom: 60px;
+  letter-spacing: 0.2em;
 }
+/* 滚动提示 */
+.scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  opacity: 0.4;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(10px); }
+}
+/* 卡片网格 */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  margin: 60px 0;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+  margin: 80px 0;
 }
+/* 元艺术卡片 */
 .card {
-  background: var(--glass);
+  background: var(--card-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 36px 28px;
-  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 40px 32px;
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
   transform-style: preserve-3d;
-  transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.4s, border-color 0.4s;
+  transition: all 0.5s cubic-bezier(0.2,0.8,0.2,1);
   cursor: pointer;
   text-decoration: none;
   color: var(--text);
@@ -123,72 +177,103 @@ body {
   position: relative;
   overflow: hidden;
 }
+/* 卡片顶部发光线 */
 .card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0; left: 10%; right: 10%;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--main), transparent);
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.5s;
+}
+/* 卡片内部光晕 */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: radial-gradient(circle, var(--main-glow), transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+  pointer-events: none;
+  z-index: -1;
 }
 .card:hover::before { opacity: 1; }
+.card:hover::after { width: 300px; height: 300px; }
 .card:hover {
-  box-shadow: 0 20px 60px rgba(104,159,137,0.12);
-  border-color: rgba(104,159,137,0.3);
+  box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 0 60px var(--main-glow);
+  border-color: rgba(104,159,137,0.4);
+  transform: translateY(-12px);
 }
 .card-icon {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
+  font-size: 3rem;
+  margin-bottom: 20px;
+  transform: translateZ(30px);
 }
 .card h3 {
-  font-size: 1.3rem;
-  margin-bottom: 10px;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
   color: var(--main);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  font-weight: 600;
 }
 .card p {
   color: var(--text-dim);
-  line-height: 1.7;
-  font-size: 0.9rem;
+  line-height: 1.8;
+  font-size: 0.92rem;
+  margin-bottom: 16px;
 }
 .card .tag {
   display: inline-block;
-  margin-top: 14px;
-  padding: 4px 12px;
+  padding: 6px 16px;
   background: rgba(104,159,137,0.1);
+  border: 1px solid rgba(104,159,137,0.2);
   border-radius: 100px;
   font-size: 0.75rem;
   color: var(--main);
+  letter-spacing: 0.1em;
 }
+/* 逐字动画 */
 .char {
   display: inline-block;
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.4s, transform 0.4s;
+  transform: translateY(40px) rotateX(90deg);
+  transition: opacity 0.5s, transform 0.5s;
 }
 .char.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) rotateX(0);
 }
+/* 滚动渐入 */
 .fade-in {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.6s, transform 0.6s;
+  transform: translateY(60px);
+  transition: opacity 0.8s, transform 0.8s;
 }
 .fade-in.visible {
   opacity: 1;
   transform: translateY(0);
 }
+/* 页脚 */
 .footer {
   text-align: center;
-  padding: 40px 0;
+  padding: 60px 0 40px;
   color: var(--text-dim);
   font-size: 0.85rem;
+  opacity: 0.4;
+  letter-spacing: 0.1em;
+}
+.footer .line {
+  width: 60px;
+  height: 1px;
+  background: var(--main);
+  margin: 0 auto 20px;
   opacity: 0.5;
 }
 @media (max-width: 768px) {
-  .cards { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: 1fr; gap: 20px; }
+  .hero h1 { font-size: 3rem; }
 }
 </style>
 </head>
@@ -196,6 +281,7 @@ body {
 <canvas id="particles"></canvas>
 <div class="glow glow-1"></div>
 <div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <div class="container">
@@ -205,6 +291,7 @@ body {
     <h1 id="mainTitle"></h1>
     <p class="slogan">以衡为核，万我归一</p>
     <p class="sub">大道元灵 · 数字门户</p>
+    <div class="scroll-hint">▼ 向下探索</div>
   </div>
 
   <div class="cards">
@@ -247,53 +334,87 @@ body {
   </div>
 
   <div class="footer">
+    <div class="line"></div>
     大道元灵 · Est. 2026<br>
-    MedianiGray
+    MedianiGray · 以衡为核，万我归一
   </div>
 </div>
 
 <script>
-// 粒子背景
+// 粒子背景 - 带连线效果
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let particles = [];
+let mouseX = 0, mouseY = 0;
+
 function resize() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
 resize();
 window.addEventListener('resize', resize);
-for (let i = 0; i < 80; i++) {
+
+// 创建粒子
+const particleCount = 100;
+for (let i = 0; i < particleCount; i++) {
   particles.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
     r: Math.random() * 2 + 0.5,
-    dx: (Math.random() - 0.5) * 0.3,
-    dy: (Math.random() - 0.5) * 0.3,
-    opacity: Math.random() * 0.5 + 0.1
+    dx: (Math.random() - 0.5) * 0.4,
+    dy: (Math.random() - 0.5) * 0.4,
+    opacity: Math.random() * 0.6 + 0.15
   });
 }
+
+// 鼠标位置
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursorGlow.style.left = e.clientX + 'px';
+  cursorGlow.style.top = e.clientY + 'px';
+});
+
+// 动画循环
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 更新粒子位置
   particles.forEach(p => {
-    p.x += p.dx; p.y += p.dy;
+    p.x += p.dx;
+    p.y += p.dy;
     if (p.x < 0 || p.x > canvas.width) p.dx = -p.dx;
     if (p.y < 0 || p.y > canvas.height) p.dy = -p.dy;
+  });
+
+  // 画连线
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = 'rgba(104, 159, 137,' + (0.15 * (1 - dist / 120)) + ')';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // 画粒子
+  particles.forEach(p => {
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(104, 159, 137,' + p.opacity + ')';
     ctx.fill();
   });
+
   requestAnimationFrame(animate);
 }
 animate();
-
-// 鼠标跟随光环
-const cursorGlow = document.getElementById('cursorGlow');
-document.addEventListener('mousemove', e => {
-  cursorGlow.style.left = e.clientX + 'px';
-  cursorGlow.style.top = e.clientY + 'px';
-});
 
 // 标题逐字动画
 const titleText = '大道元灵';
@@ -304,7 +425,7 @@ titleText.split('').forEach((ch, i) => {
   span.textContent = ch;
   span.style.transitionDelay = (i * 0.15) + 's';
   titleEl.appendChild(span);
-  setTimeout(() => span.classList.add('visible'), 300);
+  setTimeout(() => span.classList.add('visible'), 400);
 });
 
 // 卡片3D倾斜
@@ -315,9 +436,9 @@ document.querySelectorAll('.card').forEach(card => {
     const y = e.clientY - rect.top;
     const cx = rect.width / 2;
     const cy = rect.height / 2;
-    const rx = ((y - cy) / cy) * -8;
-    const ry = ((x - cx) / cx) * 8;
-    card.style.transform = perspective(800px) rotateX(deg) rotateY(deg) translateY(-8px);
+    const rx = ((y - cy) / cy) * -10;
+    const ry = ((x - cx) / cx) * 10;
+    card.style.transform = perspective(800px) rotateX(deg) rotateY(deg) translateY(-12px);
   });
   card.addEventListener('mouseleave', () => {
     card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
@@ -329,10 +450,20 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('visible');
   });
-}, { threshold: 0.1 });
+}, { threshold: 0.15 });
 document.querySelectorAll('.fade-in').forEach((el, i) => {
-  el.style.transitionDelay = (i * 0.1) + 's';
+  el.style.transitionDelay = (i * 0.12) + 's';
   observer.observe(el);
+});
+
+// 滚动视差 - 背景光斑跟随
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const glow1 = document.querySelector('.glow-1');
+  const glow2 = document.querySelector('.glow-2');
+  glow1.style.transform = 	ranslateY(px);
+  glow2.style.transform = 	ranslateY(px);
 });
 </script>
 </body>
