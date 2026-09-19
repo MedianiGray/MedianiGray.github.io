@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>澶ч亾鍏冪伒 路 鍏冮棬鎴?/title>
+<title>婢堆囦壕閸忓啰浼?璺?閸忓啴妫幋?/title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
@@ -24,14 +24,14 @@ body {
   min-height: 100vh;
   perspective: 1200px;
 }
-/* 绮掑瓙鐢诲竷 */
+/* 缁帒鐡欓悽璇茬 */
 #particles {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
   z-index: -2;
 }
-/* 鑳屾櫙鍏夋枒 */
+/* 閼冲本娅欓崗澶嬫瀿 */
 .glow {
   position: fixed;
   border-radius: 50%;
@@ -71,7 +71,7 @@ body {
   0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
   50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
 }
-/* 榧犳爣鍏夌幆 */
+/* 姒х姵鐖ｉ崗澶屽箚 */
 .cursor-glow {
   position: fixed;
   width: 500px; height: 500px;
@@ -82,7 +82,7 @@ body {
   transform: translate(-50%, -50%);
   transition: opacity 0.3s;
 }
-/* 瀹瑰櫒 */
+/* 鐎圭懓娅?*/
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -90,7 +90,7 @@ body {
   position: relative;
   z-index: 1;
 }
-/* 鍝佺墝鏍囪瘑 */
+/* 閸濅胶澧濋弽鍥槕 */
 .brand {
   text-align: center;
   margin-bottom: 30px;
@@ -101,7 +101,7 @@ body {
   opacity: 0.6;
   font-weight: 300;
 }
-/* Hero鍖哄煙 */
+/* Hero閸栧搫鐓?*/
 .hero {
   min-height: 65vh;
   display: flex;
@@ -138,7 +138,7 @@ body {
   margin-bottom: 60px;
   letter-spacing: 0.2em;
 }
-/* 婊氬姩鎻愮ず */
+/* 濠婃艾濮╅幓鎰仛 */
 .scroll-hint {
   position: absolute;
   bottom: 30px;
@@ -153,14 +153,14 @@ body {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(10px); }
 }
-/* 鍗＄墖缃戞牸 */
+/* 閸楋紕澧栫純鎴炵壐 */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 28px;
   margin: 80px 0;
 }
-/* 鍏冭壓鏈崱鐗?*/
+/* 閸忓啳澹撻張顖氬幢閻?*/
 .card {
   background: var(--card-bg);
   border: 1px solid var(--glass-border);
@@ -177,7 +177,7 @@ body {
   position: relative;
   overflow: hidden;
 }
-/* 鍗＄墖椤堕儴鍙戝厜绾?*/
+/* 閸楋紕澧栨い鍫曞劥閸欐垵鍘滅痪?*/
 .card::before {
   content: '';
   position: absolute;
@@ -187,7 +187,7 @@ body {
   opacity: 0;
   transition: opacity 0.5s;
 }
-/* 鍗＄墖鍐呴儴鍏夋檿 */
+/* 閸楋紕澧栭崘鍛村劥閸忓妾?*/
 .card::after {
   content: '';
   position: absolute;
@@ -234,10 +234,10 @@ body {
   color: var(--main);
   letter-spacing: 0.1em;
 }
-/* 閫愬瓧鍔ㄧ敾 */
+/* 闁劕鐡ч崝銊ф暰 */
 .char {
   display: inline-block;
-  opacity: 0;
+  opacity: 1;
   transform: translateY(40px) rotateX(90deg);
   transition: opacity 0.5s, transform 0.5s;
 }
@@ -245,9 +245,9 @@ body {
   opacity: 1;
   transform: translateY(0) rotateX(0);
 }
-/* 婊氬姩娓愬叆 */
+/* 濠婃艾濮╁〒鎰弳 */
 .fade-in {
-  opacity: 0;
+  opacity: 1;
   transform: translateY(60px);
   transition: opacity 0.8s, transform 0.8s;
 }
@@ -255,7 +255,7 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
-/* 椤佃剼 */
+/* 妞や絻鍓?*/
 .footer {
   text-align: center;
   padding: 60px 0 40px;
@@ -289,59 +289,58 @@ body {
 
   <div class="hero">
     <h1 id="mainTitle"></h1>
-    <p class="slogan">浠ヨ　涓烘牳锛屼竾鎴戝綊涓€</p>
-    <p class="sub">澶ч亾鍏冪伒 路 鏁板瓧闂ㄦ埛</p>
-    <div class="scroll-hint">鈻?鍚戜笅鎺㈢储</div>
+    <p class="slogan">娴犮儴銆€娑撶儤鐗抽敍灞肩閹存垵缍婃稉鈧?/p>
+    <p class="sub">婢堆囦壕閸忓啰浼?璺?閺佹澘鐡ч梻銊﹀煕</p>
+    <div class="scroll-hint">閳?閸氭垳绗呴幒銏㈠偍</div>
   </div>
 
   <div class="cards">
     <a href="/" class="card fade-in">
-      <div class="card-icon">馃摑</div>
-      <h3>鍏冨崥瀹?/h3>
-      <p>鎶€鏈垎浜€佺紪绋嬬瑪璁般€佺敓娲昏褰曘€侶exo闈欐€佸崥瀹紝Butterfly涓婚銆?/p>
-      <span class="tag">鎶€鏈?路 鏂囩珷</span>
+      <div class="card-icon">棣冩憫</div>
+      <h3>閸忓啫宕ョ€?/h3>
+      <p>閹垛偓閺堫垰鍨庢禍顐犫偓浣虹椽缁嬪鐟拋鑸偓浣烘晸濞叉槒顔囪ぐ鏇樷偓渚秂xo闂堟瑦鈧礁宕ョ€诡澁绱滲utterfly娑撳顣介妴?/p>
+      <span class="tag">閹垛偓閺?璺?閺傚洨鐝?/span>
     </a>
     <a href="/tools/" class="card fade-in">
-      <div class="card-icon">馃洜锔?/div>
-      <h3>鍏冨伐鍏风</h3>
-      <p>鑷埗灏忓伐鍏烽泦鍚堬紝瀛楁暟缁熻銆佹椂闂存埑杞崲銆侀鑹查€夋嫨鍣ㄧ瓑瀹炵敤宸ュ叿銆?/p>
-      <span class="tag">瀹炵敤 路 宸ュ叿</span>
+      <div class="card-icon">棣冩礈閿?/div>
+      <h3>閸忓啫浼愰崗椋庮唸</h3>
+      <p>閼奉亜鍩楃亸蹇撲紣閸忕兘娉﹂崥鍫礉鐎涙鏆熺紒鐔活吀閵嗕焦妞傞梻瀛樺煈鏉烆剚宕查妴渚€顤侀懝鏌モ偓澶嬪閸ｃ劎鐡戠€圭偟鏁ゅ銉ュ徔閵?/p>
+      <span class="tag">鐎圭偟鏁?璺?瀹搞儱鍙?/span>
     </a>
     <a href="/about/" class="card fade-in">
-      <div class="card-icon">馃懁</div>
-      <h3>鍏冩。妗?/h3>
-      <p>鍏充簬 MedianiGray锛岀綉缁滃伐绋嬩笓涓氾紝鐞嗘€т笌鑷渷骞跺瓨鐨勬帰绱㈣€呫€?/p>
-      <span class="tag">鍏充簬 路 鎴?/span>
+      <div class="card-icon">棣冩噥</div>
+      <h3>閸忓啯銆傚?/h3>
+      <p>閸忓厖绨?MedianiGray閿涘瞼缍夌紒婊冧紣缁嬪绗撴稉姘剧礉閻炲棙鈧傜瑢閼奉亞娓烽獮璺虹摠閻ㄥ嫭甯扮槐銏ｂ偓鍛偓?/p>
+      <span class="tag">閸忓厖绨?璺?閹?/span>
     </a>
     <a href="/categories/" class="card fade-in">
-      <div class="card-icon">馃搨</div>
-      <h3>鍏冨垎绫?/h3>
-      <p>鏂囩珷鍒嗙被娴忚锛屾妧鏈€佺敓娲汇€佹暀绋嬬瓑鍐呭浣撶郴鍖栨暣鐞嗐€?/p>
-      <span class="tag">瀵艰埅 路 鏁寸悊</span>
+      <div class="card-icon">棣冩惃</div>
+      <h3>閸忓啫鍨庣猾?/h3>
+      <p>閺傚洨鐝烽崚鍡欒濞村繗顫嶉敍灞惧Η閺堫垬鈧胶鏁撳ú姹団偓浣规殌缁嬪鐡戦崘鍛啇娴ｆ挾閮撮崠鏍ㄦ殻閻炲棎鈧?/p>
+      <span class="tag">鐎佃壈鍩?璺?閺佸鎮?/span>
     </a>
     <a href="/archives/" class="card fade-in">
-      <div class="card-icon">馃梻锔?/div>
-      <h3>鍏冨綊妗?/h3>
-      <p>鏃堕棿绾垮綊妗ｏ紝鍥為【涓€璺蛋鏉ョ殑鎬濊€冧笌璁板綍銆?/p>
-      <span class="tag">鏃堕棿 路 璁板繂</span>
+      <div class="card-icon">棣冩⒒閿?/div>
+      <h3>閸忓啫缍婂?/h3>
+      <p>閺冨爼妫跨痪鍨秺濡楋綇绱濋崶鐐恒€愭稉鈧捄顖濊泲閺夈儳娈戦幀婵娾偓鍐х瑢鐠佹澘缍嶉妴?/p>
+      <span class="tag">閺冨爼妫?璺?鐠佹澘绻?/span>
     </a>
     <a href="/tags/" class="card fade-in">
-      <div class="card-icon">馃彿锔?/div>
-      <h3>鍏冩爣绛?/h3>
-      <p>鏍囩浜戯紝蹇€熸壘鍒颁綘鎰熷叴瓒ｇ殑涓婚涓庢柟鍚戙€?/p>
-      <span class="tag">绱㈠紩 路 鎺㈢储</span>
+      <div class="card-icon">棣冨娇閿?/div>
+      <h3>閸忓啯鐖ｇ粵?/h3>
+      <p>閺嶅洨顒锋禍鎴礉韫囶偊鈧喐澹橀崚棰佺稑閹扮喎鍙寸搾锝囨畱娑撳顣芥稉搴㈡煙閸氭垯鈧?/p>
+      <span class="tag">缁便垹绱?璺?閹恒垻鍌?/span>
     </a>
   </div>
 
   <div class="footer">
     <div class="line"></div>
-    澶ч亾鍏冪伒 路 Est. 2026<br>
-    MedianiGray 路 浠ヨ　涓烘牳锛屼竾鎴戝綊涓€
-  </div>
+    婢堆囦壕閸忓啰浼?璺?Est. 2026<br>
+    MedianiGray 璺?娴犮儴銆€娑撶儤鐗抽敍灞肩閹存垵缍婃稉鈧?  </div>
 </div>
 
 <script>
-// 绮掑瓙鑳屾櫙 - 甯﹁繛绾挎晥鏋?const canvas = document.getElementById('particles');
+// 缁帒鐡欓懗灞炬珯 - 鐢箒绻涚痪鎸庢櫏閺?const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let particles = [];
 let mouseX = 0, mouseY = 0;
@@ -353,7 +352,7 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
-// 鍒涘缓绮掑瓙
+// 閸掓稑缂撶划鎺戠摍
 const particleCount = 100;
 for (let i = 0; i < particleCount; i++) {
   particles.push({
@@ -366,7 +365,7 @@ for (let i = 0; i < particleCount; i++) {
   });
 }
 
-// 榧犳爣浣嶇疆
+// 姒х姵鐖ｆ担宥囩枂
 document.addEventListener('mousemove', e => {
   mouseX = e.clientX;
   mouseY = e.clientY;
@@ -374,19 +373,18 @@ document.addEventListener('mousemove', e => {
   cursorGlow.style.top = e.clientY + 'px';
 });
 
-// 鍔ㄧ敾寰幆
+// 閸斻劎鏁惧顏嗗箚
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 鏇存柊绮掑瓙浣嶇疆
-  particles.forEach(p => {
+  // 閺囧瓨鏌婄划鎺戠摍娴ｅ秶鐤?  particles.forEach(p => {
     p.x += p.dx;
     p.y += p.dy;
     if (p.x < 0 || p.x > canvas.width) p.dx = -p.dx;
     if (p.y < 0 || p.y > canvas.height) p.dy = -p.dy;
   });
 
-  // 鐢昏繛绾?  for (let i = 0; i < particles.length; i++) {
+  // 閻㈡槒绻涚痪?  for (let i = 0; i < particles.length; i++) {
     for (let j = i + 1; j < particles.length; j++) {
       const dx = particles[i].x - particles[j].x;
       const dy = particles[i].y - particles[j].y;
@@ -402,7 +400,7 @@ function animate() {
     }
   }
 
-  // 鐢荤矑瀛?  particles.forEach(p => {
+  // 閻㈣崵鐭戠€?  particles.forEach(p => {
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(104, 159, 137,' + p.opacity + ')';
@@ -413,8 +411,7 @@ function animate() {
 }
 animate();
 
-// 鏍囬閫愬瓧鍔ㄧ敾
-const titleText = '澶ч亾鍏冪伒';
+// 閺嶅洭顣介柅鎰摟閸斻劎鏁?const titleText = '婢堆囦壕閸忓啰浼?;
 const titleEl = document.getElementById('mainTitle');
 titleText.split('').forEach((ch, i) => {
   const span = document.createElement('span');
@@ -425,8 +422,7 @@ titleText.split('').forEach((ch, i) => {
   setTimeout(() => span.classList.add('visible'), 400);
 });
 
-// 鍗＄墖3D鍊炬枩
-document.querySelectorAll('.card').forEach(card => {
+// 閸楋紕澧?D閸婄偓鏋?document.querySelectorAll('.card').forEach(card => {
   card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -442,7 +438,7 @@ document.querySelectorAll('.card').forEach(card => {
   });
 });
 
-// 婊氬姩娓愬叆
+// 濠婃艾濮╁〒鎰弳
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -453,8 +449,7 @@ document.querySelectorAll('.fade-in').forEach((el, i) => {
   observer.observe(el);
 });
 
-// 婊氬姩瑙嗗樊 - 鑳屾櫙鍏夋枒璺熼殢
-let lastScroll = 0;
+// 濠婃艾濮╃憴鍡楁▕ - 閼冲本娅欓崗澶嬫瀿鐠虹喖娈?let lastScroll = 0;
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY;
   const glow1 = document.querySelector('.glow-1');
