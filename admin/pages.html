@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面内容 · 元管理</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --main: #689F89;
+            --main-deep: #4E7A68;
+            --main-glow: rgba(104, 159, 137, 0.3);
+            --bg-primary: #161d1b;
+            --bg-secondary: #1e2825;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --text-primary: #e8eaf0;
+            --text-secondary: #9ba3b4;
+            --text-muted: #6b7385;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0; bottom: 0;
+            width: 240px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 0;
+            z-index: 100;
+        }
+        .sidebar-logo { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+        .sidebar-logo h2 { font-size: 1.2rem; color: var(--main); }
+        .sidebar-logo p { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .nav-item {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.75rem 1.5rem; color: var(--text-secondary);
+            cursor: pointer; transition: all 0.2s; font-size: 0.9rem; text-decoration: none;
+        }
+        .nav-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+        .nav-item.active { background: var(--main-glow); color: var(--main); border-right: 2px solid var(--main); }
+        .main { margin-left: 240px; padding: 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .header h1 { font-size: 1.5rem; }
+        .table-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .page-item { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+        .page-item h3 { margin-bottom: 1rem; color: var(--main); }
+        .page-item pre {
+            background: var(--bg-primary); padding: 1rem; border-radius: 8px;
+            overflow-x: auto; font-size: 0.85rem; color: var(--text-secondary);
+        }
+        @media (max-width: 768px) {
+            .sidebar { width: 60px; }
+            .sidebar-logo p, .nav-item span { display: none; }
+            .main { margin-left: 60px; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2>元管理</h2>
+            <p>大道元灵 · 管理后台</p>
+        </div>
+        <nav>
+            <a class="nav-item" href="index.html"><span>📊</span><span>仪表盘</span></a>
+            <a class="nav-item" href="posts.html"><span>📝</span><span>文章管理</span></a>
+            <a class="nav-item active" href="pages.html"><span>📄</span><span>页面内容</span></a>
+            <a class="nav-item" href="comments.html"><span>💬</span><span>评论管理</span></a>
+            <a class="nav-item" href="settings.html"><span>⚙️</span><span>网站设置</span></a>
+            <a class="nav-item" href="#" onclick="logout()"><span>🚪</span><span>退出登录</span></a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <div class="header">
+            <h1>页面内容</h1>
+        </div>
+        <div class="table-card">
+            <div id="pages-editor">
+                <p style="color:var(--text-muted)">加载中...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        sb.auth.getSession().then(({ data: { session } }) => {
+            if (!session) window.location.href = 'login.html';
+        });
+
+        async function loadPages() {
+            const container = document.getElementById('pages-editor');
+            try {
+                const { data, error } = await sb.from('pages').select('*');
+                if (error) throw error;
+                container.innerHTML = '';
+                data.forEach(page => {
+                    const item = document.createElement('div');
+                    item.className = 'page-item';
+                    item.innerHTML = `
+                        <h3>${page.page_key}</h3>
+                        <pre>${JSON.stringify(page.content, null, 2)}</pre>
+                    `;
+                    container.appendChild(item);
+                });
+            } catch(e) {
+                container.innerHTML = '<p style="color:var(--danger)">加载失败: ' + e.message + '</p>';
+            }
+        }
+
+        async function logout() {
+            await sb.auth.signOut();
+            window.location.href = 'login.html';
+        }
+
+        loadPages();
+    </script>
+</body>
+</html>
