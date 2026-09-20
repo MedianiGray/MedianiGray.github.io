@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -18,6 +18,7 @@
             --text-secondary: #9ba3b4;
             --text-muted: #6b7385;
             --border: rgba(255, 255, 255, 0.1);
+            --danger: #e06c6c;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -54,17 +55,65 @@
         }
         .btn-primary { background: var(--main); color: white; }
         .btn-primary:hover { background: var(--main-deep); }
-        .table-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
-        .form-group { margin-bottom: 1.2rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; }
-        .form-group input {
-            width: 100%; padding: 0.75rem; background: var(--bg-card);
-            border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 0.95rem;
+        .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
+        .category-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .category-title {
+            font-size: 1.1rem;
+            color: var(--main);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.85rem; }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%; padding: 0.6rem 0.75rem; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;
+        }
+        .form-group input[type="color"] {
+            width: 60px; height: 36px; border: none; border-radius: 8px; cursor: pointer; background: transparent;
+        }
+        .color-row { display: flex; align-items: center; gap: 0.75rem; }
+        .color-row span { color: var(--text-muted); font-size: 0.85rem; font-family: monospace; }
+        .toggle-row { display: flex; align-items: center; gap: 0.75rem; }
+        .switch { position: relative; width: 48px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-card-hover); border-radius: 24px; transition: 0.3s;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+            background: white; border-radius: 50%; transition: 0.3s;
+        }
+        input:checked + .slider { background: var(--main); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .save-bar {
+            position: sticky; bottom: 0;
+            background: var(--bg-secondary); border-top: 1px solid var(--border);
+            padding: 1rem 2rem; display: flex; justify-content: flex-end; gap: 1rem;
+            margin-left: -2rem; margin-right: -2rem; margin-bottom: -2rem;
         }
         @media (max-width: 768px) {
             .sidebar { width: 60px; }
             .sidebar-logo p, .nav-item span { display: none; }
             .main { margin-left: 60px; padding: 1rem; }
+            .form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -87,60 +136,165 @@
     <main class="main">
         <div class="header">
             <h1>网站设置</h1>
+            <button class="btn btn-secondary" onclick="resetSettings()">重置</button>
         </div>
-        <div class="table-card">
-            <div id="settings-editor" style="max-width:600px;">
-                <p style="color:var(--text-muted)">加载中...</p>
-            </div>
+        <div id="settings-container">
+            <p style="color:var(--text-muted)">加载中...</p>
         </div>
-    </div>
+        <div class="save-bar">
+            <button class="btn btn-secondary" onclick="resetSettings()">重置</button>
+            <button class="btn btn-primary" onclick="saveAllSettings()">保存全部设置</button>
+        </div>
+    </main>
 
     <script>
         const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let allSettings = [];
+
         sb.auth.getSession().then(({ data: { session } }) => {
             if (!session) window.location.href = 'login.html';
         });
 
         async function loadSettings() {
-            const container = document.getElementById('settings-editor');
+            const container = document.getElementById('settings-container');
             try {
-                const { data, error } = await sb.from('site_settings').select('*');
+                const { data, error } = await sb.from('site_config').select('*').order('category');
                 if (error) throw error;
-                container.innerHTML = '';
-                data.forEach(setting => {
-                    const group = document.createElement('div');
-                    group.className = 'form-group';
-                    group.innerHTML = `
-                        <label>${setting.key}</label>
-                        <input type="text" value="${setting.value}" data-key="${setting.key}">
-                    `;
-                    container.appendChild(group);
+                allSettings = data;
+                
+                // 按分类分组
+                const categories = {};
+                data.forEach(item => {
+                    if (!categories[item.category]) categories[item.category] = [];
+                    categories[item.category].push(item);
                 });
-                const saveBtn = document.createElement('button');
-                saveBtn.className = 'btn btn-primary';
-                saveBtn.textContent = '保存设置';
-                saveBtn.onclick = saveSettings;
-                container.appendChild(saveBtn);
+
+                const categoryNames = {
+                    'home': '门户主页',
+                    'nav': '导航栏',
+                    'article': '文章页',
+                    'footer': '页脚',
+                    'style': '视觉样式',
+                    'interaction': '互动效果'
+                };
+
+                container.innerHTML = '';
+                for (const [cat, items] of Object.entries(categories)) {
+                    const section = document.createElement('div');
+                    section.className = 'category-section';
+                    const title = document.createElement('h2');
+                    title.className = 'category-title';
+                    title.textContent = categoryNames[cat] || cat;
+                    section.appendChild(title);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'form-grid';
+
+                    items.forEach(item => {
+                        const group = document.createElement('div');
+                        group.className = 'form-group' + (item.type === 'text' && item.value.length > 50 ? ' full-width' : '');
+                        const label = document.createElement('label');
+                        label.textContent = item.description || item.key;
+                        group.appendChild(label);
+
+                        let input;
+                        if (item.type === 'color') {
+                            const row = document.createElement('div');
+                            row.className = 'color-row';
+                            input = document.createElement('input');
+                            input.type = 'color';
+                            input.value = item.value;
+                            input.dataset.key = item.key;
+                            input.dataset.type = item.type;
+                            const span = document.createElement('span');
+                            span.textContent = item.value;
+                            input.oninput = () => span.textContent = input.value;
+                            row.appendChild(input);
+                            row.appendChild(span);
+                            group.appendChild(row);
+                        } else if (item.type === 'boolean') {
+                            const row = document.createElement('div');
+                            row.className = 'toggle-row';
+                            const label2 = document.createElement('label');
+                            label2.className = 'switch';
+                            input = document.createElement('input');
+                            input.type = 'checkbox';
+                            input.checked = item.value === 'true';
+                            input.dataset.key = item.key;
+                            input.dataset.type = item.type;
+                            const slider = document.createElement('span');
+                            slider.className = 'slider';
+                            label2.appendChild(input);
+                            label2.appendChild(slider);
+                            row.appendChild(label2);
+                            group.appendChild(row);
+                        } else if (item.type === 'number') {
+                            input = document.createElement('input');
+                            input.type = 'number';
+                            input.value = item.value;
+                            input.dataset.key = item.key;
+                            input.dataset.type = item.type;
+                            group.appendChild(input);
+                        } else if (item.type === 'select') {
+                            input = document.createElement('select');
+                            input.dataset.key = item.key;
+                            input.dataset.type = item.type;
+                            if (item.key === 'font.title' || item.key === 'font.body') {
+                                ['serif', 'sans-serif', 'monospace'].forEach(opt => {
+                                    const o = document.createElement('option');
+                                    o.value = opt;
+                                    o.textContent = opt;
+                                    if (opt === item.value) o.selected = true;
+                                    input.appendChild(o);
+                                });
+                            }
+                            group.appendChild(input);
+                        } else {
+                            input = document.createElement('input');
+                            input.type = 'text';
+                            input.value = item.value;
+                            input.dataset.key = item.key;
+                            input.dataset.type = item.type;
+                            group.appendChild(input);
+                        }
+
+                        grid.appendChild(group);
+                    });
+
+                    section.appendChild(grid);
+                    container.appendChild(section);
+                }
             } catch(e) {
                 container.innerHTML = '<p style="color:var(--danger)">加载失败: ' + e.message + '</p>';
             }
         }
 
-        async function saveSettings() {
-            const inputs = document.querySelectorAll('#settings-editor input');
+        async function saveAllSettings() {
+            const inputs = document.querySelectorAll('.form-group input, .form-group select');
             try {
                 for (const input of inputs) {
                     const key = input.dataset.key;
-                    const value = input.value;
-                    await sb.from('site_settings').update({ value }).eq('key', key);
+                    const type = input.dataset.type;
+                    let value;
+                    if (type === 'boolean') {
+                        value = input.checked ? 'true' : 'false';
+                    } else {
+                        value = input.value;
+                    }
+                    await sb.from('site_config').update({ value, updated_at: new Date().toISOString() }).eq('key', key);
                 }
-                alert('设置已保存');
+                alert('✅ 所有设置已保存！刷新前端页面查看效果。');
             } catch(e) {
-                alert('保存失败: ' + e.message);
+                alert('❌ 保存失败: ' + e.message);
             }
+        }
+
+        async function resetSettings() {
+            if (!confirm('确定要重置所有设置为默认值吗？')) return;
+            loadSettings();
         }
 
         async function logout() {

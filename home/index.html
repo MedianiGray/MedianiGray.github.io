@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -314,7 +314,7 @@ body {
 <div class="container">
   <!-- 入口区 -->
   <div class="entrance">
-    <div class="brand">META · META</div>
+    <div class="brand">大道元灵</div>
     <h1 id="main-title">大道元灵</h1>
     <div class="line"></div>
     <p class="sub">以衡为核<br>万我归一</p>
@@ -326,50 +326,74 @@ body {
   <!-- 六扇门 -->
   <div class="gates">
     <a href="/" class="gate">
-      <div class="gate-icon">📜</div>
-      <div class="gate-label">Gate 01</div>
-      <h3>思想文章</h3>
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 01</div>
+      <h3>元博客</h3>
       <p>探索本源，记录思考。每一篇文字，都是向内走的一步。</p>
       <div class="enter-hint">→ 进入</div>
     </a>
 
     <a href="/categories/" class="gate">
-      <div class="gate-icon">🔮</div>
-      <div class="gate-label">Gate 02</div>
-      <h3>哲学随笔</h3>
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 02</div>
+      <h3>元分类</h3>
       <p>从东方到西方，从古到今。在思辨中寻找平衡。</p>
       <div class="enter-hint">→ 进入</div>
     </a>
 
     <a href="/archives/" class="gate">
-      <div class="gate-icon">🌌</div>
-      <div class="gate-label">Gate 03</div>
-      <h3>宇宙观想</h3>
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 03</div>
+      <h3>元归档</h3>
       <p>观照宇宙与内心的共鸣。在宏大与微小之间。</p>
       <div class="enter-hint">→ 进入</div>
     </a>
 
     <a href="/about/" class="gate">
-      <div class="gate-icon">✨</div>
-      <div class="gate-label">Gate 04</div>
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 04</div>
       <h3>灵性成长</h3>
       <p>冥想、觉察、内在实践。陪伴每一次觉醒。</p>
       <div class="enter-hint">→ 进入</div>
     </a>
 
     <a href="/tags/" class="gate">
-      <div class="gate-icon">🎨</div>
-      <div class="gate-label">Gate 05</div>
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 05</div>
       <h3>艺术创作</h3>
       <p>文字、影像、视觉的跨界表达。用创作诠释一切。</p>
       <div class="enter-hint">→ 进入</div>
     </a>
 
     <a href="/tools/" class="gate">
-      <div class="gate-icon">🤝</div>
-      <div class="gate-label">Gate 06</div>
-      <h3>社群联结</h3>
-      <p>与同频者相聚。在交流中彼此映照，共同生长。</p>
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 06</div>
+      <h3>元工具箱</h3>
+      <p>与同频者相聚。在交流中自制小工具 · 实用集合，共同生长。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+
+    <a href="/space/" class="gate">
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 07</div>
+      <h3>元空间</h3>
+      <p>三维虚拟空间 · 作品与思想的栖息之所。在空间中自由探索。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+
+    <a href="/knowledge/" class="gate">
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 08</div>
+      <h3>元知识</h3>
+      <p>个人知识库 · 学习笔记。知识的结构化存储与连接。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+
+    <a href="/community/" class="gate">
+      <div class="gate-icon"></div>
+      <div class="gate-label">GATE 09</div>
+      <h3>元社区</h3>
+      <p>读者社区 · 与同频者相聚。在交流中彼此映照，共同生长。</p>
       <div class="enter-hint">→ 进入</div>
     </a>
   </div>
@@ -377,7 +401,75 @@ body {
   <div class="footer">大道元灵 · Est. 2026 · MedianiGray</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 从数据库加载所有配置
+async function loadConfig() {
+    try {
+        const { data, error } = await sb.from('site_config').select('key, value');
+        if (error) throw error;
+        const config = {};
+        data.forEach(item => { config[item.key] = item.value; });
+        
+        // 更新所有文字
+        if (config['home.title']) document.getElementById('main-title').textContent = config['home.title'];
+        if (config['home.subtitle1']) document.querySelector('.sub').innerHTML = config['home.subtitle1'] + '<br>' + (config['home.subtitle2'] || '');
+        if (config['home.scroll_hint']) document.querySelector('.entrance-hint').innerHTML = config['home.scroll_hint'] + ' <span class="arrow">↓</span>';
+        
+        // 更新9扇门
+        for (let i = 1; i <= 9; i++) {
+            const gate = document.querySelector(`.gates .gate:nth-child(${i})`);
+            if (!gate) continue;
+            if (config[`home.gate${i}_title`]) gate.querySelector('h3').textContent = config[`home.gate${i}_title`];
+            if (config[`home.gate${i}_desc`]) gate.querySelector('p').textContent = config[`home.gate${i}_desc`];
+            if (config[`home.gate${i}_link`]) gate.href = config[`home.gate${i}_link`];
+        }
+        
+        // 更新页脚
+        if (config['home.footer']) document.querySelector('.footer').textContent = config['home.footer'];
+        
+        // 更新颜色
+        if (config['color.primary']) {
+            document.documentElement.style.setProperty('--accent', config['color.primary']);
+        }
+        
+        // 更新粒子数量
+        if (config['interaction.particle_count']) {
+            // 重新初始化粒子
+            initParticles(parseInt(config['interaction.particle_count']));
+        }
+        
+        // 开关控制
+        if (config['interaction.glow_enabled'] === 'false') {
+            document.getElementById('mouse-glow').style.display = 'none';
+        }
+        
+        if (config['interaction.tilt_enabled'] === 'false') {
+            gates.forEach(gate => {
+                gate.removeEventListener('mousemove', tiltGate);
+                gate.removeEventListener('mouseleave', resetGate);
+            });
+        }
+        
+        console.log('✅ 配置加载完成');
+    } catch(e) {
+        console.warn('⚠️ 配置加载失败，使用默认值:', e);
+    }
+}
+
+let gates;
+let tiltGate, resetGate;
+
+// 初始化粒子
+function initParticles(count) {
+    particles = [];
+    for (let i = 0; i < count; i++) particles.push(new Particle());
+}
+
 // 1. 逐字动画
 const titleEl = document.getElementById('main-title');
 const titleText = titleEl.textContent;
@@ -460,21 +552,23 @@ document.addEventListener('mousemove', (e) => {
 });
 
 // 4. 3D门廊倾斜
-const gates = document.querySelectorAll('.gate');
-gates.forEach(gate => {
-  gate.addEventListener('mousemove', (e) => {
-    const rect = gate.getBoundingClientRect();
+gates = document.querySelectorAll('.gate');
+tiltGate = function(e) {
+    const rect = this.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     const rotateY = (x - centerX) / 25;
     const rotateX = (centerY - y) / 25;
-    gate.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
-  });
-  gate.addEventListener('mouseleave', () => {
-    gate.style.transform = '';
-  });
+    this.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+};
+resetGate = function() {
+    this.style.transform = '';
+};
+gates.forEach(gate => {
+    gate.addEventListener('mousemove', tiltGate);
+    gate.addEventListener('mouseleave', resetGate);
 });
 
 // 5. 滚动渐入
@@ -486,6 +580,50 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 gates.forEach(gate => observer.observe(gate));
+
+// 加载后端配置
+loadConfig();
+</script>
+
+<!-- 全局错误处理与加载失败fallback -->
+<script>
+// 1. 图片加载失败处理
+document.addEventListener('error', function(e) {
+  if (e.target.tagName === 'IMG') {
+    e.target.style.display = 'none';
+    console.warn('图片加载失败:', e.target.src);
+  }
+}, true);
+
+// 2. JS错误保护 - 内容默认显示，不依赖JS
+// 确保即使JS坏了，内容也是可见的
+document.documentElement.style.opacity = '1';
+document.body.style.opacity = '1';
+
+// 3. 网络状态检测
+if (!navigator.onLine) {
+  console.warn('当前离线状态');
+}
+window.addEventListener('online', function() {
+  console.log('网络已连接');
+});
+window.addEventListener('offline', function() {
+  console.warn('网络已断开');
+});
+
+// 4. 所有异步操作都有try/catch保护
+// 防止某个功能出错导致整个页面崩溃
+window.addEventListener('error', function(e) {
+  console.error('页面错误:', e.error || e.message);
+  // 不要让一个小错误搞崩整个页面
+  return true;
+});
+
+// 5. 未捕获的Promise错误
+window.addEventListener('unhandledrejection', function(e) {
+  console.error('未处理的Promise错误:', e.reason);
+  e.preventDefault(); // 不要让控制台刷爆
+});
 </script>
 </body>
 </html>
