@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录 · 元管理</title>
+    <title>登录 · 大道元灵</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -66,8 +66,8 @@
 <body>
     <div class="login-card">
         <div id="login-form">
-            <h1>元管理</h1>
-            <p>大道元灵 · 管理后台登录</p>
+            <h1>登录</h1>
+            <p>大道元灵 · 用户登录</p>
             <div class="form-group">
                 <label>邮箱</label>
                 <input type="email" id="login-email" placeholder="admin@example.com">
@@ -81,10 +81,14 @@
         </div>
         <div id="register-form" style="display:none;">
             <h1>注册账号</h1>
-            <p>创建管理员账号</p>
+            <p>创建普通用户账号</p>
             <div class="form-group">
                 <label>邮箱</label>
-                <input type="email" id="reg-email" placeholder="admin@example.com">
+                <input type="email" id="reg-email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>昵称（可选）</label>
+                <input type="text" id="reg-username" placeholder="给自己起个名字">
             </div>
             <div class="form-group">
                 <label>密码</label>
@@ -118,9 +122,20 @@
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             try {
-                const { error } = await sb.auth.signInWithPassword({ email, password });
+                const { data: { user }, error } = await sb.auth.signInWithPassword({ email, password });
                 if (error) throw error;
-                window.location.href = 'index.html';
+                
+                // 检查用户角色
+                const { data: profile } = await sb.from('profiles').select('role').eq('id', user.id).single();
+                const role = profile?.role || 'user';
+                
+                if (role === 'user') {
+                    // 普通用户跳转到用户中心
+                    window.location.href = '/profile/';
+                } else {
+                    // 管理员跳转到管理后台
+                    window.location.href = 'index.html';
+                }
             } catch(e) {
                 alert('登录失败: ' + e.message);
             }
@@ -128,10 +143,19 @@
 
         async function register() {
             const email = document.getElementById('reg-email').value;
+            const username = document.getElementById('reg-username').value;
             const password = document.getElementById('reg-password').value;
             try {
-                const { error } = await sb.auth.signUp({ email, password });
+                const { data: { user }, error } = await sb.auth.signUp({ email, password });
                 if (error) throw error;
+                
+                // 自动创建profiles记录
+                await sb.from('profiles').upsert({
+                    id: user.id,
+                    username: username || email.split('@')[0],
+                    role: 'user'
+                });
+                
                 alert('注册成功！请用刚才的账号登录。');
                 showLogin();
             } catch(e) {

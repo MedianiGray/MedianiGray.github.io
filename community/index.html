@@ -9,13 +9,14 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
   --main: #689F89;
+  --main-deep: #4E7A68;
   --main-glow: rgba(104,159,137,0.3);
-  --bg: #07090d;
+  --bg: #0a0f0e;
+  --bg-card: #161d1b;
   --text: #e8edf2;
   --text-dim: #7a8595;
   --glass: rgba(255,255,255,0.03);
   --glass-border: rgba(255,255,255,0.08);
-  --card-bg: rgba(12,16,24,0.6);
 }
 body {
   background: var(--bg);
@@ -27,7 +28,7 @@ body {
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 60px 24px;
+  padding: 40px 20px;
 }
 .back-link {
   display: inline-block;
@@ -35,7 +36,6 @@ body {
   text-decoration: none;
   font-size: 0.9rem;
   margin-bottom: 30px;
-  transition: color 0.3s;
 }
 .back-link:hover { color: var(--main); }
 .page-title {
@@ -49,42 +49,25 @@ body {
 }
 .page-subtitle {
   color: var(--text-dim);
-  margin-bottom: 50px;
-  font-size: 1rem;
-}
-
-/* 社区板块 */
-.community-hero {
-  background: var(--card-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 40px;
   margin-bottom: 40px;
-  backdrop-filter: blur(20px);
-  text-align: center;
-}
-.community-hero h2 {
-  font-size: 1.5rem;
-  color: var(--main);
-  margin-bottom: 10px;
-}
-.community-hero p {
-  color: var(--text-dim);
-  font-style: italic;
 }
 
 /* 统计 */
 .stats-row {
   display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 25px;
+  gap: 30px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
 }
 .stat-item {
+  flex: 1;
   text-align: center;
 }
 .stat-num {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--main);
 }
@@ -93,131 +76,209 @@ body {
   color: var(--text-dim);
 }
 
-/* 评论区 */
-.comment-section {
-  background: var(--card-bg);
+/* 发布区 */
+.post-composer {
+  background: var(--bg-card);
   border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 35px;
+  border-radius: 16px;
+  padding: 20px;
   margin-bottom: 30px;
-  backdrop-filter: blur(20px);
 }
-.section-title {
-  font-size: 1.3rem;
-  color: var(--main);
-  margin-bottom: 20px;
-}
-.comment-input {
+.post-composer textarea {
   width: 100%;
   min-height: 100px;
   padding: 15px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(104,159,137,0.2);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   color: var(--text);
   font-size: 0.95rem;
-  box-sizing: border-box;
-  margin-bottom: 15px;
   resize: vertical;
   font-family: inherit;
 }
-.comment-input:focus {
+.post-composer textarea:focus {
   outline: none;
   border-color: var(--main);
 }
-.comment-btn {
-  padding: 10px 28px;
-  background: rgba(104,159,137,0.2);
-  border: 1px solid rgba(104,159,137,0.4);
-  border-radius: 100px;
-  color: var(--main);
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.3s;
-}
-.comment-btn:hover {
-  background: rgba(104,159,137,0.3);
-  transform: translateY(-2px);
-}
-
-/* 评论列表 */
-.comment-list {
-  margin-top: 30px;
-}
-.comment-item {
-  padding: 20px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 12px;
-  margin-bottom: 15px;
-  border-left: 3px solid rgba(104,159,137,0.3);
-}
-.comment-meta {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin-bottom: 8px;
+.composer-actions {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-.comment-content {
-  color: var(--text);
-  font-size: 0.95rem;
-  line-height: 1.6;
+.mood-selector {
+  display: flex;
+  gap: 8px;
+}
+.mood-btn {
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  opacity: 0.5;
+}
+.mood-btn.active, .mood-btn:hover {
+  opacity: 1;
+  background: var(--glass);
+}
+.anon-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.publish-btn {
+  padding: 10px 24px;
+  background: var(--main);
+  color: white;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.publish-btn:hover {
+  background: var(--main-deep);
 }
 
-/* 社区成员 */
-.members-section {
-  background: var(--card-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 35px;
-  backdrop-filter: blur(20px);
+/* 排序切换 */
+.sort-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
-.members-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+.sort-tab {
+  padding: 8px 20px;
+  border-radius: 100px;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.sort-tab.active {
+  background: var(--main-glow);
+  color: var(--main);
+  border-color: var(--main);
+}
+
+/* 帖子列表 */
+.post-list {
+  display: flex;
+  flex-direction: column;
   gap: 15px;
-  margin-top: 20px;
 }
-.member-card {
-  text-align: center;
-  padding: 20px 10px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 12px;
-  transition: all 0.3s;
+.post-item {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px;
 }
-.member-card:hover {
-  transform: translateY(-3px);
-  background: rgba(104,159,137,0.08);
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
-.member-avatar {
-  width: 50px;
-  height: 50px;
+.post-avatar {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--main), var(--main-glow));
-  margin: 0 auto 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  color: #fff;
   font-weight: 700;
+  color: white;
 }
-.member-name {
-  font-size: 0.85rem;
-  color: var(--text);
+.post-author {
+  font-weight: 600;
 }
-.member-role {
-  font-size: 0.7rem;
+.post-time {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+.post-content {
+  margin-bottom: 15px;
+  line-height: 1.8;
+}
+.post-mood {
+  font-size: 1.2rem;
+}
+.post-actions {
+  display: flex;
+  gap: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--glass-border);
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.action-btn:hover {
   color: var(--main);
-  margin-top: 3px;
+}
+.action-btn.liked {
+  color: var(--main);
 }
 
-.footer {
-  text-align: center;
-  padding: 60px 0 30px;
+/* 热榜 */
+.hot-section {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 30px;
+}
+.hot-title {
+  font-size: 1.1rem;
+  color: var(--main);
+  margin-bottom: 15px;
+}
+.hot-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+.hot-rank {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--main-glow);
+  color: var(--main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.hot-content {
+  flex: 1;
+  font-size: 0.9rem;
+}
+.hot-likes {
+  font-size: 0.8rem;
   color: var(--text-dim);
-  font-size: 0.85rem;
-  opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+  .container { padding: 20px 15px; }
+  .page-title { font-size: 1.8rem; }
+  .stats-row { flex-wrap: wrap; }
+  .post-actions { gap: 15px; }
 }
 </style>
 </head>
@@ -228,195 +289,217 @@ body {
   <h1 class="page-title">元社区</h1>
   <p class="page-subtitle">与同频者相聚 · 在交流中彼此映照，共同生长</p>
 
-  <!-- 社区介绍 -->
-  <div class="community-hero">
-    <h2>🌱 社群联结</h2>
-    <p>这里是读者与作者相遇的地方。留下你的想法，我们一起探讨。</p>
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-num" id="statComments">0</div>
-        <div class="stat-label">评论</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num" id="statMembers">0</div>
-        <div class="stat-label">访客</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num" id="statLikes">0</div>
-        <div class="stat-label">点赞</div>
-      </div>
+  <!-- 统计 -->
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num" id="statPosts">0</div>
+      <div class="stat-label">帖子</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="statComments">0</div>
+      <div class="stat-label">评论</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="statLikes">0</div>
+      <div class="stat-label">点赞</div>
     </div>
   </div>
 
-  <!-- 评论区 -->
-  <div class="comment-section">
-    <h2 class="section-title">💬 留言板</h2>
-    <textarea class="comment-input" id="commentInput" placeholder="留下你的想法..."></textarea>
-    <button class="comment-btn" onclick="submitComment()">发布评论</button>
-    
-    <div class="comment-list" id="commentList">
-      <div class="comment-item" style="opacity:0.5;">
-        <div class="comment-meta">
-          <span>加载中...</span>
-          <span></span>
-        </div>
-        <div class="comment-content">正在连接数据库...</div>
+  <!-- 发布区 -->
+  <div class="post-composer">
+    <textarea id="postInput" placeholder="说点什么..."></textarea>
+    <div class="composer-actions">
+      <div class="mood-selector">
+        <span class="mood-btn" data-mood="😊">😊</span>
+        <span class="mood-btn" data-mood="😢">😢</span>
+        <span class="mood-btn" data-mood="😡">😡</span>
+        <span class="mood-btn" data-mood="😰">😰</span>
+        <span class="mood-btn" data-mood="😔">😔</span>
       </div>
+      <label class="anon-toggle">
+        <input type="checkbox" id="anonToggle">
+        匿名发布
+      </label>
+      <button class="publish-btn" onclick="submitPost()">发布</button>
     </div>
   </div>
 
-  <!-- 社区成员 -->
-  <div class="members-section">
-    <h2 class="section-title">👥 社区成员</h2>
-    <div class="members-grid">
-      <div class="member-card">
-        <div class="member-avatar">M</div>
-        <div class="member-name">MedianiGray</div>
-        <div class="member-role">站长</div>
-      </div>
-      <div class="member-card">
-        <div class="member-avatar">访</div>
-        <div class="member-name">访客</div>
-        <div class="member-role">读者</div>
-      </div>
-      <div class="member-card">
-        <div class="member-avatar">新</div>
-        <div class="member-name">新朋友</div>
-        <div class="member-role">等待加入</div>
-      </div>
-    </div>
+  <!-- 排序切换 -->
+  <div class="sort-tabs">
+    <div class="sort-tab active" data-sort="latest">最新</div>
+    <div class="sort-tab" data-sort="hot">最热</div>
   </div>
 
-  <div class="footer">
-    大道元灵 · 元社区 · Est. 2026
+  <!-- 帖子列表 -->
+  <div class="post-list" id="postList">
+    <p style="color:var(--text-dim);text-align:center;padding:40px;">加载中...</p>
+  </div>
+
+  <!-- 热榜 -->
+  <div class="hot-section">
+    <h3 class="hot-title">🔥 今日热榜</h3>
+    <div id="hotList">
+      <p style="color:var(--text-dim);">加载中...</p>
+    </div>
   </div>
 </div>
 
 <script>
-// Supabase配置
-const SUPABASE_URL = 'https://xyxrwstdhmauwrbrojnr.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG';
-const PAGE_ID = 'community_main';
+const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let supabase = null;
-try {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-} catch (e) {
-  console.error('Supabase init failed:', e);
-}
+let currentMood = '😊';
+let currentSort = 'latest';
 
-function getUserId() {
-  let id = localStorage.getItem('user_id');
-  if (!id) {
-    id = 'user_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('user_id', id);
-  }
-  return id;
-}
+// 心情选择
+document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMood = btn.dataset.mood;
+    });
+});
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
+// 排序切换
+document.querySelectorAll('.sort-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentSort = tab.dataset.sort;
+        loadPosts();
+    });
+});
 
-// 加载统计
 async function loadStats() {
-  if (!supabase) return;
-  try {
-    const { count: commentCount } = await supabase
-      .from('comments')
-      .select('*', { count: 'exact', head: true })
-      .eq('page_id', PAGE_ID);
-    document.getElementById('statComments').textContent = commentCount || 0;
-
-    const { count: likeCount } = await supabase
-      .from('likes')
-      .select('*', { count: 'exact', head: true })
-      .eq('page_id', PAGE_ID);
-    document.getElementById('statLikes').textContent = likeCount || 0;
-  } catch (e) {
-    console.error('加载统计失败:', e);
-  }
-}
-
-// 加载评论
-async function loadComments() {
-  if (!supabase) return;
-  const listEl = document.getElementById('commentList');
-  try {
-    const { data, error } = await supabase
-      .from('comments')
-      .select('*')
-      .eq('page_id', PAGE_ID)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    if (data && data.length > 0) {
-      listEl.innerHTML = data.map(c => `
-        <div class="comment-item">
-          <div class="comment-meta">
-            <span>${c.author_name || '匿名'}</span>
-            <span>${new Date(c.created_at).toLocaleString('zh-CN')}</span>
-          </div>
-          <div class="comment-content">${escapeHtml(c.content)}</div>
-        </div>
-      `).join('');
-    } else {
-      listEl.innerHTML = '<div class="comment-item" style="opacity:0.5;"><div class="comment-content">还没有评论，来抢沙发~</div></div>';
+    try {
+        const { count: postCount } = await sb.from('community_posts').select('*', { count: 'exact', head: true });
+        document.getElementById('statPosts').textContent = postCount || 0;
+    } catch(e) {
+        console.log('统计加载失败:', e);
     }
-  } catch (e) {
-    console.error('加载评论失败:', e);
-    listEl.innerHTML = '<div class="comment-item" style="opacity:0.5;"><div class="comment-content">评论加载失败，请检查数据库表是否创建</div></div>';
-  }
 }
 
-// 提交评论
-async function submitComment() {
-  const input = document.getElementById('commentInput');
-  const content = input.value.trim();
-  if (!content) return;
+async function loadPosts() {
+    const listEl = document.getElementById('postList');
+    listEl.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:40px;">加载中...</p>';
+    
+    try {
+        let query = sb.from('community_posts').select('*');
+        if (currentSort === 'latest') {
+            query = query.order('created_at', { ascending: false });
+        } else {
+            query = query.order('likes_count', { ascending: false });
+        }
+        const { data, error } = await query;
+        
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+            listEl.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:40px;">还没有帖子，来发第一条吧~</p>';
+            return;
+        }
+        
+        listEl.innerHTML = data.map(post => `
+            <div class="post-item">
+                <div class="post-header">
+                    <div class="post-avatar">${post.is_anonymous ? '匿' : (post.author_name?.[0] || '访')}</div>
+                    <div>
+                        <div class="post-author">${post.is_anonymous ? '匿名用户' : (post.author_name || '访客')}</div>
+                        <div style="font-size:0.8rem;color:var(--text-dim);">${new Date(post.created_at).toLocaleString('zh-CN')}</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    ${post.mood ? `<span class="post-mood">${post.mood}</span> ` : ''}
+                    ${post.content}
+                </div>
+                <div class="post-actions">
+                    <span class="action-btn" onclick="likePost('${post.id}', this)">
+                        ❤️ ${post.likes_count || 0}
+                    </span>
+                    <span class="action-btn">💬 ${post.comments_count || 0}</span>
+                    <span class="action-btn">↗️ 分享</span>
+                </div>
+            </div>
+        `).join('');
+    } catch(e) {
+        listEl.innerHTML = '<p style="color:var(--danger);text-align:center;padding:40px;">加载失败: ' + e.message + '</p>';
+    }
+}
 
-  if (!supabase) {
-    alert('Supabase未初始化');
-    return;
-  }
+async function loadHot() {
+    const hotEl = document.getElementById('hotList');
+    try {
+        const { data, error } = await sb
+            .from('community_posts')
+            .select('*')
+            .order('likes_count', { ascending: false })
+            .limit(5);
+        
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+            hotEl.innerHTML = '<p style="color:var(--text-dim);">暂无热榜</p>';
+            return;
+        }
+        
+        hotEl.innerHTML = data.map((post, i) => `
+            <div class="hot-item">
+                <div class="hot-rank">${i + 1}</div>
+                <div class="hot-content">${post.content.substring(0, 30)}${post.content.length > 30 ? '...' : ''}</div>
+                <div class="hot-likes">❤️ ${post.likes_count || 0}</div>
+            </div>
+        `).join('');
+    } catch(e) {
+        hotEl.innerHTML = '<p style="color:var(--text-dim);">热榜加载失败</p>';
+    }
+}
 
-  try {
-    const { error } = await supabase
-      .from('comments')
-      .insert({
-        page_id: PAGE_ID,
-        content: content,
-        author_name: '访客'
-      });
+async function submitPost() {
+    const input = document.getElementById('postInput');
+    const content = input.value.trim();
+    const isAnonymous = document.getElementById('anonToggle').checked;
+    
+    if (!content) return;
+    
+    try {
+        const { error } = await sb
+            .from('community_posts')
+            .insert([{
+                content: content,
+                mood: currentMood,
+                is_anonymous: isAnonymous,
+                author_name: isAnonymous ? null : '访客'
+            }]);
+        
+        if (error) throw error;
+        
+        input.value = '';
+        loadPosts();
+        loadStats();
+        loadHot();
+    } catch(e) {
+        alert('发布失败: ' + e.message);
+    }
+}
 
-    if (error) throw error;
-
-    input.value = '';
-    loadComments();
-    loadStats();
-  } catch (e) {
-    console.error('评论提交失败:', e);
-    alert('评论提交失败，请检查数据库表是否创建');
-  }
+async function likePost(postId, btnEl) {
+    try {
+        await sb.rpc('increment_likes', { post_id: postId });
+        btnEl.innerHTML = '❤️ ' + (parseInt(btnEl.textContent.match(/\d+/)[0]) + 1);
+    } catch(e) {
+        console.log('点赞失败:', e);
+        // 简单+1
+        const num = parseInt(btnEl.textContent.match(/\d+/)[0]);
+        btnEl.innerHTML = '❤️ ' + (num + 1);
+    }
 }
 
 // 页面加载
-window.addEventListener('load', function() {
-  loadStats();
-  loadComments();
-});
-
-// 全局错误保护
-window.addEventListener('error', function(e) {
-  console.warn('页面错误:', e.message);
-  return true;
-});
-window.addEventListener('unhandledrejection', function(e) {
-  console.warn('Promise错误:', e.reason);
-  e.preventDefault();
+window.addEventListener('load', () => {
+    loadStats();
+    loadPosts();
+    loadHot();
 });
 </script>
 </body>
