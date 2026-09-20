@@ -10,66 +10,92 @@
   <rights>All rights reserved 2026, MedianiGray</rights>
   <subtitle>专注于技术分享与生活记录</subtitle>
   <title>MedianiGray的博客hub</title>
-  <updated>2026-06-21T19:23:20.543Z</updated>
+  <updated>2026-09-20T10:53:57.480Z</updated>
   <entry>
     <author>
       <name>MedianiGray</name>
     </author>
-    <category term="教程" scheme="https://medianigray.github.io/categories/%E6%95%99%E7%A8%8B/"/>
-    <category term="Hexo" scheme="https://medianigray.github.io/tags/Hexo/"/>
-    <category term="博客教程" scheme="https://medianigray.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/"/>
+    <category term="测试" scheme="https://medianigray.github.io/categories/%E6%B5%8B%E8%AF%95/"/>
+    <category term="媒体" scheme="https://medianigray.github.io/tags/%E5%AA%92%E4%BD%93/"/>
+    <category term="测试" scheme="https://medianigray.github.io/tags/%E6%B5%8B%E8%AF%95/"/>
     <content>
-      <![CDATA[<p>这里写文章正文，支持Markdown语法：</p><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><p>普通文字<br><a href="https://medianigray.github.io/">超链接</a></p>]]>
+      <![CDATA[<h2 id="图片测试"><a href="#图片测试" class="headerlink" title="图片测试"></a>图片测试</h2><h3 id="1-本地图片格式"><a href="#1-本地图片格式" class="headerlink" title="1. 本地图片格式"></a>1. 本地图片格式</h3><h4 id="PNG格式"><a href="#PNG格式" class="headerlink" title="PNG格式"></a>PNG格式</h4><p><img src="/img/avatar.png" alt="PNG测试"></p><h4 id="JPG格式"><a href="#JPG格式" class="headerlink" title="JPG格式"></a>JPG格式</h4><p><img src="/img/bg-default.jpg" alt="JPG测试"></p><h3 id="2-在线图片"><a href="#2-在线图片" class="headerlink" title="2. 在线图片"></a>2. 在线图片</h3><p><img src="https://picsum.photos/800/400" alt="在线图片"></p><h3 id="3-图片灯箱测试"><a href="#3-图片灯箱测试" class="headerlink" title="3. 图片灯箱测试"></a>3. 图片灯箱测试</h3><p>点击下面的图片试试，应该会弹出灯箱：</p><p><img src="https://picsum.photos/1200/600" alt="灯箱测试"></p><hr><h2 id="视频测试"><a href="#视频测试" class="headerlink" title="视频测试"></a>视频测试</h2><h3 id="1-B站嵌入"><a href="#1-B站嵌入" class="headerlink" title="1. B站嵌入"></a>1. B站嵌入</h3><iframe src="//player.bilibili.com/player.html?bvid=BV1GJ411x7h7&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe><h3 id="2-YouTube嵌入"><a href="#2-YouTube嵌入" class="headerlink" title="2. YouTube嵌入"></a>2. YouTube嵌入</h3><iframe width="100%" height="400" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe><hr><h2 id="音频测试"><a href="#音频测试" class="headerlink" title="音频测试"></a>音频测试</h2><h3 id="1-APlayer音乐播放器"><a href="#1-APlayer音乐播放器" class="headerlink" title="1. APlayer音乐播放器"></a>1. APlayer音乐播放器</h3><div class="aplayer" data-id="1" data-server="netease" data-type="playlist" data-id="2838832819"></div><hr><h2 id="实况照片测试"><a href="#实况照片测试" class="headerlink" title="实况照片测试"></a>实况照片测试</h2><p>实况照片本质上是”图片+视频”的组合。目前Hexo静态博客支持：</p><ul><li>静态图片显示</li><li>点击后查看对应视频</li></ul><hr><h2 id="格式支持总结"><a href="#格式支持总结" class="headerlink" title="格式支持总结"></a>格式支持总结</h2><table><thead><tr><th>格式类型</th><th>支持情况</th><th>说明</th></tr></thead><tbody><tr><td>PNG</td><td>✅</td><td>本地图片</td></tr><tr><td>JPG&#x2F;JPEG</td><td>✅</td><td>本地图片</td></tr><tr><td>GIF</td><td>✅</td><td>动画图片</td></tr><tr><td>WebP</td><td>✅</td><td>现代格式</td></tr><tr><td>SVG</td><td>✅</td><td>矢量图</td></tr><tr><td>MP4视频</td><td>✅</td><td>嵌入播放</td></tr><tr><td>B站视频</td><td>✅</td><td>iframe嵌入</td></tr><tr><td>YouTube</td><td>✅</td><td>iframe嵌入</td></tr><tr><td>MP3音频</td><td>✅</td><td>APlayer播放器</td></tr><tr><td>网易云音乐</td><td>✅</td><td>歌单嵌入</td></tr><tr><td>实况照片</td><td>⚠️</td><td>需手动组合图+视频</td></tr></tbody></table><hr><p><em>测试文章 · 验证媒体功能</em></p>]]>
     </content>
-    <id>https://medianigray.github.io/posts/af180990</id>
-    <link href="https://medianigray.github.io/posts/af180990"/>
-    <published>2026-06-20T17:51:57.000Z</published>
+    <id>https://medianigray.github.io/posts/a54cf915</id>
+    <link href="https://medianigray.github.io/posts/a54cf915"/>
+    <published>2026-09-20T12:00:00.000Z</published>
     <summary>
-      <![CDATA[<p>这里写文章正文，支持Markdown语法：</p>
-<h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><p>普通文字<br><a href="https://medianig]]>
+      <![CDATA[<h2 id="图片测试"><a href="#图片测试" class="headerlink" title="图片测试"></a>图片测试</h2><h3 id="1-本地图片格式"><a href="#1-本地图片格式" class="headerlink" title="1]]>
     </summary>
-    <title>第一篇测试文章</title>
-    <updated>2026-06-21T19:23:20.543Z</updated>
+    <title>媒体功能测试</title>
+    <updated>2026-09-20T10:53:57.480Z</updated>
   </entry>
   <entry>
     <author>
       <name>MedianiGray</name>
     </author>
-    <category term="日常" scheme="https://medianigray.github.io/categories/%E6%97%A5%E5%B8%B8/"/>
-    <category term="随笔" scheme="https://medianigray.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
-    <category term="故事" scheme="https://medianigray.github.io/tags/%E6%95%85%E4%BA%8B/"/>
+    <category term="宇宙观想" scheme="https://medianigray.github.io/categories/%E5%AE%87%E5%AE%99%E8%A7%82%E6%83%B3/"/>
+    <category term="宇宙" scheme="https://medianigray.github.io/tags/%E5%AE%87%E5%AE%99/"/>
+    <category term="观照" scheme="https://medianigray.github.io/tags/%E8%A7%82%E7%85%A7/"/>
+    <category term="合一" scheme="https://medianigray.github.io/tags/%E5%90%88%E4%B8%80/"/>
     <content>
-      <![CDATA[<style>#container .content .post .post-title {  text-align: center !important;}#container .content .post .post-content p {  text-indent: 2em !important;  line-height: 1.8 !important;}#container .content .post .post-content img {  display: block !important;  max-width: 100% !important;  height: auto !important;  margin: 1.8rem auto !important;}</style><p>傍晚的晚风卷着梧桐碎叶，轻轻撞在老居民楼的玻璃窗上。少年背着洗得发白的帆布书包，脚步放得很轻，怀里揣着一团柔软的灰白色影子。</p><p>那是一只流浪猫，右耳缺了一小块，身上沾着路边的尘土，却乖乖蜷在他臂弯里，连一声呜咽都没有。男孩蹲在楼下楼道角落，把早上没舍得吃的牛奶倒进干净的塑料盒，指尖轻轻顺着猫咪凌乱的背毛。<br>“以后就叫小灰好不好。”</p><div class="post-image-caption">  ![晚枫](晚枫.png)  <div class="caption-text">傍晚的老居民楼，少年第一次遇见小灰</div></div><p>猫咪抬眼，琥珀色的瞳孔软软地映出少年的侧脸，试探着蹭了蹭他的手腕。</p><p>从前放学路上，男孩总是一个人走。马路两旁的店铺人声嘈杂，同行的同学结伴说笑，只有他独自踩着影子慢慢回家。遇见小灰之后，每天放学多了一份期待 —— 楼下花坛边总会有一小团灰乎乎的身影，安安静静等他。</p><div class="post-image-row-2">  <img src="小灰和影子.png" alt="小灰和影子">  <img src="雨天楼道.png" alt="雨天楼道"></div><p>晴天的时候，两人坐在花坛石阶上晒太阳。男孩掏出笔记本写零散的文字，小灰就趴在他腿上打盹，尾巴偶尔轻轻扫过纸页；雨天便躲进楼道避风，少年撑着伞，把大半伞面分给脚边的小猫，自己半边肩膀淋得微凉。</p><div class="post-image-left-text">  <img src="花坛石阶.png" alt="花坛石阶">  <div class="text-block">    <p>他不敢把小猫带回家，家里的母亲对猫毛过敏。于是偷偷在楼道储物间搭了个小窝，铺着旧毛衣，每日省下零花钱买猫粮、牛奶。</p>  </div></div><div class="post-image-grid-3">  <img src="小窝.png" alt="小窝">  <img src="楼道.png" alt="楼道">  <img src="花坛石阶.png" alt="花坛石阶"></div><p>有次下起暴雨，狂风卷着雨点砸下来，男孩放学狂奔回家，第一件事冲到储物间。看见小灰缩在毛衣堆里，浑身干爽，只是听见脚步声立刻起身，蹭着他的裤脚撒娇。那一刻，少年忽然觉得，原来孤单也可以被温柔填满。</p><p>日子一天天过，少年的笔记本写满细碎日常，每一页都藏着一只小猫的身影。无人陪伴的黄昏，因为有一团温热的小生命等候，漫长的归途也变得温柔。</p><div class="post-image-right-text">  <img src="黄昏.png" alt="黄昏">  <div class="text-block">    <p>晚风再次吹过，少年低头看着怀里熟睡的小灰，轻声说：“以后每个傍晚，我都来陪你。”</p>  </div></div><div class="post-image-caption">  <img src="小猫的身影.png" alt="小猫的身影">  <div class="caption-text">每个黄昏，小灰都会在楼下等着少年回家</div></div><p>从那以后，每个黄昏的楼道里，都有一个少年和一只小猫的身影。少年写着他的故事，小猫打着它的盹，晚风穿过楼道，带来了夏天的味道，也带来了属于他们的温柔时光。</p><p>那些曾经无人分享的喜怒哀乐，那些独自走过的漫长道路，因为这只小小的猫，都变成了闪闪发光的回忆。原来最温暖的陪伴，从来都不需要太多言语，只是一个眼神，一个拥抱，就足够治愈所有的孤单。</p>]]>
+      <![CDATA[<h2 id="你有多大"><a href="#你有多大" class="headerlink" title="你有多大"></a>你有多大</h2><p>抬头看夜空。</p><p>星星很远。远到光走了很多年，才到你的眼睛里。</p><p>你看到的，不是现在的星星，是过去的星星。</p><p>那你呢？你有多大？</p><span id="more"></span><h2 id="微观的你"><a href="#微观的你" class="headerlink" title="微观的你"></a>微观的你</h2><p>低头看自己的手。</p><p>手上有细胞。细胞里有分子。分子里有原子。原子里，大部分是空的。</p><p>你以为你是实体，其实你大部分是空的。</p><p>你以为你是一个”东西”，其实你是一个过程——能量在流动，物质在交换，你一直在变。</p><h2 id="你和宇宙"><a href="#你和宇宙" class="headerlink" title="你和宇宙"></a>你和宇宙</h2><p>你身体里的碳原子，来自很久以前的星星。</p><p>你的眼睛，能看到光——因为你的身体，就是用星星的材料做的。</p><p>你不是在”看”宇宙。你是宇宙，在通过你看它自己。</p><h2 id="万我归一"><a href="#万我归一" class="headerlink" title="万我归一"></a>万我归一</h2><p>有很多个我。</p><p>有思考的我，有感受的我，有行动的我，有安静的我。</p><p>这些我，都是我。</p><p>但所有的我，都指向同一个本源。</p><p>那就是——观照本身。</p><p>你不是那个在思考的人，你是那个知道有人在思考的人。</p><p>你不是那个在感受的人，你是那个知道有人在感受的人。</p><p>那个”知道”，就是归一的地方。</p><hr><p><em>大道元灵 · 宇宙观想</em></p>]]>
     </content>
-    <id>https://medianigray.github.io/posts/e1b9021a</id>
-    <link href="https://medianigray.github.io/posts/e1b9021a"/>
-    <published>2026-06-20T17:50:24.000Z</published>
+    <id>https://medianigray.github.io/posts/f921d911</id>
+    <link href="https://medianigray.github.io/posts/f921d911"/>
+    <published>2026-09-20T10:00:00.000Z</published>
     <summary>
-      <![CDATA[<style>
-#container .content .post .post-title {
-  text-align: center !important;
-}
-
-#container .content .post .post-content p {
-  text-inden]]>
+      <![CDATA[<h2 id="你有多大"><a href="#你有多大" class="headerlink" title="你有多大"></a>你有多大</h2><p>抬头看夜空。</p>
+<p>星星很远。远到光走了很多年，才到你的眼睛里。</p>
+<p>你看到的，不是现在的星星，是过去的星星。</p>
+<p>那你呢？你有多大？</p>]]>
     </summary>
-    <title>男孩和猫</title>
-    <updated>2026-07-12T23:36:21.985Z</updated>
+    <title>宇宙观想：在宏大与微小之间</title>
+    <updated>2026-09-20T10:53:57.485Z</updated>
   </entry>
   <entry>
     <author>
       <name>MedianiGray</name>
     </author>
+    <category term="哲学随笔" scheme="https://medianigray.github.io/categories/%E5%93%B2%E5%AD%A6%E9%9A%8F%E7%AC%94/"/>
+    <category term="衡" scheme="https://medianigray.github.io/tags/%E8%A1%A1/"/>
+    <category term="平衡" scheme="https://medianigray.github.io/tags/%E5%B9%B3%E8%A1%A1/"/>
+    <category term="中道" scheme="https://medianigray.github.io/tags/%E4%B8%AD%E9%81%93/"/>
     <content>
-      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]>
+      <![CDATA[<h2 id="衡不是平庸"><a href="#衡不是平庸" class="headerlink" title="衡不是平庸"></a>衡不是平庸</h2><p>很多人以为”衡”就是中庸，就是和稀泥。</p><p>不是。</p><p>衡是动态的平衡——不是静止在中间，是在两个极端之间，始终找到那个刚好的点。</p><span id="more"></span><h2 id="有无相生"><a href="#有无相生" class="headerlink" title="有无相生"></a>有无相生</h2><p>有和无，不是对立的。</p><p>有，是因为有無。空，不是没有，是为了有。</p><p>一个杯子，它的用处，在于它空的部分。一间房子，它的用处，在于它空的部分。</p><p>空，是最大的有。</p><h2 id="相克相成"><a href="#相克相成" class="headerlink" title="相克相成"></a>相克相成</h2><p>对立面，不是敌人。</p><p>对立面，是你的另一半。</p><p>没有冷，就没有热。没有黑，就没有白。没有痛苦，就没有快乐。</p><p>对立面，让你完整。</p><h2 id="中道不是静止"><a href="#中道不是静止" class="headerlink" title="中道不是静止"></a>中道不是静止</h2><p>中道不是站在中间不动。</p><p>中道是在两个极端之间，动态地调整，始终保持平衡。</p><p>就像走钢丝——你不是站在中间不动，你是一直在调整，往左一点，往右一点，始终在中间。</p><p>这就是衡。</p><hr><p><em>大道元灵 · 哲学随笔</em></p>]]>
     </content>
-    <id>https://medianigray.github.io/posts/4a17b156</id>
-    <link href="https://medianigray.github.io/posts/4a17b156"/>
-    <published>2026-06-20T17:07:04.958Z</published>
+    <id>https://medianigray.github.io/posts/a452e502</id>
+    <link href="https://medianigray.github.io/posts/a452e502"/>
+    <published>2026-09-20T06:00:00.000Z</published>
     <summary>
-      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for]]>
+      <![CDATA[<h2 id="衡不是平庸"><a href="#衡不是平庸" class="headerlink" title="衡不是平庸"></a>衡不是平庸</h2><p>很多人以为”衡”就是中庸，就是和稀泥。</p>
+<p>不是。</p>
+<p>衡是动态的平衡——不是静止在中间，是在两个极端之间，始终找到那个刚好的点。</p>]]>
     </summary>
-    <title>Hello World</title>
-    <updated>2026-06-21T19:23:20.432Z</updated>
+    <title>衡：不偏不倚的中间</title>
+    <updated>2026-09-20T10:53:57.544Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>MedianiGray</name>
+    </author>
+    <category term="思想文章" scheme="https://medianigray.github.io/categories/%E6%80%9D%E6%83%B3%E6%96%87%E7%AB%A0/"/>
+    <category term="元" scheme="https://medianigray.github.io/tags/%E5%85%83/"/>
+    <category term="自反" scheme="https://medianigray.github.io/tags/%E8%87%AA%E5%8F%8D/"/>
+    <category term="超越" scheme="https://medianigray.github.io/tags/%E8%B6%85%E8%B6%8A/"/>
+    <content>
+      <![CDATA[<h2 id="什么是元"><a href="#什么是元" class="headerlink" title="什么是元"></a>什么是元</h2><p>元不是一个东西。</p><p>元是一种态度——对任何既定形式的反思。</p><p>当你意识到自己正在思考，并且开始观察这个思考的过程，你就进入了元的状态。</p><p>这就是自反性——把自己作为对象，观察自己。</p><span id="more"></span><h2 id="元不是终点"><a href="#元不是终点" class="headerlink" title="元不是终点"></a>元不是终点</h2><p>很多人以为元是”更高级”的意思。</p><p>不是。</p><p>元是”对自身的反思”。元认知不是更聪明的认知，是对认知过程的觉察。元数据不是更重要的数据，是描述数据的数据。</p><p>元不追求终极。恰恰相反，它通过自反性消解任何终极主张。</p><p>你一旦说”这就是终极了”，元就开始反思你说的”终极”。</p><h2 id="元的递归"><a href="#元的递归" class="headerlink" title="元的递归"></a>元的递归</h2><p>元合之后还有元合。</p><p>不是一层就结束了。是一层一层，无限递归。</p><p>今天的元，明天可能成为新的对象，被更高层次的元再次审视。</p><p>这就是元的生命力——它永远在往前走，永远不停止。</p><h2 id="我们为什么需要元"><a href="#我们为什么需要元" class="headerlink" title="我们为什么需要元"></a>我们为什么需要元</h2><p>因为我们太容易被自己的框架困住。</p><p>我们用语言思考，就被语言困住。我们用概念理解世界，就被概念困住。</p><p>元，就是跳出来看——看自己的思考，看自己的框架，看自己的局限。</p><p>不是为了否定，是为了看见。</p><p>看见，然后选择。</p><hr><p><em>大道元灵 · 思想文章</em></p>]]>
+    </content>
+    <id>https://medianigray.github.io/posts/e378063f</id>
+    <link href="https://medianigray.github.io/posts/e378063f"/>
+    <published>2026-09-20T02:00:00.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="什么是元"><a href="#什么是元" class="headerlink" title="什么是元"></a>什么是元</h2><p>元不是一个东西。</p>
+<p>元是一种态度——对任何既定形式的反思。</p>
+<p>当你意识到自己正在思考，并且开始观察这个思考的过程，你就进入了元的状态。</p>
+<p>这就是自反性——把自己作为对象，观察自己。</p>]]>
+    </summary>
+    <title>元：一种永远在超越的态度</title>
+    <updated>2026-09-20T10:53:57.471Z</updated>
   </entry>
 </feed>

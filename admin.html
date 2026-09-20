@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元管理 · 大道元灵</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --main: #689F89;
+            --main-deep: #4E7A68;
+            --main-glow: rgba(104, 159, 137, 0.3);
+            --bg-primary: #161d1b;
+            --bg-secondary: #1e2825;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --text-primary: #e8eaf0;
+            --text-secondary: #9ba3b4;
+            --text-muted: #6b7385;
+            --border: rgba(255, 255, 255, 0.1);
+            --danger: #e06c6c;
+            --warning: #e0b86c;
+            --success: #6ce09a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0; bottom: 0;
+            width: 240px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 0;
+            z-index: 100;
+        }
+        .sidebar-logo {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+        .sidebar-logo h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--main);
+        }
+        .sidebar-logo p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .nav-item:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+        .nav-item.active {
+            background: var(--main-glow);
+            color: var(--main);
+            border-right: 2px solid var(--main);
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 2rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 { font-size: 1.5rem; font-weight: 600; }
+        .header .actions { display: flex; gap: 0.75rem; }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--main); color: white; }
+        .btn-primary:hover { background: var(--main-deep); transform: translateY(-1px); }
+        .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg-card-hover); }
+        .btn-danger { background: rgba(224, 108, 108, 0.15); color: var(--danger); border: 1px solid rgba(224, 108, 108, 0.3); }
+        .btn-danger:hover { background: rgba(224, 108, 108, 0.25); }
+        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--main); }
+        .stat-card .change { font-size: 0.75rem; margin-top: 0.5rem; color: var(--text-muted); }
+
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .table-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .table-header h3 { font-size: 1rem; font-weight: 600; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        td { font-size: 0.9rem; }
+        tr:hover { background: var(--bg-card-hover); }
+
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
+        .status-published { background: rgba(108, 224, 154, 0.15); color: var(--success); }
+        .status-pending { background: rgba(224, 184, 108, 0.15); color: var(--warning); }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .empty-state {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 60px; }
+            .sidebar-logo p, .nav-item span { display: none; }
+            .main { margin-left: 60px; padding: 1rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载遮罩 -->
+    <div id="loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-primary);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.3s;">
+        <div style="text-align:center;">
+            <div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--main);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem;"></div>
+            <p style="color:var(--text-muted);font-size:0.9rem;">加载中...</p>
+        </div>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h2>元管理</h2>
+            <p>大道元灵 · 管理后台</p>
+        </div>
+        <nav>
+            <div class="nav-item active" data-page="dashboard">
+                <span>📊</span><span>仪表盘</span>
+            </div>
+            <div class="nav-item" data-page="posts">
+                <span>📝</span><span>文章管理</span>
+            </div>
+            <div class="nav-item" data-page="comments">
+                <span>💬</span><span>评论管理</span>
+            </div>
+            <div class="nav-item" data-page="media">
+                <span>🖼️</span><span>媒体资源</span>
+            </div>
+            <div class="nav-item" data-page="settings">
+                <span>⚙️</span><span>网站设置</span>
+            </div>
+            <div class="nav-item" data-page="back">
+                <span>🏠</span><span>返回首页</span>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <!-- 仪表盘 -->
+        <div class="page active" id="page-dashboard">
+            <div class="header">
+                <h1>仪表盘</h1>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="refreshStats()">刷新数据</button>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="label">文章总数</div>
+                    <div class="value" id="stat-posts">-</div>
+                    <div class="change">本地Markdown</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">总访问量</div>
+                    <div class="value" id="stat-visits">-</div>
+                    <div class="change">来自Supabase</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">评论总数</div>
+                    <div class="value" id="stat-comments">-</div>
+                    <div class="change">来自Supabase</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">总点赞数</div>
+                    <div class="value" id="stat-likes">-</div>
+                    <div class="change">来自Supabase</div>
+                </div>
+            </div>
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>最近文章</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>标题</th><th>分类</th><th>状态</th></tr>
+                    </thead>
+                    <tbody id="recent-posts-body">
+                        <tr><td colspan="3" style="text-align:center;color:var(--text-muted)">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 文章管理 -->
+        <div class="page" id="page-posts">
+            <div class="header">
+                <h1>文章管理</h1>
+            </div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr><th>标题</th><th>分类</th><th>标签</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="posts-body">
+                        <tr><td colspan="4" style="text-align:center;color:var(--text-muted)">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top:1rem;padding:1rem;background:var(--bg-card);border-radius:8px;font-size:0.85rem;color:var(--text-secondary);">
+                💡 文章是本地Markdown文件，编辑需要修改 source/_posts/ 目录下的 .md 文件后重新构建。
+            </div>
+        </div>
+
+        <!-- 评论管理 -->
+        <div class="page" id="page-comments">
+            <div class="header">
+                <h1>评论管理</h1>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="loadComments()">刷新</button>
+                </div>
+            </div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr><th>昵称</th><th>内容</th><th>文章</th><th>时间</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="comments-body">
+                        <tr><td colspan="5" style="text-align:center;color:var(--text-muted)">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 媒体资源 -->
+        <div class="page" id="page-media">
+            <div class="header">
+                <h1>媒体资源</h1>
+            </div>
+            <div class="table-card" style="padding: 2rem;">
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem">当前图片资源列表</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;" id="media-grid">
+                    <div style="text-align:center;color:var(--text-muted)">加载中...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 网站设置 -->
+        <div class="page" id="page-settings">
+            <div class="header">
+                <h1>网站设置</h1>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="loadSettingsFromSupabase()">从Supabase加载</button>
+                </div>
+            </div>
+
+            <!-- 基本信息 -->
+            <div class="table-card" style="padding: 2rem; margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1.5rem;">基本信息</h3>
+                <div style="max-width: 600px;">
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">网站标题</label>
+                        <input type="text" id="set-site_title" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                    </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">网站副标题</label>
+                        <input type="text" id="set-site_subtitle" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                    </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">页脚文字</label>
+                        <input type="text" id="set-footer_text" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 门户主页文字 -->
+            <div class="table-card" style="padding: 2rem; margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1.5rem;">门户主页文字</h3>
+                <div style="max-width: 600px;">
+                    <div style="margin-bottom: 1.2rem;">
+                        <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">主标题</label>
+                        <input type="text" id="set-hero_title" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">副标题第一行</label>
+                            <input type="text" id="set-hero_subtitle1" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                        </div>
+                        <div style="margin-bottom: 1.2rem;">
+                            <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">副标题第二行</label>
+                            <input type="text" id="set-hero_subtitle2" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 配色方案 -->
+            <div class="table-card" style="padding: 2rem; margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1.5rem;">配色方案</h3>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                    <div class="theme-option active" data-theme="" style="padding: 1rem; border-radius: 12px; cursor: pointer; border: 2px solid #689F89; text-align: center;">
+                        <div style="width: 40px; height: 40px; background: #689F89; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                        <div style="font-size: 0.8rem;">灰绿（默认）</div>
+                    </div>
+                    <div class="theme-option" data-theme="warm" style="padding: 1rem; border-radius: 12px; cursor: pointer; border: 2px solid transparent; text-align: center;">
+                        <div style="width: 40px; height: 40px; background: #b8956e; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                        <div style="font-size: 0.8rem;">暖棕</div>
+                    </div>
+                    <div class="theme-option" data-theme="indigo" style="padding: 1rem; border-radius: 12px; cursor: pointer; border: 2px solid transparent; text-align: center;">
+                        <div style="width: 40px; height: 40px; background: #7a8db8; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                        <div style="font-size: 0.8rem;">靛蓝</div>
+                    </div>
+                    <div class="theme-option" data-theme="pink" style="padding: 1rem; border-radius: 12px; cursor: pointer; border: 2px solid transparent; text-align: center;">
+                        <div style="width: 40px; height: 40px; background: #b88a9e; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                        <div style="font-size: 0.8rem;">藕粉</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 布局与字体 -->
+            <div class="table-card" style="padding: 2rem; margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1.5rem;">布局与字体</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div>
+                        <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">布局宽度</label>
+                        <select id="set-layout_width" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                            <option value="default">默认</option>
+                            <option value="wide">宽屏</option>
+                            <option value="narrow">窄屏</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">字体风格</label>
+                        <select id="set-font_style" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                            <option value="sans">无衬线体</option>
+                            <option value="serif">衬线体</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:0.5rem;color:var(--text-secondary);font-size:0.9rem;">卡片样式</label>
+                        <select id="set-card_style" style="width:100%;padding:0.75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
+                            <option value="glass">玻璃拟态</option>
+                            <option value="rounded">圆角</option>
+                            <option value="sharp">尖角</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-primary" onclick="saveSettingsToSupabase()">保存到Supabase</button>
+                <button class="btn btn-secondary" onclick="resetSettings()">重置为默认</button>
+            </div>
+        </div>    </main>
+
+    <script>
+        // Supabase配置
+        const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
+        let sb = null;
+        try {
+            sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch(e) {
+            console.log("Supabase初始化失败:", e);
+        }
+
+        // 页面切换
+        document.querySelectorAll('.nav-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                var page = this.dataset.page;
+                if (page === 'back') {
+                    window.location.href = '/';
+                    return;
+                }
+                document.querySelectorAll('.nav-item').forEach(function(i) { i.classList.remove('active'); });
+                this.classList.add('active');
+                document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+                document.getElementById('page-' + page).classList.add('active');
+
+                // 切换页面时加载对应数据
+                if (page === 'comments') loadComments();
+                if (page === 'dashboard') loadStats();
+            });
+        });
+
+        // 加载统计数据
+        async function loadStats() {
+            if (!sb) return;
+            try {
+                // 文章数（本地，硬编码）
+                document.getElementById('stat-posts').textContent = '4';
+
+                // 访问量
+                const { count: visitCount } = await sb.from('visits').select('*', { count: 'exact', head: true });
+                document.getElementById('stat-visits').textContent = visitCount || 0;
+
+                // 评论数
+                const { count: commentCount } = await sb.from('comments').select('*', { count: 'exact', head: true });
+                document.getElementById('stat-comments').textContent = commentCount || 0;
+
+                // 点赞数总和
+                const { data: likesData } = await sb.from('likes').select('count');
+                const totalLikes = likesData ? likesData.reduce((sum, item) => sum + (item.count || 0), 0) : 0;
+                document.getElementById('stat-likes').textContent = totalLikes;
+            } catch(e) {
+                console.log("加载统计失败:", e);
+            }
+        }
+
+        // 加载评论
+        async function loadComments() {
+            const tbody = document.getElementById('comments-body');
+            if (!sb) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Supabase未连接</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">加载中...</td></tr>';
+            try {
+                const { data, error } = await sb
+                    .from('comments')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">暂无评论</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                data.forEach(function(comment) {
+                    const tr = document.createElement('tr');
+                    const date = new Date(comment.created_at).toLocaleString('zh-CN');
+                    tr.innerHTML = `
+                        <td>${comment.author || '匿名'}</td>
+                        <td>${comment.content.substring(0, 50)}${comment.content.length > 50 ? '...' : ''}</td>
+                        <td>${comment.post_path}</td>
+                        <td>${date}</td>
+                        <td><button class="btn btn-sm btn-danger" onclick="deleteComment('${comment.id}')">删除</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-danger)">加载失败: ' + e.message + '</td></tr>';
+            }
+        }
+
+        // 删除评论
+        async function deleteComment(id) {
+            if (!confirm('确定删除这条评论？')) return;
+            try {
+                const { error } = await sb.from('comments').delete().eq('id', id);
+                if (error) throw error;
+                loadComments();
+                loadStats();
+            } catch(e) {
+                alert('删除失败: ' + e.message);
+            }
+        }
+
+        // 文章列表（本地，演示）
+        const postsList = [
+            { title: '元：一种永远在超越的态度', category: '思想文章', url: '/posts/' },
+            { title: '衡：不偏不倚的中间', category: '哲学随笔', url: '/posts/' },
+            { title: '宇宙观想：在宏大与微小之间', category: '宇宙观想', url: '/posts/' },
+            { title: '媒体功能测试', category: '测试', url: '/posts/' }
+        ];
+
+        function renderPosts() {
+            const tbody = document.getElementById('posts-body');
+            tbody.innerHTML = '';
+            postsList.forEach(function(post) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${post.title}</td>
+                    <td>${post.category}</td>
+                    <td>-</td>
+                    <td>
+                        <button class="btn btn-sm btn-secondary" onclick="window.open('${post.url}')">查看</button>
+                        <button class="btn btn-sm btn-danger" onclick="alert('演示版暂不支持删除本地文章')">删除</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 保存设置
+        function saveSettings() {
+            const settings = {
+                theme: document.querySelector('.theme-option.active').dataset.theme,
+                layout: document.getElementById('setting-layout').value,
+                font: document.getElementById('setting-font').value,
+                card: document.getElementById('setting-card').value
+            };
+            localStorage.setItem('meta_settings', JSON.stringify(settings));
+            alert('设置已保存');
+        }
+
+        // 配色方案切换
+        document.querySelectorAll('.theme-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.theme-option').forEach(function(o) {
+                    o.style.border = '2px solid transparent';
+                });
+                this.style.border = '2px solid #689F89';
+                document.body.setAttribute('data-theme', this.dataset.theme);
+            });
+        });
+
+        // 从Supabase加载设置
+        async function loadSettingsFromSupabase() {
+            if (!sb) {
+                alert("Supabase未连接");
+                return;
+            }
+            try {
+                const { data, error } = await sb.from('site_settings').select('*');
+                if (error) throw error;
+
+                data.forEach(function(item) {
+                    const input = document.getElementById('set-' + item.key);
+                    if (input) {
+                        if (input.tagName === 'SELECT') {
+                            input.value = item.value;
+                        } else {
+                            input.value = item.value;
+                        }
+                    }
+                });
+                alert("设置已从Supabase加载");
+            } catch(e) {
+                alert("加载失败: " + e.message);
+            }
+        }
+
+        // 保存设置到Supabase
+        async function saveSettingsToSupabase() {
+            if (!sb) {
+                alert("Supabase未连接");
+                return;
+            }
+
+            const inputs = document.querySelectorAll('[id^="set-"]');
+            const updates = [];
+
+            inputs.forEach(function(input) {
+                const key = input.id.replace('set-', '');
+                updates.push({ key: key, value: input.value });
+            });
+
+            try {
+                for (const item of updates) {
+                    // 先尝试更新
+                    const { error: updateError } = await sb
+                        .from('site_settings')
+                        .update({ value: item.value, updated_at: new Date().toISOString() })
+                        .eq('key', item.key);
+
+                    // 如果更新失败（不存在），就插入
+                    if (updateError) {
+                        await sb.from('site_settings').insert([{ key: item.key, value: item.value }]);
+                    }
+                }
+                alert("设置已保存到Supabase");
+            } catch(e) {
+                alert("保存失败: " + e.message);
+            }
+        }
+
+        // 重置为默认
+        function resetSettings() {
+            if (!confirm("确定重置为默认设置？")) return;
+            document.getElementById('set-site_title').value = '大道元灵';
+            document.getElementById('set-site_subtitle').value = '以衡为核，万我归一';
+            document.getElementById('set-footer_text').value = '大道元灵 · Est. 2026 · MedianiGray';
+            document.getElementById('set-hero_title').value = '大道元灵';
+            document.getElementById('set-hero_subtitle1').value = '以衡为核';
+            document.getElementById('set-hero_subtitle2').value = '万我归一';
+            document.getElementById('set-layout_width').value = 'default';
+            document.getElementById('set-font_style').value = 'sans';
+            document.getElementById('set-card_style').value = 'glass';
+        }
+
+        // 初始化
+        renderPosts();
+        loadStats();
+        loadSettingsFromSupabase();
+
+        // 页面加载完成后隐藏遮罩
+        setTimeout(function() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 300);
+            }
+        }, 500);
+    </script>
+</body>
+</html>

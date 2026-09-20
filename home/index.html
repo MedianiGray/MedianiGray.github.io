@@ -3,460 +3,489 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>婢堆囦壕閸忓啰浼?璺?閸忓啴妫幋?/title>
+<title>大道元灵</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --main: #689F89;
-  --main-glow: rgba(104,159,137,0.4);
-  --bg: #07090d;
-  --text: #e8edf2;
-  --text-dim: #7a8595;
-  --glass: rgba(255,255,255,0.03);
-  --glass-border: rgba(255,255,255,0.06);
-  --card-bg: rgba(12,16,24,0.6);
+  --accent: #689F89;
+  --accent-light: #8ab8a5;
+  --accent-glow: rgba(104, 159, 137, 0.25);
+  --text-primary: #e8edf2;
+  --text-secondary: #7a8595;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Noto Serif SC', 'Georgia', serif;
-  overflow-x: hidden;
+  background: #0a0f0e;
+  color: var(--text-primary);
+  font-family: 'Noto Serif SC', 'Source Han Serif', 'Songti SC', Georgia, serif;
   min-height: 100vh;
-  perspective: 1200px;
+  overflow-x: hidden;
+  line-height: 1.8;
 }
-/* 缁帒鐡欓悽璇茬 */
-#particles {
+
+/* 粒子画布 */
+#particles-canvas {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  z-index: -2;
+  z-index: 0;
+  pointer-events: none;
 }
-/* 閼冲本娅欓崗澶嬫瀿 */
-.glow {
+
+/* 鼠标跟随光环 */
+#mouse-glow {
+  position: fixed;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* 背景光斑 */
+.bg-orb {
   position: fixed;
   border-radius: 50%;
   filter: blur(100px);
-  pointer-events: none;
-  z-index: -1;
-  transition: transform 0.8s cubic-bezier(0.2,0.8,0.2,1);
-}
-.glow-1 {
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, var(--main-glow), transparent 70%);
-  top: -200px; left: -150px;
-  animation: float1 20s ease-in-out infinite;
-}
-.glow-2 {
-  width: 800px; height: 800px;
-  background: radial-gradient(circle, rgba(80,120,180,0.15), transparent 70%);
-  bottom: -250px; right: -200px;
-  animation: float2 25s ease-in-out infinite;
-}
-.glow-3 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(150,100,180,0.08), transparent 70%);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  animation: float3 30s ease-in-out infinite;
-}
-@keyframes float1 {
-  0%, 100% { transform: translate(0,0); }
-  50% { transform: translate(100px, 80px); }
-}
-@keyframes float2 {
-  0%, 100% { transform: translate(0,0); }
-  50% { transform: translate(-120px, -100px); }
-}
-@keyframes float3 {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
-}
-/* 姒х姵鐖ｉ崗澶屽箚 */
-.cursor-glow {
-  position: fixed;
-  width: 500px; height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--main-glow), transparent 60%);
-  pointer-events: none;
   z-index: 0;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s;
+  pointer-events: none;
 }
-/* 鐎圭懓娅?*/
+.orb-1 {
+  width: 500px; height: 500px;
+  background: rgba(104, 159, 137, 0.12);
+  top: -100px; left: -100px;
+  animation: orbFloat1 25s ease-in-out infinite;
+}
+.orb-2 {
+  width: 400px; height: 400px;
+  background: rgba(138, 184, 165, 0.08);
+  bottom: -50px; right: -50px;
+  animation: orbFloat2 30s ease-in-out infinite;
+}
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(100px, 80px) scale(1.1); }
+}
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-80px, -100px) scale(0.9); }
+}
+
 .container {
+  position: relative;
+  z-index: 10;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 24px;
-  position: relative;
-  z-index: 1;
+  padding: 100px 24px 60px;
 }
-/* 閸濅胶澧濋弽鍥槕 */
-.brand {
+
+/* 顶部入口区 */
+.entrance {
   text-align: center;
-  margin-bottom: 30px;
-  color: var(--main);
-  font-size: 0.85rem;
+  margin-bottom: 80px;
+}
+
+.entrance .brand {
+  color: var(--accent-light);
+  font-size: 0.8rem;
   letter-spacing: 0.6em;
   text-transform: uppercase;
   opacity: 0.6;
-  font-weight: 300;
-}
-/* Hero閸栧搫鐓?*/
-.hero {
-  min-height: 65vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  perspective: 1000px;
-}
-.hero h1 {
-  font-size: clamp(3.5rem, 12vw, 7rem);
-  font-weight: 700;
-  letter-spacing: 0.15em;
   margin-bottom: 24px;
-  background: linear-gradient(135deg, #ffffff 0%, var(--main) 50%, #88c9b0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 40px var(--main-glow));
+  animation: fadeIn 1s ease-out 0.2s both;
 }
-.hero .slogan {
-  font-size: 1.15rem;
-  color: var(--text-dim);
-  max-width: 500px;
-  line-height: 2;
-  margin-bottom: 12px;
-  font-style: italic;
-  letter-spacing: 0.1em;
-}
-.hero .sub {
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  opacity: 0.5;
-  margin-bottom: 60px;
+
+.entrance h1 {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 700;
   letter-spacing: 0.2em;
+  margin-bottom: 28px;
+  background: linear-gradient(135deg, #ffffff, #689F89, #88c9b0);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
 }
-/* 濠婃艾濮╅幓鎰仛 */
-.scroll-hint {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--text-dim);
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+
+.entrance .line {
+  width: 60px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 32px auto;
+  animation: fadeIn 1s ease-out 0.8s both;
+}
+
+.entrance .sub {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 2.2;
+  letter-spacing: 0.25em;
+  animation: fadeIn 1s ease-out 1s both;
+}
+
+/* 入口提示 */
+.entrance-hint {
+  margin-top: 48px;
   font-size: 0.8rem;
-  opacity: 0.4;
-  animation: bounce 2s infinite;
+  color: var(--accent-light);
+  opacity: 0.5;
+  letter-spacing: 0.3em;
+  animation: fadeIn 1s ease-out 1.5s both;
 }
-@keyframes bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(10px); }
+
+.entrance-hint .arrow {
+  display: inline-block;
+  animation: arrowDown 2s ease-in-out infinite;
 }
-/* 閸楋紕澧栫純鎴炵壐 */
-.cards {
+@keyframes arrowDown {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* 门廊区域 - 不是并列卡片，是入口门廊 */
+.gates {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 28px;
-  margin: 80px 0;
+  gap: 24px;
+  perspective: 1200px;
 }
-/* 閸忓啳澹撻張顖氬幢閻?*/
-.card {
-  background: var(--card-bg);
+
+.gate {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 40px 32px;
-  backdrop-filter: blur(24px) saturate(1.5);
-  -webkit-backdrop-filter: blur(24px) saturate(1.5);
-  transform-style: preserve-3d;
-  transition: all 0.5s cubic-bezier(0.2,0.8,0.2,1);
-  cursor: pointer;
+  border-radius: 2px;
+  padding: 44px 36px;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   text-decoration: none;
-  color: var(--text);
+  color: var(--text-primary);
   display: block;
-  position: relative;
-  overflow: hidden;
-}
-/* 閸楋紕澧栨い鍫曞劥閸欐垵鍘滅痪?*/
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 10%; right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--main), transparent);
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-/* 閸楋紕澧栭崘鍛村劥閸忓妾?*/
-.card::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 0; height: 0;
-  background: radial-gradient(circle, var(--main-glow), transparent 70%);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-  pointer-events: none;
-  z-index: -1;
-}
-.card:hover::before { opacity: 1; }
-.card:hover::after { width: 300px; height: 300px; }
-.card:hover {
-  box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 0 60px var(--main-glow);
-  border-color: rgba(104,159,137,0.4);
-  transform: translateY(-12px);
-}
-.card-icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
-  transform: translateZ(30px);
-}
-.card h3 {
-  font-size: 1.4rem;
-  margin-bottom: 12px;
-  color: var(--main);
-  letter-spacing: 0.08em;
-  font-weight: 600;
-}
-.card p {
-  color: var(--text-dim);
-  line-height: 1.8;
-  font-size: 0.92rem;
-  margin-bottom: 16px;
-}
-.card .tag {
-  display: inline-block;
-  padding: 6px 16px;
-  background: rgba(104,159,137,0.1);
-  border: 1px solid rgba(104,159,137,0.2);
-  border-radius: 100px;
-  font-size: 0.75rem;
-  color: var(--main);
-  letter-spacing: 0.1em;
-}
-/* 闁劕鐡ч崝銊ф暰 */
-.char {
-  display: inline-block;
-  opacity: 1;
-  transform: translateY(40px) rotateX(90deg);
-  transition: opacity 0.5s, transform 0.5s;
-}
-.char.visible {
-  opacity: 1;
-  transform: translateY(0) rotateX(0);
-}
-/* 濠婃艾濮╁〒鎰弳 */
-.fade-in {
-  opacity: 1;
-  transform: translateY(60px);
-  transition: opacity 0.8s, transform 0.8s;
-}
-.fade-in.visible {
   opacity: 1;
   transform: translateY(0);
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* 门廊感：尖角边框 */
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
 }
-/* 妞や絻鍓?*/
+
+.gate.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* 门的顶部光线 */
+.gate::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+/* 门的深处光 */
+.gate::after {
+  content: '';
+  position: absolute;
+  bottom: -50%; left: 50%;
+  width: 200%; height: 100%;
+  background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 60%);
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+.gate:hover::before { opacity: 1; }
+.gate:hover::after { opacity: 0.5; }
+.gate:hover {
+  border-color: rgba(104, 159, 137, 0.35);
+  box-shadow: 0 24px 80px rgba(104, 159, 137, 0.18);
+}
+
+/* 门的呼吸动画 */
+@keyframes gate-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.gate:nth-child(odd) {
+  animation: gate-breathe 6s ease-in-out infinite;
+}
+
+.gate:nth-child(even) {
+  animation: gate-breathe 7s ease-in-out infinite 0.5s;
+}
+
+/* 门hover时停止呼吸 */
+.gate:hover {
+  animation-play-state: paused;
+}
+
+.gate .gate-icon {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  display: block;
+  transform: translateZ(30px);
+}
+
+.gate .gate-label {
+  font-size: 0.75rem;
+  color: var(--accent-light);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+
+.gate h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  letter-spacing: 0.1em;
+  transform: translateZ(20px);
+}
+
+.gate p {
+  color: var(--text-secondary);
+  line-height: 1.9;
+  font-size: 0.88rem;
+  transform: translateZ(10px);
+}
+
+/* 门的入口提示 */
+.gate .enter-hint {
+  margin-top: 24px;
+  font-size: 0.8rem;
+  color: var(--accent-light);
+  opacity: 0;
+  transition: opacity 0.3s;
+  letter-spacing: 0.2em;
+}
+.gate:hover .enter-hint { opacity: 0.8; }
+
+/* 底部 */
 .footer {
   text-align: center;
-  padding: 60px 0 40px;
-  color: var(--text-dim);
-  font-size: 0.85rem;
+  padding: 80px 0 40px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
   opacity: 0.4;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.2em;
 }
-.footer .line {
-  width: 60px;
-  height: 1px;
-  background: var(--main);
-  margin: 0 auto 20px;
-  opacity: 0.5;
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
+
 @media (max-width: 768px) {
-  .cards { grid-template-columns: 1fr; gap: 20px; }
-  .hero h1 { font-size: 3rem; }
+  .container { padding: 80px 20px 40px; }
+  #mouse-glow { display: none; }
+  .gates { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .gate { padding: 1.8rem 1.5rem; }
+  .gate h3 { font-size: 1.1rem; }
+  .gate p { font-size: 0.75rem; }
+  .hero h1 { font-size: 2.5rem; }
 }
 </style>
 </head>
 <body>
-<canvas id="particles"></canvas>
-<div class="glow glow-1"></div>
-<div class="glow glow-2"></div>
-<div class="glow glow-3"></div>
-<div class="cursor-glow" id="cursorGlow"></div>
+
+<canvas id="particles-canvas"></canvas>
+<div id="mouse-glow"></div>
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
 
 <div class="container">
-  <div class="brand">DAO DAO YUAN LING</div>
-
-  <div class="hero">
-    <h1 id="mainTitle"></h1>
-    <p class="slogan">娴犮儴銆€娑撶儤鐗抽敍灞肩閹存垵缍婃稉鈧?/p>
-    <p class="sub">婢堆囦壕閸忓啰浼?璺?閺佹澘鐡ч梻銊﹀煕</p>
-    <div class="scroll-hint">閳?閸氭垳绗呴幒銏㈠偍</div>
-  </div>
-
-  <div class="cards">
-    <a href="/" class="card fade-in">
-      <div class="card-icon">棣冩憫</div>
-      <h3>閸忓啫宕ョ€?/h3>
-      <p>閹垛偓閺堫垰鍨庢禍顐犫偓浣虹椽缁嬪鐟拋鑸偓浣烘晸濞叉槒顔囪ぐ鏇樷偓渚秂xo闂堟瑦鈧礁宕ョ€诡澁绱滲utterfly娑撳顣介妴?/p>
-      <span class="tag">閹垛偓閺?璺?閺傚洨鐝?/span>
-    </a>
-    <a href="/tools/" class="card fade-in">
-      <div class="card-icon">棣冩礈閿?/div>
-      <h3>閸忓啫浼愰崗椋庮唸</h3>
-      <p>閼奉亜鍩楃亸蹇撲紣閸忕兘娉﹂崥鍫礉鐎涙鏆熺紒鐔活吀閵嗕焦妞傞梻瀛樺煈鏉烆剚宕查妴渚€顤侀懝鏌モ偓澶嬪閸ｃ劎鐡戠€圭偟鏁ゅ銉ュ徔閵?/p>
-      <span class="tag">鐎圭偟鏁?璺?瀹搞儱鍙?/span>
-    </a>
-    <a href="/about/" class="card fade-in">
-      <div class="card-icon">棣冩噥</div>
-      <h3>閸忓啯銆傚?/h3>
-      <p>閸忓厖绨?MedianiGray閿涘瞼缍夌紒婊冧紣缁嬪绗撴稉姘剧礉閻炲棙鈧傜瑢閼奉亞娓烽獮璺虹摠閻ㄥ嫭甯扮槐銏ｂ偓鍛偓?/p>
-      <span class="tag">閸忓厖绨?璺?閹?/span>
-    </a>
-    <a href="/categories/" class="card fade-in">
-      <div class="card-icon">棣冩惃</div>
-      <h3>閸忓啫鍨庣猾?/h3>
-      <p>閺傚洨鐝烽崚鍡欒濞村繗顫嶉敍灞惧Η閺堫垬鈧胶鏁撳ú姹団偓浣规殌缁嬪鐡戦崘鍛啇娴ｆ挾閮撮崠鏍ㄦ殻閻炲棎鈧?/p>
-      <span class="tag">鐎佃壈鍩?璺?閺佸鎮?/span>
-    </a>
-    <a href="/archives/" class="card fade-in">
-      <div class="card-icon">棣冩⒒閿?/div>
-      <h3>閸忓啫缍婂?/h3>
-      <p>閺冨爼妫跨痪鍨秺濡楋綇绱濋崶鐐恒€愭稉鈧捄顖濊泲閺夈儳娈戦幀婵娾偓鍐х瑢鐠佹澘缍嶉妴?/p>
-      <span class="tag">閺冨爼妫?璺?鐠佹澘绻?/span>
-    </a>
-    <a href="/tags/" class="card fade-in">
-      <div class="card-icon">棣冨娇閿?/div>
-      <h3>閸忓啯鐖ｇ粵?/h3>
-      <p>閺嶅洨顒锋禍鎴礉韫囶偊鈧喐澹橀崚棰佺稑閹扮喎鍙寸搾锝囨畱娑撳顣芥稉搴㈡煙閸氭垯鈧?/p>
-      <span class="tag">缁便垹绱?璺?閹恒垻鍌?/span>
-    </a>
-  </div>
-
-  <div class="footer">
+  <!-- 入口区 -->
+  <div class="entrance">
+    <div class="brand">META · META</div>
+    <h1 id="main-title">大道元灵</h1>
     <div class="line"></div>
-    婢堆囦壕閸忓啰浼?璺?Est. 2026<br>
-    MedianiGray 璺?娴犮儴銆€娑撶儤鐗抽敍灞肩閹存垵缍婃稉鈧?  </div>
+    <p class="sub">以衡为核<br>万我归一</p>
+    <div class="entrance-hint">
+      向下进入 <span class="arrow">↓</span>
+    </div>
+  </div>
+
+  <!-- 六扇门 -->
+  <div class="gates">
+    <a href="/" class="gate">
+      <div class="gate-icon">📜</div>
+      <div class="gate-label">Gate 01</div>
+      <h3>思想文章</h3>
+      <p>探索本源，记录思考。每一篇文字，都是向内走的一步。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+
+    <a href="/categories/" class="gate">
+      <div class="gate-icon">🔮</div>
+      <div class="gate-label">Gate 02</div>
+      <h3>哲学随笔</h3>
+      <p>从东方到西方，从古到今。在思辨中寻找平衡。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+
+    <a href="/archives/" class="gate">
+      <div class="gate-icon">🌌</div>
+      <div class="gate-label">Gate 03</div>
+      <h3>宇宙观想</h3>
+      <p>观照宇宙与内心的共鸣。在宏大与微小之间。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+
+    <a href="/about/" class="gate">
+      <div class="gate-icon">✨</div>
+      <div class="gate-label">Gate 04</div>
+      <h3>灵性成长</h3>
+      <p>冥想、觉察、内在实践。陪伴每一次觉醒。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+
+    <a href="/tags/" class="gate">
+      <div class="gate-icon">🎨</div>
+      <div class="gate-label">Gate 05</div>
+      <h3>艺术创作</h3>
+      <p>文字、影像、视觉的跨界表达。用创作诠释一切。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+
+    <a href="/tools/" class="gate">
+      <div class="gate-icon">🤝</div>
+      <div class="gate-label">Gate 06</div>
+      <h3>社群联结</h3>
+      <p>与同频者相聚。在交流中彼此映照，共同生长。</p>
+      <div class="enter-hint">→ 进入</div>
+    </a>
+  </div>
+
+  <div class="footer">大道元灵 · Est. 2026 · MedianiGray</div>
 </div>
 
 <script>
-// 缁帒鐡欓懗灞炬珯 - 鐢箒绻涚痪鎸庢櫏閺?const canvas = document.getElementById('particles');
+// 1. 逐字动画
+const titleEl = document.getElementById('main-title');
+const titleText = titleEl.textContent;
+titleEl.textContent = '';
+[...titleText].forEach((char, i) => {
+  const span = document.createElement('span');
+  span.textContent = char;
+  span.style.display = 'inline-block';
+  span.style.opacity = '0';
+  span.style.transform = 'translateY(30px)';
+  span.style.animation = `charIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards`;
+  span.style.animationDelay = `${0.3 + i * 0.15}s`;
+  titleEl.appendChild(span);
+});
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `@keyframes charIn { to { opacity: 1; transform: translateY(0); } }`;
+document.head.appendChild(styleSheet);
+
+// 2. 粒子背景
+const canvas = document.getElementById('particles-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-let mouseX = 0, mouseY = 0;
-
-function resize() {
+function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-resize();
-window.addEventListener('resize', resize);
-
-// 閸掓稑缂撶划鎺戠摍
-const particleCount = 100;
-for (let i = 0; i < particleCount; i++) {
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 2 + 0.5,
-    dx: (Math.random() - 0.5) * 0.4,
-    dy: (Math.random() - 0.5) * 0.4,
-    opacity: Math.random() * 0.6 + 0.15
-  });
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.radius = Math.random() * 1.8 + 0.8;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(104, 159, 137, 0.35)';
+    ctx.fill();
+  }
 }
-
-// 姒х姵鐖ｆ担宥囩枂
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  cursorGlow.style.left = e.clientX + 'px';
-  cursorGlow.style.top = e.clientY + 'px';
-});
-
-// 閸斻劎鏁惧顏嗗箚
-function animate() {
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+const connectDistance = 130;
+function animateParticles() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // 閺囧瓨鏌婄划鎺戠摍娴ｅ秶鐤?  particles.forEach(p => {
-    p.x += p.dx;
-    p.y += p.dy;
-    if (p.x < 0 || p.x > canvas.width) p.dx = -p.dx;
-    if (p.y < 0 || p.y > canvas.height) p.dy = -p.dy;
-  });
-
-  // 閻㈡槒绻涚痪?  for (let i = 0; i < particles.length; i++) {
+  particles.forEach(p => { p.update(); p.draw(); });
+  for (let i = 0; i < particles.length; i++) {
     for (let j = i + 1; j < particles.length; j++) {
       const dx = particles[i].x - particles[j].x;
       const dy = particles[i].y - particles[j].y;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) {
+      if (dist < connectDistance) {
         ctx.beginPath();
         ctx.moveTo(particles[i].x, particles[i].y);
         ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = 'rgba(104, 159, 137,' + (0.15 * (1 - dist / 120)) + ')';
-        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = `rgba(104, 159, 137, ${0.12 * (1 - dist / connectDistance)})`;
+        ctx.lineWidth = 1;
         ctx.stroke();
       }
     }
   }
-
-  // 閻㈣崵鐭戠€?  particles.forEach(p => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(104, 159, 137,' + p.opacity + ')';
-    ctx.fill();
-  });
-
-  requestAnimationFrame(animate);
+  requestAnimationFrame(animateParticles);
 }
-animate();
+animateParticles();
 
-// 閺嶅洭顣介柅鎰摟閸斻劎鏁?const titleText = '婢堆囦壕閸忓啰浼?;
-const titleEl = document.getElementById('mainTitle');
-titleText.split('').forEach((ch, i) => {
-  const span = document.createElement('span');
-  span.className = 'char';
-  span.textContent = ch;
-  span.style.transitionDelay = (i * 0.15) + 's';
-  titleEl.appendChild(span);
-  setTimeout(() => span.classList.add('visible'), 400);
+// 3. 鼠标跟随光环
+const mouseGlow = document.getElementById('mouse-glow');
+document.addEventListener('mousemove', (e) => {
+  mouseGlow.style.left = e.clientX + 'px';
+  mouseGlow.style.top = e.clientY + 'px';
+  mouseGlow.style.opacity = '1';
 });
 
-// 閸楋紕澧?D閸婄偓鏋?document.querySelectorAll('.card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
+// 4. 3D门廊倾斜
+const gates = document.querySelectorAll('.gate');
+gates.forEach(gate => {
+  gate.addEventListener('mousemove', (e) => {
+    const rect = gate.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const cx = rect.width / 2;
-    const cy = rect.height / 2;
-    const rx = ((y - cy) / cy) * -10;
-    const ry = ((x - cx) / cx) * 10;
-    card.style.transform = perspective(800px) rotateX(deg) rotateY(deg) translateY(-12px);
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateY = (x - centerX) / 25;
+    const rotateX = (centerY - y) / 25;
+    gate.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
   });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+  gate.addEventListener('mouseleave', () => {
+    gate.style.transform = '';
   });
 });
 
-// 濠婃艾濮╁〒鎰弳
-const observer = new IntersectionObserver(entries => {
+// 5. 滚动渐入
+const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
   });
-}, { threshold: 0.15 });
-document.querySelectorAll('.fade-in').forEach((el, i) => {
-  el.style.transitionDelay = (i * 0.12) + 's';
-  observer.observe(el);
-});
-
-// 濠婃艾濮╃憴鍡楁▕ - 閼冲本娅欓崗澶嬫瀿鐠虹喖娈?let lastScroll = 0;
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  const glow1 = document.querySelector('.glow-1');
-  const glow2 = document.querySelector('.glow-2');
-  glow1.style.transform = 	ranslateY(px);
-  glow2.style.transform = 	ranslateY(px);
-});
+}, { threshold: 0.1 });
+gates.forEach(gate => observer.observe(gate));
 </script>
 </body>
 </html>
