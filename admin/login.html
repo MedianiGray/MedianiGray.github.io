@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录 · 大道元灵</title>
+    <title>登录 · 观照之境</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -67,7 +67,7 @@
     <div class="login-card">
         <div id="login-form">
             <h1>登录</h1>
-            <p>大道元灵 · 用户登录</p>
+            <p>观照之境 · 用户登录</p>
             <div class="form-group">
                 <label>邮箱</label>
                 <input type="email" id="login-email" placeholder="admin@example.com">
@@ -77,7 +77,11 @@
                 <input type="password" id="login-password" placeholder="••••••••">
             </div>
             <button class="btn" onclick="login()">登录</button>
-            <p class="switch-text">还没有账号？<a onclick="showRegister()">注册</a></p>
+            <p class="switch-text">
+                忘记密码？<a onclick="showResetPassword()">找回密码</a>
+                &nbsp;·&nbsp;
+                还没有账号？<a onclick="showRegister()">注册</a>
+            </p>
         </div>
         <div id="register-form" style="display:none;">
             <h1>注册账号</h1>
@@ -97,6 +101,18 @@
             <button class="btn" onclick="register()">注册</button>
             <p class="switch-text">已有账号？<a onclick="showLogin()">登录</a></p>
         </div>
+
+        <div id="reset-form" style="display:none;">
+            <h1>找回密码</h1>
+            <p>输入你的邮箱，我们会发送重置链接</p>
+            <div class="form-group">
+                <label>邮箱</label>
+                <input type="email" id="reset-email" placeholder="your@email.com">
+            </div>
+            <button class="btn" onclick="resetPassword()">发送重置邮件</button>
+            <p class="switch-text">想起密码了？<a onclick="showLogin()">返回登录</a></p>
+        </div>
+
     </div>
 
     <script>
@@ -112,10 +128,17 @@
         function showRegister() {
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('register-form').style.display = 'block';
+            document.getElementById('reset-form').style.display = 'none';
         }
         function showLogin() {
             document.getElementById('register-form').style.display = 'none';
             document.getElementById('login-form').style.display = 'block';
+            document.getElementById('reset-form').style.display = 'none';
+        }
+        function showResetPassword() {
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('reset-form').style.display = 'block';
         }
 
         async function login() {
@@ -162,7 +185,26 @@
                 alert('注册失败: ' + e.message);
             }
         }
+
+        async function resetPassword() {
+            const email = document.getElementById('reset-email').value;
+            try {
+                const { error } = await sb.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/profile/'
+                });
+                if (error) throw error;
+                alert('重置邮件已发送！请检查你的邮箱。');
+                showLogin();
+            } catch(e) {
+                alert('发送失败: ' + e.message);
+            }
+        }
+
     </script>
 </body>
 </html>
+
+
+
+
 

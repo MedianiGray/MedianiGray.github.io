@@ -3,677 +3,354 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>元工具箱 · 大道元灵</title>
+<title>器用之辨</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
   --main: #689F89;
-  --main-glow: rgba(104,159,137,0.3);
-  --bg: #07090d;
+  --main-glow: rgba(104,159,137,0.2);
+  --bg: #0a0f0e;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-hover: rgba(255,255,255,0.06);
   --text: #e8edf2;
   --text-dim: #7a8595;
-  --glass: rgba(255,255,255,0.03);
-  --glass-border: rgba(255,255,255,0.08);
-  --card-bg: rgba(12,16,24,0.6);
+  --border: rgba(255,255,255,0.08);
 }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Noto Serif SC', 'Georgia', serif;
-  line-height: 1.7;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
   min-height: 100vh;
 }
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 24px;
+
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(10,15,14,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
 }
-.back-link {
-  display: inline-block;
+.nav-left { display: flex; align-items: center; gap: 20px; }
+.back-btn {
   color: var(--text-dim);
   text-decoration: none;
   font-size: 0.9rem;
-  margin-bottom: 30px;
-  transition: color 0.3s;
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
 }
-.back-link:hover { color: var(--main); }
-.page-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 10px;
+.back-btn:hover { color: var(--main); border-color: var(--main); }
+.nav-title {
+  font-size: 1.1rem;
+  font-weight: 600;
   background: linear-gradient(135deg, #fff, var(--main));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.page-subtitle {
-  color: var(--text-dim);
-  margin-bottom: 50px;
+
+.container {
+  max-width: 1200px;
+  margin: 84px auto 40px;
+  padding: 0 24px;
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 32px;
+}
+.search-bar input {
+  width: 100%;
+  padding: 16px 20px 16px 56px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
   font-size: 1rem;
+  outline: none;
+  transition: all 0.2s;
 }
-.section-title {
-  font-size: 1.5rem;
-  color: var(--main);
-  margin: 50px 0 20px;
-  letter-spacing: 0.05em;
+.search-bar input:focus {
+  border-color: var(--main);
+  box-shadow: 0 0 0 3px var(--main-glow);
 }
-.tool-grid {
+.search-bar::before {
+  content: '🔍';
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+}
+
+.categories {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.category-chip {
+  padding: 8px 16px;
+  border-radius: 99px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.category-chip:hover { background: var(--bg-hover); }
+.category-chip.active {
+  background: var(--main);
+  border-color: var(--main);
+  color: white;
+}
+
+.tools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
 }
 .tool-card {
-  background: var(--card-bg);
-  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 28px;
-  backdrop-filter: blur(20px);
-  transition: all 0.4s;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 .tool-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(104,159,137,0.3);
-  box-shadow: 0 15px 40px rgba(104,159,137,0.1);
+  background: var(--bg-hover);
+  transform: translateY(-4px);
+  border-color: var(--main);
 }
-.tool-num {
-  font-size: 0.8rem;
-  color: var(--main);
-  opacity: 0.6;
-  margin-bottom: 8px;
-}
-.tool-tag {
-  display: inline-block;
-  padding: 2px 10px;
-  background: rgba(104,159,137,0.1);
-  border-radius: 100px;
-  font-size: 0.7rem;
-  color: var(--main);
-  margin-bottom: 12px;
+.tool-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--main-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
 }
 .tool-card h3 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin-bottom: 8px;
-  color: var(--text);
 }
 .tool-card p {
   color: var(--text-dim);
   font-size: 0.9rem;
-  margin-bottom: 15px;
-}
-.tool-card input, .tool-card textarea {
-  width: 100%;
-  padding: 10px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(104,159,137,0.2);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 0.9rem;
-  box-sizing: border-box;
-  margin-top: 8px;
-}
-.tool-card input[type="color"] {
-  height: 50px;
-  padding: 4px;
-  cursor: pointer;
-}
-.tool-result {
-  font-size: 0.85rem;
-  color: var(--main);
-  margin-top: 10px;
-}
-.tool-card a {
-  color: var(--main);
-  text-decoration: none;
-  font-size: 0.9rem;
-  display: inline-block;
-  margin-top: 10px;
-  transition: opacity 0.3s;
-}
-.tool-card a:hover { opacity: 0.8; }
-/* 社群联结板块 */
-.community-section {
-  background: var(--card-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 40px;
-  margin: 60px 0;
-  backdrop-filter: blur(20px);
-}
-.community-title {
-  font-size: 1.5rem;
-  color: var(--main);
-  margin-bottom: 10px;
-}
-.community-desc {
-  color: var(--text-dim);
-  margin-bottom: 30px;
-  font-style: italic;
-}
-/* 评论区 */
-.comment-input {
-  width: 100%;
-  min-height: 80px;
-  padding: 15px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(104,159,137,0.2);
-  border-radius: 12px;
-  color: var(--text);
-  font-size: 0.95rem;
-  box-sizing: border-box;
-  margin-bottom: 15px;
-  resize: vertical;
-}
-.comment-btn {
-  padding: 10px 28px;
-  background: rgba(104,159,137,0.2);
-  border: 1px solid rgba(104,159,137,0.4);
-  border-radius: 100px;
-  color: var(--main);
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.3s;
-}
-.comment-btn:hover {
-  background: rgba(104,159,137,0.3);
-}
-.comment-list {
-  margin-top: 30px;
-}
-.comment-item {
-  padding: 20px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 12px;
-  margin-bottom: 15px;
-}
-.comment-meta {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin-bottom: 8px;
-}
-.comment-content {
-  color: var(--text);
-  font-size: 0.95rem;
   line-height: 1.6;
 }
-/* 点赞按钮 */
-.like-section {
-  text-align: center;
-  margin: 50px 0;
-}
-.like-btn {
-  padding: 14px 40px;
-  background: rgba(104,159,137,0.1);
-  border: 1px solid rgba(104,159,137,0.3);
-  border-radius: 100px;
+.tool-tag {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 10px;
+  background: var(--bg-hover);
+  border-radius: 99px;
+  font-size: 0.75rem;
   color: var(--main);
+}
+
+.tool-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(20px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.tool-modal.open { display: flex; }
+.modal-content {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.modal-header h2 {
+  font-size: 1.3rem;
+}
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  border: none;
+  color: var(--text);
   cursor: pointer;
   font-size: 1.1rem;
+}
+.close-btn:hover { background: var(--border); }
+
+.toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: var(--main);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  opacity: 0;
   transition: all 0.3s;
+  z-index: 1000;
+  pointer-events: none;
 }
-.like-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px var(--main-glow);
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
-.like-btn.liked {
-  background: rgba(104,159,137,0.3);
-}
-.footer {
-  text-align: center;
-  padding: 60px 0 30px;
-  color: var(--text-dim);
-  font-size: 0.85rem;
-  opacity: 0.5;
+
+@media (max-width: 768px) {
+  .tools-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
+
+<div class="toast" id="toast"></div>
+
+<nav class="top-nav">
+  <div class="nav-left">
+    <a href="/home/" class="back-btn">← 返回门廊</a>
+    <div class="nav-title">器用之辨</div>
+  </div>
+</nav>
+
 <div class="container">
-  <a href="/home/" class="back-link">← 返回元门户</a>
-  
-  <h1 class="page-title">元工具箱</h1>
-  <p class="page-subtitle">自制小工具集合 · 直接在网页里用，不用跳出去</p>
+  <div class="search-bar">
+    <input type="text" placeholder="搜索工具..." id="searchInput" oninput="filterTools()">
+  </div>
 
-  <h2 class="section-title">01 · 自制工具</h2>
-  <div class="tool-grid">
-    <div class="tool-card">
-      <div class="tool-num">001</div>
-      <span class="tool-tag">写作</span>
-      <h3>字数统计器</h3>
-      <p>粘贴文本自动统计字数、字符数、行数</p>
-      <textarea id="wc-input" placeholder="在这里输入或粘贴文本..."></textarea>
-      <div class="tool-result" id="wc-output">0 字 · 0 字符 · 0 行</div>
-    </div>
+  <div class="categories">
+    <div class="category-chip active" onclick="filterCategory(this, 'all')">全部</div>
+    <div class="category-chip" onclick="filterCategory(this, 'text')">文本</div>
+    <div class="category-chip" onclick="filterCategory(this, 'dev')">开发</div>
+    <div class="category-chip" onclick="filterCategory(this, 'util')">实用</div>
+  </div>
 
-    <div class="tool-card">
-      <div class="tool-num">002</div>
-      <span class="tool-tag">开发</span>
-      <h3>时间戳转换</h3>
-      <p>Unix时间戳 ↔ 日期时间互转</p>
-      <input type="number" id="ts-input" placeholder="输入时间戳（秒）">
-      <div class="tool-result" id="ts-output">输入时间戳自动转换</div>
-    </div>
-
-    <div class="tool-card">
-      <div class="tool-num">003</div>
-      <span class="tool-tag">设计</span>
-      <h3>颜色选择器</h3>
-      <p>选色、复制HEX/RGB值</p>
-      <input type="color" id="color-input" value="#689F89">
-      <div class="tool-result" id="color-output">#689F89 · rgb(104,159,137)</div>
-    </div>
-
-    <div class="tool-card">
-      <div class="tool-num">004</div>
-      <span class="tool-tag">效率</span>
-      <h3>今日日期</h3>
-      <p>查看今天的日期、星期、时间戳</p>
-      <div class="tool-result" id="date-output" style="line-height:1.8;">加载中...</div>
-    </div>
-
-    <div class="tool-card">
-      <div class="tool-num">005</div>
-      <span class="tool-tag">开发</span>
+  <div class="tools-grid" id="toolsGrid">
+    <div class="tool-card" data-category="text" onclick="openTool('JSON格式化')">
+      <div class="tool-icon">📋</div>
       <h3>JSON 格式化</h3>
-      <p>压缩/美化 JSON 代码</p>
-      <textarea id="json-input" rows="3" placeholder='{"name":"大道元灵","est":2026}'></textarea>
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button onclick="formatJson()" style="flex:1;padding:6px;background:rgba(104,159,137,0.2);border:1px solid rgba(104,159,137,0.4);border-radius:6px;color:var(--main);cursor:pointer;">美化</button>
-        <button onclick="minifyJson()" style="flex:1;padding:6px;background:rgba(104,159,137,0.2);border:1px solid rgba(104,159,137,0.4);border-radius:6px;color:var(--main);cursor:pointer;">压缩</button>
-      </div>
-      <div class="tool-result" id="json-output" style="margin-top:8px;word-break:break-all;">结果显示在这里</div>
+      <p>美化、压缩、验证 JSON 数据，支持错误定位</p>
+      <span class="tool-tag">文本处理</span>
     </div>
 
-    <div class="tool-card">
-      <div class="tool-num">006</div>
-      <span class="tool-tag">开发</span>
+    <div class="tool-card" data-category="text" onclick="openTool('Base64编解码')">
+      <div class="tool-icon">🔐</div>
       <h3>Base64 编解码</h3>
-      <p>文本 ↔ Base64 互转</p>
-      <input type="text" id="b64-input" placeholder="输入文本或Base64">
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button onclick="encodeB64()" style="flex:1;padding:6px;background:rgba(104,159,137,0.2);border:1px solid rgba(104,159,137,0.4);border-radius:6px;color:var(--main);cursor:pointer;">编码</button>
-        <button onclick="decodeB64()" style="flex:1;padding:6px;background:rgba(104,159,137,0.2);border:1px solid rgba(104,159,137,0.4);border-radius:6px;color:var(--main);cursor:pointer;">解码</button>
-      </div>
-      <div class="tool-result" id="b64-output" style="margin-top:8px;word-break:break-all;">结果显示在这里</div>
+      <p>字符串与 Base64 互相转换，支持 UTF-8</p>
+      <span class="tool-tag">文本处理</span>
     </div>
 
-    <div class="tool-card">
-      <div class="tool-num">007</div>
-      <span class="tool-tag">开发</span>
+    <div class="tool-card" data-category="dev" onclick="openTool('URL编解码')">
+      <div class="tool-icon">🔗</div>
       <h3>URL 编解码</h3>
-      <p>URL编码/解码特殊字符</p>
-      <input type="text" id="url-input" placeholder="输入URL或文本">
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button onclick="encodeUrl()" style="flex:1;padding:6px;background:rgba(104,159,137,0.2);border:1px solid rgba(104,159,137,0.4);border-radius:6px;color:var(--main);cursor:pointer;">编码</button>
-        <button onclick="decodeUrl()" style="flex:1;padding:6px;background:rgba(104,159,137,0.2);border:1px solid rgba(104,159,137,0.4);border-radius:6px;color:var(--main);cursor:pointer;">解码</button>
-      </div>
-      <div class="tool-result" id="url-output" style="margin-top:8px;word-break:break-all;">结果显示在这里</div>
+      <p>URL 编码与解码，支持完整 URL 处理</p>
+      <span class="tool-tag">开发工具</span>
     </div>
 
-    <div class="tool-card">
-      <div class="tool-num">008</div>
-      <span class="tool-tag">效率</span>
+    <div class="tool-card" data-category="util" onclick="openTool('密码生成器')">
+      <div class="tool-icon">🎲</div>
       <h3>密码生成器</h3>
-      <p>随机生成安全密码</p>
-      <div style="display:flex;align-items:center;gap:8px;margin:8px 0;">
-        <span style="font-size:0.85rem;color:var(--text-dim);">长度:</span>
-        <input type="range" id="pwd-length" min="8" max="32" value="16" style="flex:1;">
-        <span id="pwd-length-val" style="font-size:0.85rem;color:var(--main);width:25px;">16</span>
-      </div>
-      <button onclick="genPassword()" style="width:100%;padding:8px;background:rgba(104,159,137,0.2);border:1px solid rgba(104,159,137,0.4);border-radius:6px;color:var(--main);cursor:pointer;margin-bottom:8px;">生成密码</button>
-      <div class="tool-result" id="pwd-output" style="word-break:break-all;">点击生成</div>
+      <p>自定义长度、字符集，生成安全随机密码</p>
+      <span class="tool-tag">实用工具</span>
     </div>
-  </div>
 
-  <h2 class="section-title">02 · 外部工具推荐</h2>
-  <div class="tool-grid">
-    <div class="tool-card">
-      <div class="tool-num">010</div>
-      <span class="tool-tag">写作</span>
-      <h3>Typora</h3>
-      <p>所见即所得 Markdown 编辑器</p>
-      <a href="https://typora.io" target="_blank">官网 →</a>
+    <div class="tool-card" data-category="dev" onclick="openTool('时间戳转换')">
+      <div class="tool-icon">⏰</div>
+      <h3>时间戳转换</h3>
+      <p>Unix 时间戳与日期互相转换，支持毫秒</p>
+      <span class="tool-tag">开发工具</span>
     </div>
-    <div class="tool-card">
-      <div class="tool-num">011</div>
-      <span class="tool-tag">写作</span>
-      <h3>Obsidian</h3>
-      <p>本地双链笔记，知识管理</p>
-      <a href="https://obsidian.md" target="_blank">官网 →</a>
-    </div>
-    <div class="tool-card">
-      <div class="tool-num">012</div>
-      <span class="tool-tag">开发</span>
-      <h3>VS Code</h3>
-      <p>前端/写作双用编辑器</p>
-      <a href="https://code.visualstudio.com" target="_blank">官网 →</a>
-    </div>
-    <div class="tool-card">
-      <div class="tool-num">013</div>
-      <span class="tool-tag">图片</span>
-      <h3>TinyPNG</h3>
-      <p>在线图片压缩，肉眼无损</p>
-      <a href="https://tinypng.com" target="_blank">官网 →</a>
-    </div>
-  </div>
 
-  <div class="community-section">
-    <h2 class="community-title">社群联结</h2>
-    <p class="community-desc">与同频者相聚。在交流中彼此映照，共同生长。</p>
-    
-    <textarea class="comment-input" id="commentInput" placeholder="留下你的想法..."></textarea>
-    <button class="comment-btn" onclick="submitComment()">发布评论</button>
-    
-    <div class="comment-list" id="commentList">
-      <div class="comment-item" style="opacity:0.5;">
-        <div class="comment-meta">等待后端配置...</div>
-        <div class="comment-content">评论功能正在接入Supabase，敬请期待</div>
-      </div>
+    <div class="tool-card" data-category="text" onclick="openTool('字数统计')">
+      <div class="tool-icon">📝</div>
+      <h3>字数统计</h3>
+      <p>实时统计字符数、单词数、阅读时长</p>
+      <span class="tool-tag">文本处理</span>
     </div>
-  </div>
-
-  <div class="like-section">
-    <button class="like-btn" id="likeBtn" onclick="toggleLike()">
-      ❤️ <span id="likeCount">0</span> 赞
-    </button>
-  </div>
-
-  <div class="footer">
-    大道元灵 · 元工具箱 · Est. 2026
   </div>
 </div>
 
-<!-- Supabase JS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<div class="tool-modal" id="toolModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle">工具名称</h2>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalBody">
+      <p style="color: var(--text-dim);">工具功能开发中...</p>
+    </div>
+  </div>
+</div>
+
 <script>
-// Supabase配置
-const SUPABASE_URL = 'https://xyxrwstdhmauwrbrojnr.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG';
+let currentCategory = 'all';
 
-let supabase = null;
-try {
-  supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  console.log('Supabase initialized');
-} catch (e) {
-  console.error('Supabase init failed:', e);
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
-// 字数统计
-document.getElementById('wc-input')?.addEventListener('input', function() {
-  var v = this.value;
-  var chars = v.length;
-  var words = v.replace(/\s/g, '').length;
-  var lines = v ? v.split('\n').length : 0;
-  document.getElementById('wc-output').textContent = words + ' 字 · ' + chars + ' 字符 · ' + lines + ' 行';
-});
-
-// 时间戳转换
-document.getElementById('ts-input')?.addEventListener('input', function() {
-  var v = parseInt(this.value);
-  if (v > 0) {
-    var d = new Date(v * 1000);
-    document.getElementById('ts-output').textContent = d.toLocaleString('zh-CN');
-  } else {
-    document.getElementById('ts-output').textContent = '请输入有效时间戳';
-  }
-});
-
-// 颜色选择
-document.getElementById('color-input')?.addEventListener('input', function() {
-  var hex = this.value;
-  var r = parseInt(hex.slice(1,3),16);
-  var g = parseInt(hex.slice(3,5),16);
-  var b = parseInt(hex.slice(5,7),16);
-  document.getElementById('color-output').textContent = hex + ' · rgb(' + r + ',' + g + ',' + b + ')';
-});
-
-// 今日日期
-(function() {
-  var d = new Date();
-  var days = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-  var str = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') + ' ' + days[d.getDay()];
-  str += '<br>' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') + ':' + String(d.getSeconds()).padStart(2,'0');
-  str += '<br>时间戳：' + Math.floor(d.getTime()/1000);
-  document.getElementById('date-output').innerHTML = str;
-})();
-
-// JSON格式化
-function formatJson() {
-  const input = document.getElementById('json-input').value;
-  try {
-    const parsed = JSON.parse(input);
-    document.getElementById('json-output').textContent = JSON.stringify(parsed, null, 2);
-  } catch (e) {
-    document.getElementById('json-output').textContent = 'JSON格式错误: ' + e.message;
-  }
-}
-function minifyJson() {
-  const input = document.getElementById('json-input').value;
-  try {
-    const parsed = JSON.parse(input);
-    document.getElementById('json-output').textContent = JSON.stringify(parsed);
-  } catch (e) {
-    document.getElementById('json-output').textContent = 'JSON格式错误: ' + e.message;
-  }
+function filterCategory(el, category) {
+  document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentCategory = category;
+  filterTools();
 }
 
-// Base64编解码
-function encodeB64() {
-  const input = document.getElementById('b64-input').value;
-  try {
-    const encoded = btoa(unescape(encodeURIComponent(input)));
-    document.getElementById('b64-output').textContent = encoded;
-  } catch (e) {
-    document.getElementById('b64-output').textContent = '编码失败: ' + e.message;
-  }
-}
-function decodeB64() {
-  const input = document.getElementById('b64-input').value;
-  try {
-    const decoded = decodeURIComponent(escape(atob(input)));
-    document.getElementById('b64-output').textContent = decoded;
-  } catch (e) {
-    document.getElementById('b64-output').textContent = '解码失败: ' + e.message;
-  }
+function filterTools() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const cards = document.querySelectorAll('.tool-card');
+  
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    const category = card.dataset.category;
+    const matchSearch = text.includes(search);
+    const matchCategory = currentCategory === 'all' || category === currentCategory;
+    card.style.display = (matchSearch && matchCategory) ? 'block' : 'none';
+  });
 }
 
-// URL编解码
-function encodeUrl() {
-  const input = document.getElementById('url-input').value;
-  document.getElementById('url-output').textContent = encodeURIComponent(input);
-}
-function decodeUrl() {
-  const input = document.getElementById('url-input').value;
-  try {
-    document.getElementById('url-output').textContent = decodeURIComponent(input);
-  } catch (e) {
-    document.getElementById('url-output').textContent = '解码失败: ' + e.message;
-  }
+function openTool(name) {
+  document.getElementById('modalTitle').textContent = name;
+  document.getElementById('toolModal').classList.add('open');
 }
 
-// 密码生成器
-document.getElementById('pwd-length')?.addEventListener('input', function() {
-  document.getElementById('pwd-length-val').textContent = this.value;
-});
-function genPassword() {
-  const length = parseInt(document.getElementById('pwd-length').value);
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
-  let password = '';
-  for (let i = 0; i < length; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  document.getElementById('pwd-output').textContent = password;
+function closeModal() {
+  document.getElementById('toolModal').classList.remove('open');
 }
 
-// 页面ID（用于区分不同页面的点赞和评论）
-const PAGE_ID = 'tools_main';
-
-// 点赞功能
-async function loadLikes() {
-  if (!supabase) return;
-  try {
-    const { count } = await supabase
-      .from('likes')
-      .select('*', { count: 'exact', head: true })
-      .eq('page_id', PAGE_ID);
-    document.getElementById('likeCount').textContent = count || 0;
-  } catch (e) {
-    console.error('加载点赞数失败:', e);
-  }
-}
-
-async function toggleLike() {
-  const btn = document.getElementById('likeBtn');
-  if (!supabase) {
-    alert('Supabase未初始化');
-    return;
-  }
-
-  const liked = localStorage.getItem('liked_' + PAGE_ID) === 'true';
-
-  try {
-    if (liked) {
-      // 取消点赞
-      await supabase
-        .from('likes')
-        .delete()
-        .eq('page_id', PAGE_ID)
-        .eq('user_id', getUserId());
-      localStorage.setItem('liked_' + PAGE_ID, 'false');
-      btn.classList.remove('liked');
-    } else {
-      // 点赞
-      await supabase
-        .from('likes')
-        .insert({ page_id: PAGE_ID, user_id: getUserId() });
-      localStorage.setItem('liked_' + PAGE_ID, 'true');
-      btn.classList.add('liked');
-    }
-    loadLikes();
-  } catch (e) {
-    console.error('点赞失败:', e);
-    alert('点赞失败，请稍后重试');
-  }
-}
-
-function getUserId() {
-  let id = localStorage.getItem('user_id');
-  if (!id) {
-    id = 'user_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('user_id', id);
-  }
-  return id;
-}
-
-// 评论功能
-async function loadComments() {
-  if (!supabase) return;
-  const listEl = document.getElementById('commentList');
-  try {
-    const { data, error } = await supabase
-      .from('comments')
-      .select('*')
-      .eq('page_id', PAGE_ID)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    if (data && data.length > 0) {
-      listEl.innerHTML = data.map(c => `
-        <div class="comment-item">
-          <div class="comment-meta">${c.author_name || '匿名'} · ${new Date(c.created_at).toLocaleString('zh-CN')}</div>
-          <div class="comment-content">${escapeHtml(c.content)}</div>
-        </div>
-      `).join('');
-    } else {
-      listEl.innerHTML = '<div class="comment-item" style="opacity:0.5;"><div class="comment-content">还没有评论，来抢沙发~</div></div>';
-    }
-  } catch (e) {
-    console.error('加载评论失败:', e);
-    listEl.innerHTML = '<div class="comment-item" style="opacity:0.5;"><div class="comment-content">评论加载失败，请检查数据库表是否创建</div></div>';
-  }
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-async function submitComment() {
-  const input = document.getElementById('commentInput');
-  const content = input.value.trim();
-  if (!content) return;
-
-  if (!supabase) {
-    alert('Supabase未初始化');
-    return;
-  }
-
-  try {
-    const { error } = await supabase
-      .from('comments')
-      .insert({
-        page_id: PAGE_ID,
-        content: content,
-        author_name: '访客'
-      });
-
-    if (error) throw error;
-
-    input.value = '';
-    loadComments();
-  } catch (e) {
-    console.error('评论提交失败:', e);
-    alert('评论提交失败，请检查数据库表是否创建');
-  }
-}
-
-// 页面加载时初始化
-window.addEventListener('load', function() {
-  loadLikes();
-  loadComments();
+document.getElementById('toolModal').addEventListener('click', (e) => {
+  if (e.target.id === 'toolModal') closeModal();
 });
 </script>
 
-<!-- 全局错误处理与加载失败fallback -->
-<script>
-// 1. 图片加载失败处理
-document.addEventListener('error', function(e) {
-  if (e.target.tagName === 'IMG') {
-    e.target.style.display = 'none';
-    console.warn('图片加载失败:', e.target.src);
-  }
-}, true);
-
-// 2. JS错误保护 - 内容默认显示，不依赖JS
-// 确保即使JS坏了，内容也是可见的
-document.documentElement.style.opacity = '1';
-document.body.style.opacity = '1';
-
-// 3. 网络状态检测
-if (!navigator.onLine) {
-  console.warn('当前离线状态');
-}
-window.addEventListener('online', function() {
-  console.log('网络已连接');
-});
-window.addEventListener('offline', function() {
-  console.warn('网络已断开');
-});
-
-// 4. 所有异步操作都有try/catch保护
-// 防止某个功能出错导致整个页面崩溃
-window.addEventListener('error', function(e) {
-  console.error('页面错误:', e.error || e.message);
-  // 不要让一个小错误搞崩整个页面
-  return true;
-});
-
-// 5. 未捕获的Promise错误
-window.addEventListener('unhandledrejection', function(e) {
-  console.error('未处理的Promise错误:', e.reason);
-  e.preventDefault(); // 不要让控制台刷爆
-});
-</script>
 </body>
 </html>

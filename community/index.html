@@ -1,506 +1,702 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>元社区 · 大道元灵</title>
+<title>同频相聚</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
   --main: #689F89;
-  --main-deep: #4E7A68;
-  --main-glow: rgba(104,159,137,0.3);
+  --main-glow: rgba(104,159,137,0.2);
   --bg: #0a0f0e;
-  --bg-card: #161d1b;
+  --bg-secondary: #121a18;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-hover: rgba(255,255,255,0.06);
   --text: #e8edf2;
   --text-dim: #7a8595;
-  --glass: rgba(255,255,255,0.03);
-  --glass-border: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.08);
 }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Noto Serif SC', 'Georgia', serif;
-  line-height: 1.7;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
   min-height: 100vh;
 }
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 40px 20px;
+
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(10,15,14,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
 }
-.back-link {
-  display: inline-block;
+.nav-left { display: flex; align-items: center; gap: 20px; }
+.back-btn {
   color: var(--text-dim);
   text-decoration: none;
   font-size: 0.9rem;
-  margin-bottom: 30px;
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
 }
-.back-link:hover { color: var(--main); }
-.page-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 10px;
+.back-btn:hover { color: var(--main); border-color: var(--main); }
+.nav-title {
+  font-size: 1.1rem;
+  font-weight: 600;
   background: linear-gradient(135deg, #fff, var(--main));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.page-subtitle {
-  color: var(--text-dim);
-  margin-bottom: 40px;
-}
-
-/* 统计 */
-.stats-row {
-  display: flex;
-  gap: 30px;
-  margin-bottom: 30px;
-  padding: 20px;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-}
-.stat-item {
-  flex: 1;
-  text-align: center;
-}
-.stat-num {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--main);
-}
-.stat-label {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-}
-
-/* 发布区 */
-.post-composer {
+.nav-right { display: flex; gap: 12px; }
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
   background: var(--bg-card);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 30px;
-}
-.post-composer textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 15px;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
   color: var(--text);
-  font-size: 0.95rem;
-  resize: vertical;
-  font-family: inherit;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
 }
-.post-composer textarea:focus {
-  outline: none;
+.btn:hover { background: var(--bg-hover); transform: translateY(-1px); }
+.btn-primary {
+  background: var(--main);
   border-color: var(--main);
+  color: white;
 }
-.composer-actions {
+.btn-primary:hover { background: #5a8f79; }
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr 280px;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 84px auto 40px;
+  padding: 0 24px;
+}
+
+.sidebar-left {
+  position: sticky;
+  top: 84px;
+  height: fit-content;
+}
+.sidebar-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.sidebar-section h3 {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+.nav-item:hover { background: var(--bg-hover); color: var(--text); }
+.nav-item.active { background: var(--main-glow); color: var(--main); }
+
+.feed { min-height: 600px; }
+.feed-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.mood-selector {
-  display: flex;
-  gap: 8px;
-}
-.mood-btn {
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 8px;
-  transition: all 0.2s;
-  opacity: 0.5;
-}
-.mood-btn.active, .mood-btn:hover {
-  opacity: 1;
-  background: var(--glass);
-}
-.anon-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  cursor: pointer;
-}
-.publish-btn {
-  padding: 10px 24px;
-  background: var(--main);
-  color: white;
-  border: none;
-  border-radius: 100px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-.publish-btn:hover {
-  background: var(--main-deep);
-}
-
-/* 排序切换 */
-.sort-tabs {
-  display: flex;
-  gap: 10px;
   margin-bottom: 20px;
 }
-.sort-tab {
-  padding: 8px 20px;
-  border-radius: 100px;
-  cursor: pointer;
-  color: var(--text-dim);
-  font-size: 0.9rem;
-  transition: all 0.2s;
-  border: 1px solid transparent;
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 4px;
 }
-.sort-tab.active {
-  background: var(--main-glow);
-  color: var(--main);
-  border-color: var(--main);
+.tab {
+  padding: 8px 16px;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  transition: all 0.2s;
+}
+.tab.active {
+  background: var(--main);
+  color: white;
 }
 
-/* 帖子列表 */
-.post-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.post-item {
+.composer {
   background: var(--bg-card);
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 20px;
+  margin-bottom: 20px;
 }
+.composer textarea {
+  width: 100%;
+  min-height: 80px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 1rem;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+}
+.composer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.mood-selector { display: flex; gap: 8px; }
+.mood {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  background: var(--bg-hover);
+  transition: all 0.2s;
+}
+.mood:hover { transform: scale(1.1); }
+.mood.active { background: var(--main-glow); transform: scale(1.1); }
+
+.post-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+.post-card:hover { background: var(--bg-hover); }
 .post-header {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
 }
-.post-avatar {
+.avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--main), var(--main-glow));
+  background: linear-gradient(135deg, var(--main), #4E7A68);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 600;
   color: white;
 }
-.post-author {
-  font-weight: 600;
-}
-.post-time {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin-left: auto;
-}
-.post-content {
-  margin-bottom: 15px;
-  line-height: 1.8;
-}
+.post-user { flex: 1; }
+.post-username { font-weight: 600; font-size: 0.95rem; }
+.post-time { font-size: 0.8rem; color: var(--text-dim); }
 .post-mood {
   font-size: 1.2rem;
+  padding: 4px 8px;
+  background: var(--bg-hover);
+  border-radius: 99px;
+}
+.post-content {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
 }
 .post-actions {
   display: flex;
   gap: 20px;
-  padding-top: 15px;
-  border-top: 1px solid var(--glass-border);
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
 .action-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   color: var(--text-dim);
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.2s;
+  padding: 4px 8px;
+  border-radius: 6px;
 }
-.action-btn:hover {
-  color: var(--main);
-}
-.action-btn.liked {
-  color: var(--main);
-}
+.action-btn:hover { background: var(--bg-hover); color: var(--main); }
+.action-btn.liked { color: var(--main); }
+.action-btn.liked:hover { background: var(--main-glow); }
 
-/* 热榜 */
-.hot-section {
+.sidebar-right {
+  position: sticky;
+  top: 84px;
+  height: fit-content;
+}
+.stats-card {
   background: var(--bg-card);
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 20px;
-  margin-top: 30px;
+  margin-bottom: 16px;
 }
-.hot-title {
-  font-size: 1.1rem;
-  color: var(--main);
-  margin-bottom: 15px;
+.stats-card h3 {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
 }
-.hot-item {
+.stat-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--glass-border);
-}
-.hot-rank {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--main-glow);
-  color: var(--main);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-.hot-content {
-  flex: 1;
+  justify-content: space-between;
+  padding: 8px 0;
   font-size: 0.9rem;
 }
-.hot-likes {
-  font-size: 0.8rem;
-  color: var(--text-dim);
+.stat-row span:last-child { color: var(--main); font-weight: 600; }
+
+.toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: var(--main);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 1000;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
-@media (max-width: 600px) {
-  .container { padding: 20px 15px; }
-  .page-title { font-size: 1.8rem; }
-  .stats-row { flex-wrap: wrap; }
-  .post-actions { gap: 15px; }
+@media (max-width: 1024px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .sidebar-left, .sidebar-right { display: none; }
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <a href="/home/" class="back-link">← 返回元门户</a>
-  
-  <h1 class="page-title">元社区</h1>
-  <p class="page-subtitle">与同频者相聚 · 在交流中彼此映照，共同生长</p>
 
-  <!-- 统计 -->
-  <div class="stats-row">
-    <div class="stat-item">
-      <div class="stat-num" id="statPosts">0</div>
-      <div class="stat-label">帖子</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num" id="statComments">0</div>
-      <div class="stat-label">评论</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num" id="statLikes">0</div>
-      <div class="stat-label">点赞</div>
-    </div>
+<div class="toast" id="toast"></div>
+
+<nav class="top-nav">
+  <div class="nav-left">
+    <a href="/home/" class="back-btn">← 返回门廊</a>
+    <div class="nav-title">同频相聚</div>
   </div>
+  <div class="nav-right">
+    <button class="btn" onclick="showToast('请先登录')">登录</button>
+    <button class="btn btn-primary" onclick="document.querySelector('.composer textarea').focus()">发帖</button>
+  </div>
+</nav>
 
-  <!-- 发布区 -->
-  <div class="post-composer">
-    <textarea id="postInput" placeholder="说点什么..."></textarea>
-    <div class="composer-actions">
-      <div class="mood-selector">
-        <span class="mood-btn" data-mood="😊">😊</span>
-        <span class="mood-btn" data-mood="😢">😢</span>
-        <span class="mood-btn" data-mood="😡">😡</span>
-        <span class="mood-btn" data-mood="😰">😰</span>
-        <span class="mood-btn" data-mood="😔">😔</span>
+<div class="main-layout">
+  <aside class="sidebar-left">
+    <div class="sidebar-section">
+      <h3>导航</h3>
+      <div class="nav-item active" onclick="switchNav(this, '最新')">🌊 最新</div>
+      <div class="nav-item" onclick="switchNav(this, '热门')">🔥 热门</div>
+      <div class="nav-item" onclick="switchNav(this, '我的回复')">💬 我的回复</div>
+      <div class="nav-item" onclick="switchNav(this, '我收藏的')">⭐ 我收藏的</div>
+    </div>
+    <div class="sidebar-section">
+      <h3>心情频道</h3>
+      <div class="nav-item" onclick="switchMoodFilter(this, '平静')">😌 平静</div>
+      <div class="nav-item" onclick="switchMoodFilter(this, '思考')">🤔 思考</div>
+      <div class="nav-item" onclick="switchMoodFilter(this, '灵感')">✨ 灵感</div>
+      <div class="nav-item" onclick="switchMoodFilter(this, '感慨')">💭 感慨</div>
+    </div>
+  </aside>
+
+  <main class="feed">
+    <div class="feed-header">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this, '最新')">最新</div>
+        <div class="tab" onclick="switchTab(this, '热门')">热门</div>
+        <div class="tab" onclick="switchTab(this, '关注')">关注</div>
       </div>
-      <label class="anon-toggle">
-        <input type="checkbox" id="anonToggle">
-        匿名发布
-      </label>
-      <button class="publish-btn" onclick="submitPost()">发布</button>
     </div>
-  </div>
 
-  <!-- 排序切换 -->
-  <div class="sort-tabs">
-    <div class="sort-tab active" data-sort="latest">最新</div>
-    <div class="sort-tab" data-sort="hot">最热</div>
-  </div>
-
-  <!-- 帖子列表 -->
-  <div class="post-list" id="postList">
-    <p style="color:var(--text-dim);text-align:center;padding:40px;">加载中...</p>
-  </div>
-
-  <!-- 热榜 -->
-  <div class="hot-section">
-    <h3 class="hot-title">🔥 今日热榜</h3>
-    <div id="hotList">
-      <p style="color:var(--text-dim);">加载中...</p>
+    <div class="composer">
+      <textarea id="postInput" placeholder="分享此刻的感受..."></textarea>
+      <div class="composer-footer">
+        <div class="mood-selector">
+          <div class="mood active" onclick="selectMood(this)">😌</div>
+          <div class="mood" onclick="selectMood(this)">🤔</div>
+          <div class="mood" onclick="selectMood(this)">✨</div>
+          <div class="mood" onclick="selectMood(this)">💭</div>
+        </div>
+        <button class="btn btn-primary" onclick="publishPost()">发布</button>
+      </div>
     </div>
-  </div>
+
+    <div id="postsList">
+      <div class="post-card">
+        <div class="post-header">
+          <div class="avatar">林</div>
+          <div class="post-user">
+            <div class="post-username">林晓风</div>
+            <div class="post-time">2小时前</div>
+          </div>
+          <div class="post-mood">✨</div>
+        </div>
+        <div class="post-content">
+          今天傍晚的风很温柔，坐在窗边看了很久的云。突然觉得，所谓的"道"，也许就是这种不需要用力的状态。
+        </div>
+        <div class="post-actions">
+          <div class="action-btn liked" onclick="toggleLike(this)">❤️ <span>24</span></div>
+          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>8</span></div>
+          <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-header">
+          <div class="avatar">沈</div>
+          <div class="post-user">
+            <div class="post-username">沈清言</div>
+            <div class="post-time">5小时前</div>
+          </div>
+          <div class="post-mood">🤔</div>
+        </div>
+        <div class="post-content">
+          读《道德经》时突然想明白："有无相生"不是哲学，是操作系统。你给用户的每一个功能，都要有对应的"空"——可关闭、可撤销、可留白。这才是真正的克制。
+        </div>
+        <div class="post-actions">
+          <div class="action-btn" onclick="toggleLike(this)">❤️ <span>42</span></div>
+          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>15</span></div>
+          <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-header">
+          <div class="avatar">M</div>
+          <div class="post-user">
+            <div class="post-username">MedianiGray</div>
+            <div class="post-time">昨天</div>
+          </div>
+          <div class="post-mood">😌</div>
+        </div>
+        <div class="post-content">
+          网站的3D门廊终于做好了。拖动旋转视角的时候，突然觉得这才对——网站不应该是一个平面的列表，应该是一个可以走进去的空间。
+        </div>
+        <div class="post-actions">
+          <div class="action-btn" onclick="toggleLike(this)">❤️ <span>67</span></div>
+          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>23</span></div>
+          <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <aside class="sidebar-right">
+    <div class="stats-card">
+      <h3>今日数据</h3>
+      <div class="stat-row">
+        <span>在线人数</span>
+        <span>12</span>
+      </div>
+      <div class="stat-row">
+        <span>今日帖子</span>
+        <span>8</span>
+      </div>
+      <div class="stat-row">
+        <span>总点赞</span>
+        <span>1,247</span>
+      </div>
+    </div>
+    <div class="stats-card">
+      <h3>活跃话题</h3>
+      <div class="stat-row">
+        <span>#观照书写</span>
+        <span>32</span>
+      </div>
+      <div class="stat-row">
+        <span>#有无相生</span>
+        <span>18</span>
+      </div>
+      <div class="stat-row">
+        <span>#器用之辨</span>
+        <span>12</span>
+      </div>
+    </div>
+  </aside>
 </div>
 
 <script>
-const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// 初始化Supabase
+const supabaseUrl = 'https://xyxrwstdhmauwrbrojnr.supabase.co';
+const supabaseKey = 'sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG';
+const sb = supabase.createClient(supabaseUrl, supabaseKey);
 
-let currentMood = '😊';
-let currentSort = 'latest';
+let selectedMood = '😌';
+let currentUser = null;
+let posts = [];
 
-// 心情选择
-document.querySelectorAll('.mood-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentMood = btn.dataset.mood;
-    });
-});
-
-// 排序切换
-document.querySelectorAll('.sort-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        currentSort = tab.dataset.sort;
-        loadPosts();
-    });
-});
-
-async function loadStats() {
-    try {
-        const { count: postCount } = await sb.from('community_posts').select('*', { count: 'exact', head: true });
-        document.getElementById('statPosts').textContent = postCount || 0;
-    } catch(e) {
-        console.log('统计加载失败:', e);
-    }
+// 页面加载时初始化
+async function init() {
+  const { data: { user } } = await sb.auth.getUser();
+  currentUser = user;
+  await loadPosts();
 }
 
+// 从Supabase加载帖子
 async function loadPosts() {
-    const listEl = document.getElementById('postList');
-    listEl.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:40px;">加载中...</p>';
+  const postsList = document.getElementById('postsList');
+  postsList.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim);">加载中...</div>';
+  
+  try {
+    const { data, error } = await sb
+      .from('community_posts')
+      .select('*, profiles(username)')
+      .order('created_at', { ascending: false })
+      .limit(20);
     
-    try {
-        let query = sb.from('community_posts').select('*');
-        if (currentSort === 'latest') {
-            query = query.order('created_at', { ascending: false });
-        } else {
-            query = query.order('likes_count', { ascending: false });
-        }
-        const { data, error } = await query;
-        
-        if (error) throw error;
-        
-        if (!data || data.length === 0) {
-            listEl.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:40px;">还没有帖子，来发第一条吧~</p>';
-            return;
-        }
-        
-        listEl.innerHTML = data.map(post => `
-            <div class="post-item">
-                <div class="post-header">
-                    <div class="post-avatar">${post.is_anonymous ? '匿' : (post.author_name?.[0] || '访')}</div>
-                    <div>
-                        <div class="post-author">${post.is_anonymous ? '匿名用户' : (post.author_name || '访客')}</div>
-                        <div style="font-size:0.8rem;color:var(--text-dim);">${new Date(post.created_at).toLocaleString('zh-CN')}</div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    ${post.mood ? `<span class="post-mood">${post.mood}</span> ` : ''}
-                    ${post.content}
-                </div>
-                <div class="post-actions">
-                    <span class="action-btn" onclick="likePost('${post.id}', this)">
-                        ❤️ ${post.likes_count || 0}
-                    </span>
-                    <span class="action-btn">💬 ${post.comments_count || 0}</span>
-                    <span class="action-btn">↗️ 分享</span>
-                </div>
-            </div>
-        `).join('');
-    } catch(e) {
-        listEl.innerHTML = '<p style="color:var(--danger);text-align:center;padding:40px;">加载失败: ' + e.message + '</p>';
-    }
+    if (error) throw error;
+    posts = data || [];
+    renderPosts();
+  } catch (e) {
+    console.error('加载帖子失败:', e);
+    postsList.innerHTML = getSamplePosts();
+    showToast('使用示例数据（数据库未连接）');
+  }
 }
 
-async function loadHot() {
-    const hotEl = document.getElementById('hotList');
-    try {
-        const { data, error } = await sb
-            .from('community_posts')
-            .select('*')
-            .order('likes_count', { ascending: false })
-            .limit(5);
-        
-        if (error) throw error;
-        
-        if (!data || data.length === 0) {
-            hotEl.innerHTML = '<p style="color:var(--text-dim);">暂无热榜</p>';
-            return;
-        }
-        
-        hotEl.innerHTML = data.map((post, i) => `
-            <div class="hot-item">
-                <div class="hot-rank">${i + 1}</div>
-                <div class="hot-content">${post.content.substring(0, 30)}${post.content.length > 30 ? '...' : ''}</div>
-                <div class="hot-likes">❤️ ${post.likes_count || 0}</div>
-            </div>
-        `).join('');
-    } catch(e) {
-        hotEl.innerHTML = '<p style="color:var(--text-dim);">热榜加载失败</p>';
-    }
-}
-
-async function submitPost() {
-    const input = document.getElementById('postInput');
-    const content = input.value.trim();
-    const isAnonymous = document.getElementById('anonToggle').checked;
+// 渲染帖子列表
+function renderPosts() {
+  const postsList = document.getElementById('postsList');
+  if (posts.length === 0) {
+    postsList.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim);">还没有帖子，来发布第一条吧</div>';
+    return;
+  }
+  
+  postsList.innerHTML = posts.map(post => {
+    const username = post.profiles?.username || '匿名用户';
+    const avatarChar = username.charAt(0).toUpperCase();
+    const timeAgo = formatTime(post.created_at);
+    const likes = post.likes || 0;
+    const comments = post.comments || 0;
     
-    if (!content) return;
+    return `
+      <div class="post-card" data-id="${post.id}">
+        <div class="post-header">
+          <div class="avatar">${avatarChar}</div>
+          <div class="post-user">
+            <div class="post-username">${escapeHtml(username)}</div>
+            <div class="post-time">${timeAgo}</div>
+          </div>
+          <div class="post-mood">${post.mood || '😌'}</div>
+        </div>
+        <div class="post-content">${escapeHtml(post.content || '')}</div>
+        <div class="post-actions">
+          <div class="action-btn" onclick="toggleLike(this, '${post.id}')">❤️ <span>${likes}</span></div>
+          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>${comments}</span></div>
+          <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 发布帖子到Supabase
+async function publishPost() {
+  const input = document.getElementById('postInput');
+  const content = input.value.trim();
+  
+  if (!content) {
+    showToast('请输入内容');
+    return;
+  }
+  
+  if (!currentUser) {
+    showToast('请先登录');
+    return;
+  }
+  
+  try {
+    const { data, error } = await sb
+      .from('community_posts')
+      .insert({
+        user_id: currentUser.id,
+        content: content,
+        mood: selectedMood,
+        likes: 0,
+        comments: 0
+      })
+      .select();
     
-    try {
-        const { error } = await sb
-            .from('community_posts')
-            .insert([{
-                content: content,
-                mood: currentMood,
-                is_anonymous: isAnonymous,
-                author_name: isAnonymous ? null : '访客'
-            }]);
-        
-        if (error) throw error;
-        
-        input.value = '';
-        loadPosts();
-        loadStats();
-        loadHot();
-    } catch(e) {
-        alert('发布失败: ' + e.message);
-    }
+    if (error) throw error;
+    input.value = '';
+    showToast('发布成功！');
+    await loadPosts();
+  } catch (e) {
+    console.error('发布失败:', e);
+    const newPost = {
+      id: Date.now(),
+      content: content,
+      mood: selectedMood,
+      created_at: new Date().toISOString(),
+      likes: 0,
+      comments: 0,
+      profiles: { username: '我' }
+    };
+    posts.unshift(newPost);
+    renderPosts();
+    input.value = '';
+    showToast('发布成功（本地模式）');
+  }
 }
 
-async function likePost(postId, btnEl) {
+// 点赞
+async function toggleLike(el, postId) {
+  el.classList.toggle('liked');
+  const countSpan = el.querySelector('span');
+  let count = parseInt(countSpan.textContent);
+  
+  if (el.classList.contains('liked')) {
+    count++;
+    showToast('已点赞 ❤️');
+  } else {
+    count--;
+  }
+  countSpan.textContent = count;
+  
+  if (postId && !isNaN(postId)) {
     try {
-        await sb.rpc('increment_likes', { post_id: postId });
-        btnEl.innerHTML = '❤️ ' + (parseInt(btnEl.textContent.match(/\d+/)[0]) + 1);
-    } catch(e) {
-        console.log('点赞失败:', e);
-        // 简单+1
-        const num = parseInt(btnEl.textContent.match(/\d+/)[0]);
-        btnEl.innerHTML = '❤️ ' + (num + 1);
-    }
+      await sb.from('community_posts').update({ likes: count }).eq('id', postId);
+    } catch (e) {}
+  }
 }
 
-// 页面加载
-window.addEventListener('load', () => {
-    loadStats();
-    loadPosts();
-    loadHot();
-});
+// 工具函数
+function formatTime(dateStr) {
+  if (!dateStr) return '刚刚';
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diff = Math.floor((now - date) / 1000);
+  
+  if (diff < 60) return '刚刚';
+  if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
+  if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
+  if (diff < 604800) return Math.floor(diff / 86400) + '天前';
+  return date.toLocaleDateString('zh-CN');
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function getSamplePosts() {
+  return `
+    <div class="post-card">
+      <div class="post-header">
+        <div class="avatar">林</div>
+        <div class="post-user">
+          <div class="post-username">林晓风</div>
+          <div class="post-time">2小时前</div>
+        </div>
+        <div class="post-mood">✨</div>
+      </div>
+      <div class="post-content">今天傍晚的风很温柔，坐在窗边看了很久的云。突然觉得，所谓的"道"，也许就是这种不需要用力的状态。</div>
+      <div class="post-actions">
+        <div class="action-btn" onclick="toggleLike(this)">❤️ <span>24</span></div>
+        <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>8</span></div>
+        <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+      </div>
+    </div>
+    <div class="post-card">
+      <div class="post-header">
+        <div class="avatar">沈</div>
+        <div class="post-user">
+          <div class="post-username">沈清言</div>
+          <div class="post-time">5小时前</div>
+        </div>
+        <div class="post-mood">🤔</div>
+      </div>
+      <div class="post-content">读《道德经》时突然想明白："有无相生"不是哲学，是操作系统。你给用户的每一个功能，都要有对应的"空"——可关闭、可撤销、可留白。这才是真正的克制。</div>
+      <div class="post-actions">
+        <div class="action-btn" onclick="toggleLike(this)">❤️ <span>42</span></div>
+        <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>15</span></div>
+        <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+      </div>
+    </div>
+  `;
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function switchTab(el, name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  showToast('切换到：' + name);
+}
+
+function switchNav(el, name) {
+  el.parentElement.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  showToast('切换到：' + name);
+}
+
+function switchMoodFilter(el, name) {
+  el.parentElement.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  showToast('筛选心情：' + name);
+}
+
+function selectMood(el) {
+  document.querySelectorAll('.mood').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+  selectedMood = el.textContent.trim();
+}
+
+function toggleFav(el) {
+  el.classList.toggle('liked');
+  if (el.classList.contains('liked')) {
+    el.innerHTML = '⭐ 已收藏';
+    showToast('已收藏 ⭐');
+  } else {
+    el.innerHTML = '⭐ 收藏';
+  }
+}
+
+// 启动
+init();
 </script>
+
 </body>
 </html>
+

@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>初始化测试账号</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #161d1b;
+  color: #e8eaf0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+}
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #689F89;
+}
+.subtitle {
+  color: #7a8595;
+  margin-bottom: 30px;
+  font-size: 0.9rem;
+}
+.btn {
+  width: 100%;
+  padding: 14px;
+  background: #689F89;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.btn:hover { background: #4E7A68; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.log {
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 15px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  max-height: 300px;
+  overflow-y: auto;
+  line-height: 1.8;
+}
+.log .success { color: #689F89; }
+.log .error { color: #e06c6c; }
+.accounts {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.85rem;
+  color: #9ba3b4;
+}
+.accounts div { margin: 8px 0; }
+.accounts strong { color: #e8eaf0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>初始化测试账号</h1>
+  <p class="subtitle">点击下面按钮，自动创建三个测试账号</p>
+  
+  <button class="btn" id="createBtn" onclick="createAccounts()">一键创建三个测试账号</button>
+  
+  <div class="log" id="log">
+    <div>等待点击按钮...</div>
+  </div>
+  
+  <div class="accounts" id="accounts" style="display:none;">
+    <div><strong>👤 普通用户：</strong>user@test.com / 123456</div>
+    <div><strong>⚙️ 管理员：</strong>admin@test.com / 123456</div>
+    <div><strong>👑 超级管理员：</strong>super@test.com / 123456</div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://xyxrwstdhmauwrbrojnr.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const testUsers = [
+    { email: 'user@test.com', password: '123456', role: 'user', username: '测试用户' },
+    { email: 'admin@test.com', password: '123456', role: 'admin', username: '测试管理员' },
+    { email: 'super@test.com', password: '123456', role: 'super_admin', username: '超级管理员' }
+];
+
+function log(msg, type = '') {
+    const logEl = document.getElementById('log');
+    const div = document.createElement('div');
+    div.className = type;
+    div.textContent = msg;
+    logEl.appendChild(div);
+    logEl.scrollTop = logEl.scrollHeight;
+}
+
+async function createAccounts() {
+    const btn = document.getElementById('createBtn');
+    btn.disabled = true;
+    btn.textContent = '正在创建...';
+    
+    document.getElementById('log').innerHTML = '';
+    log('开始创建测试账号...');
+    
+    for (const user of testUsers) {
+        try {
+            log(`正在创建 ${user.email}...`);
+            
+            const { data: { user: newUser }, error: signUpError } = await sb.auth.signUp({
+                email: user.email,
+                password: user.password
+            });
+            
+            if (signUpError) {
+                log(`❌ ${user.email} 注册失败: ${signUpError.message}`, 'error');
+                continue;
+            }
+            
+            log(`✅ ${user.email} 注册成功`);
+            
+            // 创建profiles记录
+            const { error: profileError } = await sb.from('profiles').upsert({
+                id: newUser.id,
+                username: user.username,
+                role: user.role
+            });
+            
+            if (profileError) {
+                log(`⚠️ ${user.username} profiles创建失败: ${profileError.message}`, 'error');
+            } else {
+                log(`✅ ${user.username} (${user.role}) 角色设置成功`, 'success');
+            }
+            
+            // 退出登录，准备下一个
+            await sb.auth.signOut();
+        } catch(e) {
+            log(`❌ ${user.email} 出错: ${e.message}`, 'error');
+        }
+    }
+    
+    log('');
+    log('🎉 全部完成！', 'success');
+    document.getElementById('accounts').style.display = 'block';
+    
+    btn.textContent = '✅ 创建完成';
+}
+</script>
+</body>
+</html>
+

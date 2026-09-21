@@ -3,166 +3,536 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>仪表盘 · 元管理</title>
+    <title>造物工作台</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --main: #689F89;
-            --main-deep: #4E7A68;
-            --main-glow: rgba(104, 159, 137, 0.3);
-            --bg-primary: #161d1b;
-            --bg-secondary: #1e2825;
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --bg-card-hover: rgba(255, 255, 255, 0.08);
-            --text-primary: #e8eaf0;
-            --text-secondary: #9ba3b4;
-            --text-muted: #6b7385;
-            --border: rgba(255, 255, 255, 0.1);
+            --main-glow: rgba(104,159,137,0.15);
+            --bg: #0a0f0e;
+            --bg-secondary: #121a18;
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-hover: rgba(255,255,255,0.06);
+            --text: #e8edf2;
+            --text-dim: #7a8595;
+            --border: rgba(255,255,255,0.08);
             --danger: #e06c6c;
+            --warning: #e0b36c;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
         }
+
+        /* 侧边栏 */
         .sidebar {
             position: fixed;
             left: 0; top: 0; bottom: 0;
             width: 240px;
             background: var(--bg-secondary);
             border-right: 1px solid var(--border);
-            padding: 1.5rem 0;
+            padding: 24px 0;
             z-index: 100;
         }
         .sidebar-logo {
-            padding: 0 1.5rem 1.5rem;
+            padding: 0 24px 24px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 1rem;
+            margin-bottom: 16px;
         }
-        .sidebar-logo h2 { font-size: 1.2rem; color: var(--main); }
-        .sidebar-logo p { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .sidebar-logo h2 {
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #fff, var(--main));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sidebar-logo p {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+        .nav-section {
+            padding: 16px 24px 8px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
-            color: var(--text-secondary);
+            gap: 12px;
+            padding: 10px 24px;
+            color: var(--text-dim);
             cursor: pointer;
             transition: all 0.2s;
             font-size: 0.9rem;
             text-decoration: none;
         }
-        .nav-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
-        .nav-item.active { background: var(--main-glow); color: var(--main); border-right: 2px solid var(--main); }
-        .main { margin-left: 240px; padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .header h1 { font-size: 1.5rem; }
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.95rem;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
+        .nav-item:hover { background: var(--bg-hover); color: var(--text); }
+        .nav-item.active {
+            background: var(--main-glow);
+            color: var(--main);
+            border-right: 2px solid var(--main);
         }
-        .btn:hover { background: var(--bg-card-hover); }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+
+        /* 主内容区 */
+        .main {
+            margin-left: 240px;
+            padding: 32px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        .header h1 { font-size: 1.5rem; }
+        .header-actions { display: flex; gap: 12px; }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: var(--bg-hover); }
+        .btn-primary {
+            background: var(--main);
+            border-color: var(--main);
+            color: white;
+        }
+        .btn-primary:hover { background: #5a8f79; }
+
+        /* 数据卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s;
         }
-        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
-        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--main); }
-        @media (max-width: 768px) {
-            .sidebar { width: 60px; }
-            .sidebar-logo p, .nav-item span { display: none; }
-            .main { margin-left: 60px; padding: 1rem; }
+        .stat-card:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .stat-change {
+            font-size: 0.8rem;
+            color: var(--main);
+        }
+        .stat-change.down { color: var(--danger); }
+
+        /* 双栏布局 */
+        .two-col {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .card-header h3 { font-size: 1.05rem; }
+        .card-header a {
+            font-size: 0.85rem;
+            color: var(--main);
+            text-decoration: none;
+        }
+
+        /* 活动流 */
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--main);
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        .activity-content { flex: 1; }
+        .activity-text { font-size: 0.9rem; margin-bottom: 4px; }
+        .activity-time { font-size: 0.8rem; color: var(--text-dim); }
+
+        /* 快捷操作 */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .quick-action {
+            padding: 16px;
+            background: var(--bg-hover);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .quick-action:hover {
+            background: var(--main-glow);
+            transform: translateY(-2px);
+        }
+        .quick-action .icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        .quick-action .label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .two-col { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <h2>元管理</h2>
-            <p>大道元灵 · 管理后台</p>
+
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <h2>🌌 造物工作台</h2>
+        <p>观照之境 · 管理后台</p>
+    </div>
+    
+    <div class="nav-section">概览</div>
+    <a href="/admin/" class="nav-item active">📊 仪表盘</a>
+    
+    <div class="nav-section">内容管理</div>
+    <a href="/admin/posts/" class="nav-item">📝 文章管理</a>
+    <a href="/admin/comments/" class="nav-item">💬 评论管理</a>
+    <a href="/admin/pages/" class="nav-item">📄 页面管理</a>
+    
+    <div class="nav-section">用户</div>
+    <a href="/admin/users/" class="nav-item">👥 用户管理</a>
+    
+    <div class="nav-section">系统</div>
+    <a href="/admin/settings/" class="nav-item">⚙️ 系统设置</a>
+    <a href="/home/" class="nav-item">🏠 返回门廊</a>
+</aside>
+
+<main class="main">
+    <div class="header">
+        <h1>仪表盘</h1>
+        <div class="header-actions">
+            <button class="btn" onclick="showToast('刷新数据')">🔄 刷新</button>
+            <button class="btn btn-primary" onclick="window.location.href='/admin/posts/'">✏️ 写新文章</button>
         </div>
-        <nav>
-            <a class="nav-item active" href="index.html"><span>📊</span><span>仪表盘</span></a>
-            <a class="nav-item" href="posts.html"><span>📝</span><span>文章管理</span></a>
-            <a class="nav-item" href="pages.html"><span>📄</span><span>页面内容</span></a>
-            <a class="nav-item" href="comments.html"><span>💬</span><span>评论管理</span></a>
-            <a class="nav-item" href="settings.html"><span>⚙️</span><span>网站设置</span></a>
-            <a class="nav-item" href="#" onclick="logout()"><span>🚪</span><span>退出登录</span></a>
-        </nav>
-    </aside>
+    </div>
 
-    <main class="main">
-        <div class="header">
-            <h1>仪表盘</h1>
-            <button class="btn" onclick="loadStats()">刷新</button>
+    <!-- 数据卡片 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">总访问量</div>
+            <div class="stat-value">1,247</div>
+            <div class="stat-change">↑ 12.5% 本周</div>
         </div>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="label">文章总数</div>
-                <div class="value" id="stat-posts">-</div>
+        <div class="stat-card">
+            <div class="stat-label">文章数</div>
+            <div class="stat-value">12</div>
+            <div class="stat-change">↑ 2 本月</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">用户数</div>
+            <div class="stat-value">3</div>
+            <div class="stat-change">↑ 3 本周</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">评论数</div>
+            <div class="stat-value">48</div>
+            <div class="stat-change down">↓ 5 本周</div>
+        </div>
+    </div>
+
+    <!-- 双栏布局 -->
+    <div class="two-col">
+        <!-- 最近活动 -->
+        <div class="card">
+            <div class="card-header">
+                <h3>最近活动</h3>
+                <a href="#">查看全部 →</a>
             </div>
-            <div class="stat-card">
-                <div class="label">总访问量</div>
-                <div class="value" id="stat-visits">-</div>
+            <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div class="activity-content">
+                    <div class="activity-text">林晓风 发布了新评论</div>
+                    <div class="activity-time">5分钟前</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="label">评论数</div>
-                <div class="value" id="stat-comments">-</div>
+            <div class="activity-item">
+                <div class="activity-dot" style="background:#6496c8"></div>
+                <div class="activity-content">
+                    <div class="activity-text">沈清言 更新了个人资料</div>
+                    <div class="activity-time">1小时前</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="label">总点赞</div>
-                <div class="value" id="stat-likes">-</div>
+            <div class="activity-item">
+                <div class="activity-dot" style="background:#9a689f"></div>
+                <div class="activity-content">
+                    <div class="activity-text">新用户注册：MedianiGray</div>
+                    <div class="activity-time">3小时前</div>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-dot" style="background:#9a8f68"></div>
+                <div class="activity-content">
+                    <div class="activity-text">发布新文章：男孩和猫</div>
+                    <div class="activity-time">昨天</div>
+                </div>
             </div>
         </div>
-    </main>
 
-    <script>
-        const SUPABASE_URL = "https://xyxrwstdhmauwrbrojnr.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG";
-        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        <!-- 快捷操作 -->
+        <div class="card">
+            <div class="card-header">
+                <h3>快捷操作</h3>
+            </div>
+            <div class="quick-actions">
+                <div class="quick-action" onclick="window.location.href='/admin/posts/'">
+                    <div class="icon">✏️</div>
+                    <div class="label">写文章</div>
+                </div>
+                <div class="quick-action" onclick="window.location.href='/admin/users/'">
+                    <div class="icon">👥</div>
+                    <div class="label">用户管理</div>
+                </div>
+                <div class="quick-action" onclick="window.location.href='/admin/comments/'">
+                    <div class="icon">💬</div>
+                    <div class="label">审评论</div>
+                </div>
+                <div class="quick-action" onclick="window.location.href='/admin/settings/'">
+                    <div class="icon">⚙️</div>
+                    <div class="label">设置</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
-        // 检查登录
-        sb.auth.getSession().then(({ data: { session } }) => {
-            if (!session) window.location.href = 'login.html';
-        });
+<script>
+// 初始化Supabase
+const supabaseUrl = 'https://xyxrwstdhmauwrbrojnr.supabase.co';
+const supabaseKey = 'sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG';
+const sb = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function loadStats() {
-            try {
-                const { count: postCount } = await sb.from('posts').select('*', { count: 'exact', head: true });
-                document.getElementById('stat-posts').textContent = postCount || 0;
+let currentUser = null;
 
-                const { count: visitCount } = await sb.from('visits').select('*', { count: 'exact', head: true });
-                document.getElementById('stat-visits').textContent = visitCount || 0;
+// 页面加载时初始化
+async function init() {
+    const { data: { user } } = await sb.auth.getUser();
+    
+    if (!user) {
+        showToast('请先登录');
+        setTimeout(() => window.location.href = '/admin/login.html', 1500);
+        return;
+    }
+    
+    currentUser = user;
+    await loadStats();
+    await loadRecentActivity();
+}
 
-                const { count: commentCount } = await sb.from('comments').select('*', { count: 'exact', head: true });
-                document.getElementById('stat-comments').textContent = commentCount || 0;
+// 加载统计数据
+async function loadStats() {
+    try {
+        // 总访问量
+        const { count: visitCount } = await sb
+            .from('visits')
+            .select('*', { count: 'exact', head: true });
+        
+        // 文章数
+        const { count: postCount } = await sb
+            .from('posts')
+            .select('*', { count: 'exact', head: true });
+        
+        // 用户数（从profiles表）
+        const { count: userCount } = await sb
+            .from('profiles')
+            .select('*', { count: 'exact', head: true });
+        
+        // 评论数
+        const { count: commentCount } = await sb
+            .from('comments')
+            .select('*', { count: 'exact', head: true });
+        
+        // 更新统计卡片
+        const stats = document.querySelectorAll('.stat-value');
+        if (stats[0]) stats[0].textContent = formatNumber(visitCount || 0);
+        if (stats[1]) stats[1].textContent = postCount || 0;
+        if (stats[2]) stats[2].textContent = userCount || 0;
+        if (stats[3]) stats[3].textContent = commentCount || 0;
+    } catch (e) {
+        console.error('加载统计失败:', e);
+        // 保持默认值
+    }
+}
 
-                const { count: likeCount } = await sb.from('likes').select('*', { count: 'exact', head: true });
-                document.getElementById('stat-likes').textContent = likeCount || 0;
-            } catch(e) {
-                console.log('统计加载失败:', e);
-            }
+// 加载最近活动
+async function loadRecentActivity() {
+    try {
+        // 从多个表获取最近活动，合并后按时间排序
+        const activities = [];
+        
+        // 最新评论
+        const { data: comments } = await sb
+            .from('comments')
+            .select('*, profiles(username)')
+            .order('created_at', { ascending: false })
+            .limit(3);
+        
+        if (comments) {
+            comments.forEach(c => {
+                activities.push({
+                    type: 'comment',
+                    text: `${c.profiles?.username || '用户'} 发布了新评论`,
+                    time: c.created_at,
+                    color: '#689F89'
+                });
+            });
         }
-
-        async function logout() {
-            await sb.auth.signOut();
-            window.location.href = 'login.html';
+        
+        // 最新文章
+        const { data: posts } = await sb
+            .from('posts')
+            .select('*, profiles(username)')
+            .order('created_at', { ascending: false })
+            .limit(3);
+        
+        if (posts) {
+            posts.forEach(p => {
+                activities.push({
+                    type: 'post',
+                    text: `发布新文章：${p.title || '无标题'}`,
+                    time: p.created_at,
+                    color: '#9a8f68'
+                });
+            });
         }
+        
+        // 最新用户
+        const { data: users } = await sb
+            .from('profiles')
+            .select('username, created_at')
+            .order('created_at', { ascending: false })
+            .limit(3);
+        
+        if (users) {
+            users.forEach(u => {
+                activities.push({
+                    type: 'user',
+                    text: `新用户注册：${u.username || '匿名'}`,
+                    time: u.created_at,
+                    color: '#9a689f'
+                });
+            });
+        }
+        
+        // 按时间排序，取最新的5条
+        activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+        const recent = activities.slice(0, 5);
+        
+        // 渲染活动列表
+        const activityContainer = document.querySelector('.card .activity-item')?.parentElement;
+        if (activityContainer && recent.length > 0) {
+            activityContainer.innerHTML = recent.map(a => `
+                <div class="activity-item">
+                    <div class="activity-dot" style="background:${a.color}"></div>
+                    <div class="activity-content">
+                        <div class="activity-text">${escapeHtml(a.text)}</div>
+                        <div class="activity-time">${formatTime(a.time)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (e) {
+        console.error('加载活动失败:', e);
+        // 保持默认活动
+    }
+}
 
-        loadStats();
-    </script>
+// 工具函数
+function formatNumber(num) {
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'k';
+    }
+    return num.toString();
+}
+
+function formatTime(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+    
+    if (diff < 60) return '刚刚';
+    if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
+    if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
+    if (diff < 604800) return Math.floor(diff / 86400) + '天前';
+    return date.toLocaleDateString('zh-CN');
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+}
+
+function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed; top: 80px; right: 32px;
+        background: var(--main); color: white;
+        padding: 12px 24px; border-radius: 10px;
+        font-size: 0.9rem; z-index: 1000;
+    `;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+}
+
+// 启动
+init();
+</script>
+
 </body>
 </html>
+
 

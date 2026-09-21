@@ -3,306 +3,602 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>网站设置 · 元管理</title>
+    <title>造物控制台</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --main: #689F89;
-            --main-deep: #4E7A68;
-            --main-glow: rgba(104, 159, 137, 0.3);
-            --bg-primary: #161d1b;
-            --bg-secondary: #1e2825;
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --bg-card-hover: rgba(255, 255, 255, 0.08);
-            --text-primary: #e8eaf0;
-            --text-secondary: #9ba3b4;
-            --text-muted: #6b7385;
-            --border: rgba(255, 255, 255, 0.1);
+            --main-glow: rgba(104,159,137,0.15);
+            --bg: #0a0f0e;
+            --bg-secondary: #121a18;
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-hover: rgba(255,255,255,0.06);
+            --text: #e8edf2;
+            --text-dim: #7a8595;
+            --border: rgba(255,255,255,0.08);
             --danger: #e06c6c;
+            --warning: #e0b36c;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
         }
         .sidebar {
-            position: fixed;
-            left: 0; top: 0; bottom: 0;
-            width: 240px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
-            padding: 1.5rem 0;
-            z-index: 100;
+            position: fixed; left: 0; top: 0; bottom: 0;
+            width: 240px; background: var(--bg-secondary);
+            border-right: 1px solid var(--border); padding: 24px 0; z-index: 100;
         }
-        .sidebar-logo { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
-        .sidebar-logo h2 { font-size: 1.2rem; color: var(--main); }
-        .sidebar-logo p { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .sidebar-logo { padding: 0 24px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+        .sidebar-logo h2 {
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #fff, var(--main));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .nav-section { padding: 16px 24px 8px; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
         .nav-item {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.75rem 1.5rem; color: var(--text-secondary);
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 24px; color: var(--text-dim);
             cursor: pointer; transition: all 0.2s; font-size: 0.9rem; text-decoration: none;
         }
-        .nav-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+        .nav-item:hover { background: var(--bg-hover); color: var(--text); }
         .nav-item.active { background: var(--main-glow); color: var(--main); border-right: 2px solid var(--main); }
-        .main { margin-left: 240px; padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .main { margin-left: 240px; padding: 32px; max-width: 900px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .header h1 { font-size: 1.5rem; }
+        .header-actions { display: flex; gap: 12px; }
         .btn {
-            padding: 0.75rem 1.5rem; border-radius: 8px; border: none;
-            cursor: pointer; font-size: 0.95rem; transition: all 0.2s;
+            padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text); cursor: pointer;
+            font-size: 0.9rem; transition: all 0.2s;
         }
-        .btn-primary { background: var(--main); color: white; }
-        .btn-primary:hover { background: var(--main-deep); }
-        .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
-        .category-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+        .btn:hover { background: var(--bg-hover); }
+        .btn-primary { background: var(--main); border-color: var(--main); color: white; }
+        .btn-primary:hover { background: #5a8f79; }
+        .settings-group {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px; margin-bottom: 20px;
         }
-        .category-title {
-            font-size: 1.1rem;
-            color: var(--main);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border);
+        .group-title {
+            font-size: 1rem; font-weight: 600; margin-bottom: 16px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
         }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+        .setting-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
         }
-        .form-group { margin-bottom: 1rem; }
-        .form-group.full-width { grid-column: 1 / -1; }
-        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.85rem; }
-        .form-group input[type="text"],
-        .form-group input[type="number"],
-        .form-group select,
-        .form-group textarea {
-            width: 100%; padding: 0.6rem 0.75rem; background: var(--bg-card);
-            border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 0.9rem;
+        .setting-row:last-child { border-bottom: none; }
+        .setting-info { flex: 1; }
+        .setting-label { font-size: 0.9rem; font-weight: 500; margin-bottom: 4px; }
+        .setting-desc { font-size: 0.8rem; color: var(--text-dim); }
+        .setting-control { display: flex; align-items: center; gap: 12px; }
+        .setting-control input[type="text"], .setting-control input[type="email"], .setting-control input[type="url"] {
+            padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text); font-size: 0.9rem; width: 280px;
         }
-        .form-group input[type="color"] {
-            width: 60px; height: 36px; border: none; border-radius: 8px; cursor: pointer; background: transparent;
+        .setting-control input[type="color"] {
+            width: 50px; height: 36px; border: 1px solid var(--border);
+            border-radius: 8px; background: var(--bg); cursor: pointer; padding: 2px;
         }
-        .color-row { display: flex; align-items: center; gap: 0.75rem; }
-        .color-row span { color: var(--text-muted); font-size: 0.85rem; font-family: monospace; }
-        .toggle-row { display: flex; align-items: center; gap: 0.75rem; }
-        .switch { position: relative; width: 48px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--bg-card-hover); border-radius: 24px; transition: 0.3s;
+        .setting-control textarea {
+            padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text); font-size: 0.85rem;
+            width: 280px; min-height: 80px; resize: vertical; font-family: monospace;
         }
-        .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
-            background: white; border-radius: 50%; transition: 0.3s;
+        .setting-control input:focus, .setting-control textarea:focus { outline: none; border-color: var(--main); }
+        .toggle {
+            width: 44px; height: 24px; border-radius: 12px;
+            background: rgba(255,255,255,0.1); cursor: pointer;
+            position: relative; transition: all 0.2s;
         }
-        input:checked + .slider { background: var(--main); }
-        input:checked + .slider:before { transform: translateX(24px); }
-        .save-bar {
-            position: sticky; bottom: 0;
+        .toggle::after {
+            content: ''; position: absolute; top: 2px; left: 2px;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: white; transition: all 0.2s;
+        }
+        .toggle.on { background: var(--main); }
+        .toggle.on::after { left: 22px; }
+        .toast {
+            position: fixed; top: 80px; right: 32px;
+            background: var(--main); color: white;
+            padding: 12px 24px; border-radius: 10px;
+            font-size: 0.9rem; z-index: 1000; animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .preview-bar {
+            position: fixed; bottom: 0; left: 240px; right: 0;
             background: var(--bg-secondary); border-top: 1px solid var(--border);
-            padding: 1rem 2rem; display: flex; justify-content: flex-end; gap: 1rem;
-            margin-left: -2rem; margin-right: -2rem; margin-bottom: -2rem;
+            padding: 12px 32px; display: flex; justify-content: space-between; align-items: center;
+            z-index: 99;
         }
-        @media (max-width: 768px) {
-            .sidebar { width: 60px; }
-            .sidebar-logo p, .nav-item span { display: none; }
-            .main { margin-left: 60px; padding: 1rem; }
-            .form-grid { grid-template-columns: 1fr; }
+        .preview-text { font-size: 0.85rem; color: var(--text-dim); }
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
+            .preview-bar { left: 0; }
         }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <h2>元管理</h2>
-            <p>大道元灵 · 管理后台</p>
+
+<aside class="sidebar">
+    <div class="sidebar-logo"><h2>🌌 造物工作台</h2></div>
+    <div class="nav-section">概览</div>
+    <a href="/admin/" class="nav-item">📊 仪表盘</a>
+    <div class="nav-section">内容管理</div>
+    <a href="/admin/posts/" class="nav-item">📝 文章管理</a>
+    <a href="/admin/comments/" class="nav-item">💬 评论管理</a>
+    <a href="/admin/pages/" class="nav-item">📄 页面管理</a>
+    <div class="nav-section">用户</div>
+    <a href="/admin/users/" class="nav-item">👥 用户管理</a>
+    <div class="nav-section">系统</div>
+    <a href="/admin/settings/" class="nav-item active">⚙️ 造物控制台</a>
+    <a href="/home/" class="nav-item">🏠 返回门廊</a>
+</aside>
+
+<main class="main">
+    <div class="header">
+        <h1>⚙️ 造物控制台</h1>
+        <div class="header-actions">
+            <button class="btn" onclick="resetDefaults()">恢复默认</button>
+            <button class="btn btn-primary" onclick="saveSettings()">💾 保存设置</button>
         </div>
-        <nav>
-            <a class="nav-item" href="index.html"><span>📊</span><span>仪表盘</span></a>
-            <a class="nav-item" href="posts.html"><span>📝</span><span>文章管理</span></a>
-            <a class="nav-item" href="pages.html"><span>📄</span><span>页面内容</span></a>
-            <a class="nav-item" href="comments.html"><span>💬</span><span>评论管理</span></a>
-            <a class="nav-item active" href="settings.html"><span>⚙️</span><span>网站设置</span></a>
-            <a class="nav-item" href="#" onclick="logout()"><span>🚪</span><span>退出登录</span></a>
-        </nav>
-    </aside>
+    </div>
 
-    <main class="main">
-        <div class="header">
-            <h1>网站设置</h1>
-            <button class="btn btn-secondary" onclick="resetSettings()">重置</button>
+    <!-- 基础设置 -->
+    <div class="settings-group">
+        <div class="group-title">🌐 基础设置</div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">网站名称</div>
+                <div class="setting-desc">显示在浏览器标签和首页标题</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_site_name"></div>
         </div>
-        <div id="settings-container">
-            <p style="color:var(--text-muted)">加载中...</p>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">网站描述</div>
+                <div class="setting-desc">一句话描述网站的核心精神</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_site_description"></div>
         </div>
-        <div class="save-bar">
-            <button class="btn btn-secondary" onclick="resetSettings()">重置</button>
-            <button class="btn btn-primary" onclick="saveAllSettings()">保存全部设置</button>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">Logo地址</div>
+                <div class="setting-desc">自定义Logo图片URL（留空使用默认）</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_site_logo" placeholder="https://..."></div>
         </div>
-    </main>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">Favicon</div>
+                <div class="setting-desc">浏览器标签页图标</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_site_favicon"></div>
+        </div>
+    </div>
 
-    <script>
-        const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
-        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <!-- 外观主题 -->
+    <div class="settings-group">
+        <div class="group-title">🎨 外观主题</div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">主色调</div>
+                <div class="setting-desc">全站主题色，按钮、链接、高亮</div>
+            </div>
+            <div class="setting-control"><input type="color" id="cfg_theme_primary"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">背景色</div>
+                <div class="setting-desc">页面背景颜色</div>
+            </div>
+            <div class="setting-control"><input type="color" id="cfg_theme_bg"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">文字色</div>
+                <div class="setting-desc">主要文字颜色</div>
+            </div>
+            <div class="setting-control"><input type="color" id="cfg_theme_text"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">次要文字色</div>
+                <div class="setting-desc">描述、辅助文字颜色</div>
+            </div>
+            <div class="setting-control"><input type="color" id="cfg_theme_text_dim"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">圆角大小</div>
+                <div class="setting-desc">卡片、按钮的圆角（如12px）</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_theme_radius"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">字体</div>
+                <div class="setting-desc">全站字体栈</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_theme_font"></div>
+        </div>
+    </div>
 
-        let allSettings = [];
+    <!-- 首页配置 -->
+    <div class="settings-group">
+        <div class="group-title">🏠 首页配置</div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">首页标题</div>
+                <div class="setting-desc">门廊主页的大标题</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_home_title"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">首页副标题</div>
+                <div class="setting-desc">标题下方的小字</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_home_subtitle"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">按钮文字</div>
+                <div class="setting-desc">首页主按钮的文字</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_home_cta_text"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">按钮链接</div>
+                <div class="setting-desc">点击按钮跳转到的页面</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_home_cta_link"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">背景图</div>
+                <div class="setting-desc">首页背景图片URL（留空使用纯色）</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_home_bg_image" placeholder="https://..."></div>
+        </div>
+    </div>
 
-        sb.auth.getSession().then(({ data: { session } }) => {
-            if (!session) window.location.href = 'login.html';
-        });
+    <!-- 功能开关 -->
+    <div class="settings-group">
+        <div class="group-title">🔌 功能开关</div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">评论功能</div>
+                <div class="setting-desc">文章底部评论区</div>
+            </div>
+            <div class="setting-control"><div class="toggle" id="cfg_feature_comments" onclick="toggleSwitch(this)"></div></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">搜索功能</div>
+                <div class="setting-desc">全站文章搜索</div>
+            </div>
+            <div class="setting-control"><div class="toggle" id="cfg_feature_search" onclick="toggleSwitch(this)"></div></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">用户注册</div>
+                <div class="setting-desc">允许新用户自行注册</div>
+            </div>
+            <div class="setting-control"><div class="toggle" id="cfg_feature_register" onclick="toggleSwitch(this)"></div></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">社区模块</div>
+                <div class="setting-desc">同频相聚社区</div>
+            </div>
+            <div class="setting-control"><div class="toggle" id="cfg_feature_community" onclick="toggleSwitch(this)"></div></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">工具箱</div>
+                <div class="setting-desc">器用之辨工具箱</div>
+            </div>
+            <div class="setting-control"><div class="toggle" id="cfg_feature_tools" onclick="toggleSwitch(this)"></div></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">知识库</div>
+                <div class="setting-desc">知识求索知识库</div>
+            </div>
+            <div class="setting-control"><div class="toggle" id="cfg_feature_knowledge" onclick="toggleSwitch(this)"></div></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">虚拟场域</div>
+                <div class="setting-desc">3D虚拟空间</div>
+            </div>
+            <div class="setting-control"><div class="toggle" id="cfg_feature_space" onclick="toggleSwitch(this)"></div></div>
+        </div>
+    </div>
 
-        async function loadSettings() {
-            const container = document.getElementById('settings-container');
-            try {
-                const { data, error } = await sb.from('site_config').select('*').order('category');
-                if (error) throw error;
-                allSettings = data;
-                
-                // 按分类分组
-                const categories = {};
-                data.forEach(item => {
-                    if (!categories[item.category]) categories[item.category] = [];
-                    categories[item.category].push(item);
-                });
+    <!-- 社交链接 -->
+    <div class="settings-group">
+        <div class="group-title">🔗 社交链接</div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">GitHub</div>
+                <div class="setting-desc">GitHub主页链接</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_social_github" placeholder="https://github.com/..."></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">Twitter</div>
+                <div class="setting-desc">Twitter/X主页链接</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_social_twitter" placeholder="https://twitter.com/..."></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">邮箱</div>
+                <div class="setting-desc">联系邮箱</div>
+            </div>
+            <div class="setting-control"><input type="email" id="cfg_social_email" placeholder="you@example.com"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">微博</div>
+                <div class="setting-desc">微博主页链接</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_social_weibo" placeholder="https://weibo.com/..."></div>
+        </div>
+    </div>
 
-                const categoryNames = {
-                    'home': '门户主页',
-                    'nav': '导航栏',
-                    'article': '文章页',
-                    'footer': '页脚',
-                    'style': '视觉样式',
-                    'interaction': '互动效果'
-                };
+    <!-- SEO设置 -->
+    <div class="settings-group">
+        <div class="group-title">🔍 SEO设置</div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">SEO标题</div>
+                <div class="setting-desc">搜索引擎显示的标题</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_seo_title"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">SEO描述</div>
+                <div class="setting-desc">搜索引擎显示的描述</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_seo_description"></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">SEO关键词</div>
+                <div class="setting-desc">用逗号分隔的关键词</div>
+            </div>
+            <div class="setting-control"><input type="text" id="cfg_seo_keywords"></div>
+        </div>
+    </div>
 
-                container.innerHTML = '';
-                for (const [cat, items] of Object.entries(categories)) {
-                    const section = document.createElement('div');
-                    section.className = 'category-section';
-                    const title = document.createElement('h2');
-                    title.className = 'category-title';
-                    title.textContent = categoryNames[cat] || cat;
-                    section.appendChild(title);
+    <!-- 高级设置 -->
+    <div class="settings-group">
+        <div class="group-title">⚡ 高级设置</div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">自定义CSS</div>
+                <div class="setting-desc">全站生效的自定义CSS代码</div>
+            </div>
+            <div class="setting-control"><textarea id="cfg_advanced_custom_css" placeholder="body { ... }"></textarea></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">自定义JS</div>
+                <div class="setting-desc">全站生效的自定义JavaScript代码</div>
+            </div>
+            <div class="setting-control"><textarea id="cfg_advanced_custom_js" placeholder="console.log(...)"></textarea></div>
+        </div>
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">统计代码</div>
+                <div class="setting-desc">Google Analytics / 百度统计等代码</div>
+            </div>
+            <div class="setting-control"><textarea id="cfg_advanced_analytics_code" placeholder="<script>...</script>"></textarea></div>
+        </div>
+    </div>
 
-                    const grid = document.createElement('div');
-                    grid.className = 'form-grid';
+    <div style="height: 80px;"></div>
+</main>
 
-                    items.forEach(item => {
-                        const group = document.createElement('div');
-                        group.className = 'form-group' + (item.type === 'text' && item.value.length > 50 ? ' full-width' : '');
-                        const label = document.createElement('label');
-                        label.textContent = item.description || item.key;
-                        group.appendChild(label);
+<div class="preview-bar">
+    <div class="preview-text">💡 修改后点击"保存设置"，刷新前台页面即可看到效果</div>
+    <button class="btn btn-primary" onclick="saveSettings()">💾 保存设置</button>
+</div>
 
-                        let input;
-                        if (item.type === 'color') {
-                            const row = document.createElement('div');
-                            row.className = 'color-row';
-                            input = document.createElement('input');
-                            input.type = 'color';
-                            input.value = item.value;
-                            input.dataset.key = item.key;
-                            input.dataset.type = item.type;
-                            const span = document.createElement('span');
-                            span.textContent = item.value;
-                            input.oninput = () => span.textContent = input.value;
-                            row.appendChild(input);
-                            row.appendChild(span);
-                            group.appendChild(row);
-                        } else if (item.type === 'boolean') {
-                            const row = document.createElement('div');
-                            row.className = 'toggle-row';
-                            const label2 = document.createElement('label');
-                            label2.className = 'switch';
-                            input = document.createElement('input');
-                            input.type = 'checkbox';
-                            input.checked = item.value === 'true';
-                            input.dataset.key = item.key;
-                            input.dataset.type = item.type;
-                            const slider = document.createElement('span');
-                            slider.className = 'slider';
-                            label2.appendChild(input);
-                            label2.appendChild(slider);
-                            row.appendChild(label2);
-                            group.appendChild(row);
-                        } else if (item.type === 'number') {
-                            input = document.createElement('input');
-                            input.type = 'number';
-                            input.value = item.value;
-                            input.dataset.key = item.key;
-                            input.dataset.type = item.type;
-                            group.appendChild(input);
-                        } else if (item.type === 'select') {
-                            input = document.createElement('select');
-                            input.dataset.key = item.key;
-                            input.dataset.type = item.type;
-                            if (item.key === 'font.title' || item.key === 'font.body') {
-                                ['serif', 'sans-serif', 'monospace'].forEach(opt => {
-                                    const o = document.createElement('option');
-                                    o.value = opt;
-                                    o.textContent = opt;
-                                    if (opt === item.value) o.selected = true;
-                                    input.appendChild(o);
-                                });
-                            }
-                            group.appendChild(input);
-                        } else {
-                            input = document.createElement('input');
-                            input.type = 'text';
-                            input.value = item.value;
-                            input.dataset.key = item.key;
-                            input.dataset.type = item.type;
-                            group.appendChild(input);
-                        }
+<script>
+const supabaseUrl = 'https://xyxrwstdhmauwrbrojnr.supabase.co';
+const supabaseKey = 'sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG';
+const sb = supabase.createClient(supabaseUrl, supabaseKey);
 
-                        grid.appendChild(group);
-                    });
+let currentConfig = null;
+let configId = null;
 
-                    section.appendChild(grid);
-                    container.appendChild(section);
+const defaults = {
+    basic: { site_name: '观照之境', site_description: '在思考中看见思考本身', site_logo: '', site_favicon: '/img/favicon.png' },
+    theme: { primary: '#689F89', bg: '#0a0f0e', text: '#e8edf2', text_dim: '#7a8595', border: 'rgba(255,255,255,0.08)', font: '-apple-system, BlinkMacSystemFont, PingFang SC, sans-serif', radius: '12px' },
+    home: { title: '观照之境', subtitle: '在思考中看见思考本身', cta_text: '进入门廊', cta_link: '/home/', bg_image: '' },
+    features: { comments: true, search: true, register: true, community: true, tools: true, knowledge: true, space: true },
+    social: { github: '', twitter: '', email: '', weibo: '' },
+    seo: { title: '观照之境 - 在思考中看见思考本身', description: '一个关于思考、哲学与自我觉察的数字空间', keywords: '哲学,思考,自我觉察,观照' },
+    advanced: { custom_css: '', custom_js: '', analytics_code: '' }
+};
+
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) {
+        showToast('请先登录');
+        setTimeout(() => window.location.href = '/admin/login.html', 1500);
+        return;
+    }
+    await loadSettings();
+}
+
+async function loadSettings() {
+    try {
+        const { data, error } = await sb.from('site_config').select('*').limit(1).single();
+        if (error) throw error;
+        if (data) {
+            configId = data.id;
+            currentConfig = data.config_json || JSON.parse(JSON.stringify(defaults));
+            // 确保所有分组都存在
+            for (const group in defaults) {
+                if (!currentConfig[group]) currentConfig[group] = {};
+                for (const key in defaults[group]) {
+                    if (currentConfig[group][key] === undefined) currentConfig[group][key] = defaults[group][key];
                 }
-            } catch(e) {
-                container.innerHTML = '<p style="color:var(--danger)">加载失败: ' + e.message + '</p>';
             }
+            fillForm();
         }
+    } catch (e) {
+        console.log('使用默认设置:', e.message);
+        currentConfig = JSON.parse(JSON.stringify(defaults));
+        fillForm();
+    }
+}
 
-        async function saveAllSettings() {
-            const inputs = document.querySelectorAll('.form-group input, .form-group select');
-            try {
-                for (const input of inputs) {
-                    const key = input.dataset.key;
-                    const type = input.dataset.type;
-                    let value;
-                    if (type === 'boolean') {
-                        value = input.checked ? 'true' : 'false';
-                    } else {
-                        value = input.value;
-                    }
-                    await sb.from('site_config').update({ value, updated_at: new Date().toISOString() }).eq('key', key);
-                }
-                alert('✅ 所有设置已保存！刷新前端页面查看效果。');
-            } catch(e) {
-                alert('❌ 保存失败: ' + e.message);
-            }
+function fillForm() {
+    // 基础设置
+    document.getElementById('cfg_site_name').value = currentConfig.basic.site_name || '';
+    document.getElementById('cfg_site_description').value = currentConfig.basic.site_description || '';
+    document.getElementById('cfg_site_logo').value = currentConfig.basic.site_logo || '';
+    document.getElementById('cfg_site_favicon').value = currentConfig.basic.site_favicon || '';
+    // 外观主题
+    document.getElementById('cfg_theme_primary').value = currentConfig.theme.primary || '#689F89';
+    document.getElementById('cfg_theme_bg').value = currentConfig.theme.bg || '#0a0f0e';
+    document.getElementById('cfg_theme_text').value = currentConfig.theme.text || '#e8edf2';
+    document.getElementById('cfg_theme_text_dim').value = currentConfig.theme.text_dim || '#7a8595';
+    document.getElementById('cfg_theme_radius').value = currentConfig.theme.radius || '12px';
+    document.getElementById('cfg_theme_font').value = currentConfig.theme.font || '';
+    // 首页配置
+    document.getElementById('cfg_home_title').value = currentConfig.home.title || '';
+    document.getElementById('cfg_home_subtitle').value = currentConfig.home.subtitle || '';
+    document.getElementById('cfg_home_cta_text').value = currentConfig.home.cta_text || '';
+    document.getElementById('cfg_home_cta_link').value = currentConfig.home.cta_link || '';
+    document.getElementById('cfg_home_bg_image').value = currentConfig.home.bg_image || '';
+    // 功能开关
+    for (const key in currentConfig.features) {
+        const el = document.getElementById('cfg_feature_' + key);
+        if (el) el.classList.toggle('on', !!currentConfig.features[key]);
+    }
+    // 社交链接
+    document.getElementById('cfg_social_github').value = currentConfig.social.github || '';
+    document.getElementById('cfg_social_twitter').value = currentConfig.social.twitter || '';
+    document.getElementById('cfg_social_email').value = currentConfig.social.email || '';
+    document.getElementById('cfg_social_weibo').value = currentConfig.social.weibo || '';
+    // SEO设置
+    document.getElementById('cfg_seo_title').value = currentConfig.seo.title || '';
+    document.getElementById('cfg_seo_description').value = currentConfig.seo.description || '';
+    document.getElementById('cfg_seo_keywords').value = currentConfig.seo.keywords || '';
+    // 高级设置
+    document.getElementById('cfg_advanced_custom_css').value = currentConfig.advanced.custom_css || '';
+    document.getElementById('cfg_advanced_custom_js').value = currentConfig.advanced.custom_js || '';
+    document.getElementById('cfg_advanced_analytics_code').value = currentConfig.advanced.analytics_code || '';
+}
+
+function collectForm() {
+    const config = JSON.parse(JSON.stringify(defaults));
+    // 基础设置
+    config.basic.site_name = document.getElementById('cfg_site_name').value;
+    config.basic.site_description = document.getElementById('cfg_site_description').value;
+    config.basic.site_logo = document.getElementById('cfg_site_logo').value;
+    config.basic.site_favicon = document.getElementById('cfg_site_favicon').value;
+    // 外观主题
+    config.theme.primary = document.getElementById('cfg_theme_primary').value;
+    config.theme.bg = document.getElementById('cfg_theme_bg').value;
+    config.theme.text = document.getElementById('cfg_theme_text').value;
+    config.theme.text_dim = document.getElementById('cfg_theme_text_dim').value;
+    config.theme.radius = document.getElementById('cfg_theme_radius').value;
+    config.theme.font = document.getElementById('cfg_theme_font').value;
+    // 首页配置
+    config.home.title = document.getElementById('cfg_home_title').value;
+    config.home.subtitle = document.getElementById('cfg_home_subtitle').value;
+    config.home.cta_text = document.getElementById('cfg_home_cta_text').value;
+    config.home.cta_link = document.getElementById('cfg_home_cta_link').value;
+    config.home.bg_image = document.getElementById('cfg_home_bg_image').value;
+    // 功能开关
+    for (const key in config.features) {
+        const el = document.getElementById('cfg_feature_' + key);
+        if (el) config.features[key] = el.classList.contains('on');
+    }
+    // 社交链接
+    config.social.github = document.getElementById('cfg_social_github').value;
+    config.social.twitter = document.getElementById('cfg_social_twitter').value;
+    config.social.email = document.getElementById('cfg_social_email').value;
+    config.social.weibo = document.getElementById('cfg_social_weibo').value;
+    // SEO设置
+    config.seo.title = document.getElementById('cfg_seo_title').value;
+    config.seo.description = document.getElementById('cfg_seo_description').value;
+    config.seo.keywords = document.getElementById('cfg_seo_keywords').value;
+    // 高级设置
+    config.advanced.custom_css = document.getElementById('cfg_advanced_custom_css').value;
+    config.advanced.custom_js = document.getElementById('cfg_advanced_custom_js').value;
+    config.advanced.analytics_code = document.getElementById('cfg_advanced_analytics_code').value;
+    return config;
+}
+
+async function saveSettings() {
+    const config = collectForm();
+    try {
+        if (configId) {
+            const { error } = await sb.from('site_config').update({
+                config_json: config,
+                site_name: config.basic.site_name,
+                site_description: config.basic.site_description,
+                theme_color: config.theme.primary,
+                updated_at: new Date().toISOString()
+            }).eq('id', configId);
+            if (error) throw error;
+        } else {
+            const { error } = await sb.from('site_config').insert({
+                config_json: config,
+                site_name: config.basic.site_name,
+                site_description: config.basic.site_description,
+                site_url: 'https://medianigray.github.io',
+                theme_color: config.theme.primary,
+                particle_enabled: true,
+                auto_rotate: true,
+                sound_enabled: false
+            });
+            if (error) throw error;
         }
+        currentConfig = config;
+        showToast('✅ 设置已保存，刷新前台即可生效');
+    } catch (e) {
+        showToast('⚠️ 保存失败: ' + e.message);
+    }
+}
 
-        async function resetSettings() {
-            if (!confirm('确定要重置所有设置为默认值吗？')) return;
-            loadSettings();
-        }
+function resetDefaults() {
+    if (!confirm('确认恢复所有默认设置？此操作不可撤销。')) return;
+    currentConfig = JSON.parse(JSON.stringify(defaults));
+    fillForm();
+    showToast('已恢复默认设置，点击保存生效');
+}
 
-        async function logout() {
-            await sb.auth.signOut();
-            window.location.href = 'login.html';
-        }
+function toggleSwitch(el) {
+    el.classList.toggle('on');
+}
 
-        loadSettings();
-    </script>
+function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+}
+</script>
+
 </body>
 </html>

@@ -1,8 +1,8 @@
-// === 从Supabase同步网站设置 ===
+// === 浠嶴upabase鍚屾缃戠珯璁剧疆 ===
 async function syncSettingsFromSupabase() {
   if (!window.supabase) return;
-  const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
+  const SUPABASE_URL = "https://xyxrwstdhmauwrbrojnr.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG";
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   try {
@@ -15,11 +15,10 @@ async function syncSettingsFromSupabase() {
 
       switch(key) {
         case 'site_title':
-          document.title = value + ' | 大道元灵';
+          document.title = value + ' | 澶ч亾鍏冪伒';
           break;
         case 'site_subtitle':
-          // 找副标题元素，更新
-          var subtitle = document.querySelector('.site-subtitle');
+          // 鎵惧壇鏍囬鍏冪礌锛屾洿鏂?          var subtitle = document.querySelector('.site-subtitle');
           if (subtitle) subtitle.textContent = value;
           break;
         case 'hero_title':
@@ -51,16 +50,15 @@ async function syncSettingsFromSupabase() {
       }
     });
   } catch(e) {
-    console.log('同步设置失败:', e);
+    console.log('鍚屾璁剧疆澶辫触:', e);
   }
 }
 
-// 页面加载时同步
-document.addEventListener('DOMContentLoaded', function() {
+// 椤甸潰鍔犺浇鏃跺悓姝?document.addEventListener('DOMContentLoaded', function() {
   syncSettingsFromSupabase();
 });
-// === 性能优化 ===
-// 节流函数
+// === 鎬ц兘浼樺寲 ===
+// 鑺傛祦鍑芥暟
 function throttle(func, limit) {
   let inThrottle;
   return function() {
@@ -74,7 +72,7 @@ function throttle(func, limit) {
   }
 }
 
-// 优先使用passive事件监听
+// 浼樺厛浣跨敤passive浜嬩欢鐩戝惉
 const passiveListener = { passive: true };
 document.addEventListener('DOMContentLoaded',function(){
   var s=document.createElement('div');
@@ -129,9 +127,9 @@ document.addEventListener('DOMContentLoaded',function(){
     });
   });
 });
-// === 进阶效果 ===
+// === 杩涢樁鏁堟灉 ===
 document.addEventListener('DOMContentLoaded', function() {
-  // 6. 粒子背景
+  // 6. 绮掑瓙鑳屾櫙
   var canvas = document.createElement('canvas');
   canvas.id = 'meta-particles';
   document.body.appendChild(canvas);
@@ -173,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   animate();
 
-  // 7. 鼠标跟随光环
+  // 7. 榧犳爣璺熼殢鍏夌幆
   var glow = document.createElement('div');
   glow.className = 'meta-cursor-glow';
   document.body.appendChild(glow);
@@ -182,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
     glow.style.top = e.clientY + 'px';
   });
 
-  // 8. 标题逐字动画
+  // 8. 鏍囬閫愬瓧鍔ㄧ敾
   document.querySelectorAll('.post-title, #article-container h1').forEach(function(el) {
     var text = el.textContent;
     el.textContent = '';
@@ -198,8 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 9. 滚动视差（侧边栏）
-  var sidebar = document.getElementById('aside-content');
+  // 9. 婊氬姩瑙嗗樊锛堜晶杈规爮锛?  var sidebar = document.getElementById('aside-content');
   if (sidebar) {
     window.addEventListener('scroll', function() {
       var scrolled = window.pageYOffset;
@@ -207,9 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { passive: true });
   }
 });
-// === 暗黑/亮色模式切换按钮 ===
+// === 鏆楅粦/浜壊妯″紡鍒囨崲鎸夐挳 ===
 document.addEventListener('DOMContentLoaded', function() {
-  // 从localStorage读取偏好
+  // 浠巐ocalStorage璇诲彇鍋忓ソ
   const savedTheme = localStorage.getItem('meta_theme') || 'dark';
   if (savedTheme === 'light') {
     document.body.removeAttribute('data-theme');
@@ -217,11 +214,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.setAttribute('data-theme', 'dark');
   }
 
-  // 创建切换按钮
+  // 鍒涘缓鍒囨崲鎸夐挳
   const toggleBtn = document.createElement('button');
   toggleBtn.className = 'meta-theme-toggle';
-  toggleBtn.innerHTML = savedTheme === 'dark' ? '☀️' : '🌙';
-  toggleBtn.title = '切换明暗模式';
+  toggleBtn.innerHTML = savedTheme === 'dark' ? '鈽€锔? : '馃寵';
+  toggleBtn.title = '鍒囨崲鏄庢殫妯″紡';
   toggleBtn.style.cssText = `
     position: fixed;
     top: 80px;
@@ -246,18 +243,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.body.hasAttribute('data-theme')) {
       document.body.removeAttribute('data-theme');
       localStorage.setItem('meta_theme', 'light');
-      toggleBtn.innerHTML = '🌙';
+      toggleBtn.innerHTML = '馃寵';
     } else {
       document.body.setAttribute('data-theme', 'dark');
       localStorage.setItem('meta_theme', 'dark');
-      toggleBtn.innerHTML = '☀️';
+      toggleBtn.innerHTML = '鈽€锔?;
     }
   });
 
   document.body.appendChild(toggleBtn);
 });
 
-// === 3D光标光环 ===
+// === 3D鍏夋爣鍏夌幆 ===
 document.addEventListener('DOMContentLoaded', function() {
   var cursor = document.createElement('div');
   cursor.className = 'meta-3d-cursor';
@@ -267,23 +264,22 @@ document.addEventListener('DOMContentLoaded', function() {
     cursor.style.top = e.clientY + 'px';
   });
 });
-// === 滚动驱动3D效果（大厂交互）===
+// === 婊氬姩椹卞姩3D鏁堟灉锛堝ぇ鍘備氦浜掞級===
 document.addEventListener('DOMContentLoaded', function() {
   var content = document.getElementById('content-inner');
   if (!content) return;
   
-  // 滚动时内容层轻微3D旋转
+  // 婊氬姩鏃跺唴瀹瑰眰杞诲井3D鏃嬭浆
   window.addEventListener('scroll', function() {
     var scrolled = window.pageYOffset;
     var maxScroll = document.body.scrollHeight - window.innerHeight;
     var progress = scrolled / maxScroll;
     
-    // 整个内容层轻微3D倾斜
-    var rotateY = (progress - 0.5) * 2; // -1度到+1度
-    content.style.transform = 'perspective(1200px) rotateY(' + rotateY + 'deg)';
+    // 鏁翠釜鍐呭灞傝交寰?D鍊炬枩
+    var rotateY = (progress - 0.5) * 2; // -1搴﹀埌+1搴?    content.style.transform = 'perspective(1200px) rotateY(' + rotateY + 'deg)';
   }, { passive: true });
 
-  // 文章卡片进入视口时的3D翻转入场
+  // 鏂囩珷鍗＄墖杩涘叆瑙嗗彛鏃剁殑3D缈昏浆鍏ュ満
   var postObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry, i) {
       if (entry.isIntersecting) {
@@ -301,42 +297,40 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// === 第4层：通信融合层 ===
-// 分享按钮
+// === 绗?灞傦細閫氫俊铻嶅悎灞?===
+// 鍒嗕韩鎸夐挳
 document.addEventListener('DOMContentLoaded', function() {
   var article = document.getElementById('article');
   if (!article) return;
 
-  // 创建分享栏
-  var shareBar = document.createElement('div');
+  // 鍒涘缓鍒嗕韩鏍?  var shareBar = document.createElement('div');
   shareBar.className = 'meta-share-bar';
   shareBar.innerHTML = `
     <div class="share-item" data-type="wechat">
       <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M8.5 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path fill="currentColor" d="M9.5 4C5.36 4 2 6.91 2 10.5c0 2.08 1.12 3.93 2.86 5.13L4.5 18l2.87-1.5c.67.17 1.38.27 2.13.27.25 0 .5-.01.74-.04-.15-.47-.24-.96-.24-1.48 0-3.31 3.13-6 7-6 .27 0 .53.02.79.05C16.1 6.19 13.03 4 9.5 4z"/><path fill="currentColor" d="M22 15.5c0-2.76-2.69-5-6-5s-6 2.24-6 5 2.69 5 6 5c.66 0 1.3-.09 1.89-.26L19 21l-.55-1.65C20.08 18.32 22 17.02 22 15.5z"/></svg>
-      <span>微信</span>
+      <span>寰俊</span>
     </div>
     <div class="share-item" data-type="weibo">
       <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M10.1 13.4c-.3-.1-.6-.2-.9-.1-.3.1-.5.4-.4.7.1.3.4.5.7.4.3-.1.5-.4.6-.7.1-.2.1-.3 0-.3zm-1.2-.3c-.1 0-.2 0-.3.1-.1.1-.2.3-.1.4.1.1.3.2.4.1.1-.1.2-.3.1-.4 0-.1 0-.2-.1-.2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm5.5 11.5c-.2.5-.7.9-1.3 1-.6.1-1.2 0-1.7-.3-.5-.3-.9-.8-1-1.4-.1-.6.1-1.2.5-1.6.4-.4.9-.7 1.5-.8.6-.1 1.2 0 1.7.3.5.3.9.8 1 1.4.1.5-.1 1-.3 1.4zm-2.8 3.3c-.6.6-1.5.9-2.3.8-.9-.1-1.6-.6-2-1.3-.4-.7-.4-1.6 0-2.3.4-.7 1.1-1.2 1.9-1.3.8-.1 1.6.2 2.2.7.6.5.9 1.2.8 2-.1.5-.3 1-.6 1.3z"/></svg>
-      <span>微博</span>
+      <span>寰崥</span>
     </div>
     <div class="share-item" data-type="copy">
       <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 14H4V3h12v12zm-4-5l-4 4-2-2 1.4-1.4L8 11l2.6-2.6L12 10zM20 7v14c0 1.1-.9 2-2 2H6v-2h12V7h2z"/></svg>
-      <span>复制链接</span>
+      <span>澶嶅埗閾炬帴</span>
     </div>
     <div class="like-btn" id="meta-like-btn">
       <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
       <span id="meta-like-count">0</span>
-      <span class="like-text">喜欢</span>
+      <span class="like-text">鍠滄</span>
     </div>
   `;
 
-  // 插入到文章底部
-  var articleContent = document.getElementById('article-content');
+  // 鎻掑叆鍒版枃绔犲簳閮?  var articleContent = document.getElementById('article-content');
   if (articleContent) {
     articleContent.parentNode.insertBefore(shareBar, articleContent.nextSibling);
   }
 
-  // 分享功能
+  // 鍒嗕韩鍔熻兘
   document.querySelectorAll('.share-item').forEach(function(item) {
     item.addEventListener('click', function() {
       var type = this.dataset.type;
@@ -344,27 +338,26 @@ document.addEventListener('DOMContentLoaded', function() {
       var title = document.title;
 
       if (type === 'wechat') {
-        alert('请复制链接后分享到微信');
+        alert('璇峰鍒堕摼鎺ュ悗鍒嗕韩鍒板井淇?);
       } else if (type === 'weibo') {
         window.open('https://service.weibo.com/share/share.php?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title), '_blank');
       } else if (type === 'copy') {
         navigator.clipboard.writeText(url).then(function() {
           var text = item.querySelector('span');
           var oldText = text.textContent;
-          text.textContent = '已复制';
+          text.textContent = '宸插鍒?;
           setTimeout(function() { text.textContent = oldText; }, 2000);
         });
       }
     });
   });
 
-  // 点赞功能
+  // 鐐硅禐鍔熻兘
   var likeBtn = document.getElementById('meta-like-btn');
   var likeCount = document.getElementById('meta-like-count');
   var pageKey = 'meta_like_' + window.location.pathname;
 
-  // 读取点赞数
-  var count = parseInt(localStorage.getItem(pageKey + '_count') || '0');
+  // 璇诲彇鐐硅禐鏁?  var count = parseInt(localStorage.getItem(pageKey + '_count') || '0');
   var liked = localStorage.getItem(pageKey + '_liked') === '1';
   likeCount.textContent = count;
   if (liked) likeBtn.classList.add('liked');
@@ -385,27 +378,26 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// === 第4层：通信融合层 - Supabase接入 ===
-// Supabase配置
-const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
+// === 绗?灞傦細閫氫俊铻嶅悎灞?- Supabase鎺ュ叆 ===
+// Supabase閰嶇疆
+const SUPABASE_URL = "https://xyxrwstdhmauwrbrojnr.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG";
 const { createClient: createSupabaseClient } = window.supabase;
 const sb = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 访客统计
+// 璁垮缁熻
 document.addEventListener('DOMContentLoaded', async function() {
   try {
     const { error } = await sb
       .from('visits')
       .insert([{ path: window.location.pathname }]);
-    if (error) console.log('访客统计:', error.message);
+    if (error) console.log('璁垮缁熻:', error.message);
   } catch (e) {
-    console.log('访客统计跳过:', e.message);
+    console.log('璁垮缁熻璺宠繃:', e.message);
   }
 });
 
-// 点赞功能接入Supabase（替换localStorage版本）
-document.addEventListener('DOMContentLoaded', async function() {
+// 鐐硅禐鍔熻兘鎺ュ叆Supabase锛堟浛鎹ocalStorage鐗堟湰锛?document.addEventListener('DOMContentLoaded', async function() {
   var likeBtn = document.getElementById('meta-like-btn');
   if (!likeBtn) return;
 
@@ -414,8 +406,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   var pageKey = 'meta_like_' + pagePath;
   var liked = localStorage.getItem(pageKey + '_liked') === '1';
 
-  // 从Supabase读取点赞数
-  try {
+  // 浠嶴upabase璇诲彇鐐硅禐鏁?  try {
     var { data, error } = await sb
       .from('likes')
       .select('count')
@@ -425,21 +416,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (data) {
       likeCount.textContent = data.count;
     } else {
-      // 没有记录，插入新的
-      await sb.from('likes').insert([{ post_path: pagePath, count: 0 }]);
+      // 娌℃湁璁板綍锛屾彃鍏ユ柊鐨?      await sb.from('likes').insert([{ post_path: pagePath, count: 0 }]);
       likeCount.textContent = '0';
     }
   } catch (e) {
-    console.log('读取点赞失败:', e.message);
+    console.log('璇诲彇鐐硅禐澶辫触:', e.message);
     likeCount.textContent = localStorage.getItem(pageKey + '_count') || '0';
   }
 
-  // 已点赞状态
-  if (liked) {
+  // 宸茬偣璧炵姸鎬?  if (liked) {
     likeBtn.classList.add('liked');
   }
 
-  // 点击点赞
+  // 鐐瑰嚮鐐硅禐
   likeBtn.addEventListener('click', async function() {
     var currentCount = parseInt(likeCount.textContent) || 0;
 
@@ -456,46 +445,45 @@ document.addEventListener('DOMContentLoaded', async function() {
     likeCount.textContent = currentCount;
     localStorage.setItem(pageKey + '_liked', liked ? '1' : '0');
 
-    // 更新Supabase
+    // 鏇存柊Supabase
     try {
       await sb
         .from('likes')
         .update({ count: currentCount, updated_at: new Date().toISOString() })
         .eq('post_path', pagePath);
     } catch (e) {
-      console.log('更新点赞失败:', e.message);
+      console.log('鏇存柊鐐硅禐澶辫触:', e.message);
     }
   });
 });
 
-// === 评论系统 - 基于Supabase ===
+// === 璇勮绯荤粺 - 鍩轰簬Supabase ===
 document.addEventListener('DOMContentLoaded', async function() {
   var article = document.getElementById('article-content');
   if (!article) return;
 
   var pagePath = window.location.pathname;
 
-  // 创建评论区
-  var commentSection = document.createElement('div');
+  // 鍒涘缓璇勮鍖?  var commentSection = document.createElement('div');
   commentSection.className = 'meta-comment-section';
   commentSection.innerHTML = `
-    <h3 class="comment-title">💬 留言</h3>
+    <h3 class="comment-title">馃挰 鐣欒█</h3>
     <div class="comment-form">
-      <input type="text" id="comment-author" placeholder="你的昵称（可匿名）" class="comment-input">
-      <textarea id="comment-content" placeholder="写下你的想法..." class="comment-textarea"></textarea>
-      <button id="comment-submit" class="comment-btn">发表留言</button>
+      <input type="text" id="comment-author" placeholder="浣犵殑鏄电О锛堝彲鍖垮悕锛? class="comment-input">
+      <textarea id="comment-content" placeholder="鍐欎笅浣犵殑鎯虫硶..." class="comment-textarea"></textarea>
+      <button id="comment-submit" class="comment-btn">鍙戣〃鐣欒█</button>
     </div>
     <div class="comment-list" id="comment-list">
-      <p class="comment-loading">加载中...</p>
+      <p class="comment-loading">鍔犺浇涓?..</p>
     </div>
   `;
 
   article.parentNode.insertBefore(commentSection, article.nextSibling.nextSibling);
 
-  // 加载评论
+  // 鍔犺浇璇勮
   async function loadComments() {
     var list = document.getElementById('comment-list');
-    list.innerHTML = '<p class="comment-loading">加载中...</p>';
+    list.innerHTML = '<p class="comment-loading">鍔犺浇涓?..</p>';
 
     try {
       var { data, error } = await sb
@@ -507,7 +495,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       if (error) throw error;
 
       if (!data || data.length === 0) {
-        list.innerHTML = '<p class="comment-empty">暂无留言，来写第一条吧</p>';
+        list.innerHTML = '<p class="comment-empty">鏆傛棤鐣欒█锛屾潵鍐欑涓€鏉″惂</p>';
         return;
       }
 
@@ -518,7 +506,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         var date = new Date(comment.created_at).toLocaleString('zh-CN');
         item.innerHTML = `
           <div class="comment-header">
-            <span class="comment-author">${comment.author || '匿名'}</span>
+            <span class="comment-author">${comment.author || '鍖垮悕'}</span>
             <span class="comment-date">${date}</span>
           </div>
           <div class="comment-body">${comment.content}</div>
@@ -526,28 +514,28 @@ document.addEventListener('DOMContentLoaded', async function() {
         list.appendChild(item);
       });
     } catch (e) {
-      list.innerHTML = '<p class="comment-error">加载失败：' + e.message + '</p>';
+      list.innerHTML = '<p class="comment-error">鍔犺浇澶辫触锛? + e.message + '</p>';
     }
   }
 
   loadComments();
 
-  // 提交评论
+  // 鎻愪氦璇勮
   var submitBtn = document.getElementById('comment-submit');
   submitBtn.addEventListener('click', async function() {
     var authorInput = document.getElementById('comment-author');
     var contentInput = document.getElementById('comment-content');
 
-    var author = authorInput.value.trim() || '匿名';
+    var author = authorInput.value.trim() || '鍖垮悕';
     var content = contentInput.value.trim();
 
     if (!content) {
-      alert('请输入留言内容');
+      alert('璇疯緭鍏ョ暀瑷€鍐呭');
       return;
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = '发表中...';
+    submitBtn.textContent = '鍙戣〃涓?..';
 
     try {
       var { error } = await sb
@@ -563,10 +551,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       contentInput.value = '';
       loadComments();
     } catch (e) {
-      alert('发表失败：' + e.message);
+      alert('鍙戣〃澶辫触锛? + e.message);
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = '发表留言';
+      submitBtn.textContent = '鍙戣〃鐣欒█';
     }
   });
 });

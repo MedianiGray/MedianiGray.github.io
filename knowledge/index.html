@@ -1,281 +1,261 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>元知识 · 大道元灵</title>
+<title>知识求索</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
   --main: #689F89;
-  --main-glow: rgba(104,159,137,0.3);
-  --bg: #07090d;
+  --main-glow: rgba(104,159,137,0.2);
+  --bg: #0a0f0e;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-hover: rgba(255,255,255,0.06);
   --text: #e8edf2;
   --text-dim: #7a8595;
-  --glass: rgba(255,255,255,0.03);
-  --glass-border: rgba(255,255,255,0.08);
-  --card-bg: rgba(12,16,24,0.6);
+  --border: rgba(255,255,255,0.08);
 }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Noto Serif SC', 'Georgia', serif;
-  line-height: 1.7;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
   min-height: 100vh;
 }
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 24px;
+
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(10,15,14,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
 }
-.back-link {
-  display: inline-block;
+.nav-left { display: flex; align-items: center; gap: 20px; }
+.back-btn {
   color: var(--text-dim);
   text-decoration: none;
   font-size: 0.9rem;
-  margin-bottom: 30px;
-  transition: color 0.3s;
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
 }
-.back-link:hover { color: var(--main); }
-.page-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 10px;
+.back-btn:hover { color: var(--main); border-color: var(--main); }
+.nav-title {
+  font-size: 1.1rem;
+  font-weight: 600;
   background: linear-gradient(135deg, #fff, var(--main));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.page-subtitle {
-  color: var(--text-dim);
-  margin-bottom: 50px;
-  font-size: 1rem;
-}
 
-/* 搜索栏 */
-.search-bar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 40px;
-}
-.search-input {
-  flex: 1;
-  padding: 14px 20px;
-  background: var(--card-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  color: var(--text);
-  font-size: 1rem;
-  backdrop-filter: blur(20px);
-  transition: all 0.3s;
-}
-.search-input:focus {
-  outline: none;
-  border-color: var(--main);
-  box-shadow: 0 0 20px var(--main-glow);
-}
-.search-input::placeholder {
-  color: var(--text-dim);
-}
-
-/* 知识分类 */
-.cats-grid {
+.layout {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 50px;
-}
-.cat-card {
-  background: var(--card-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 14px;
-  padding: 24px;
-  backdrop-filter: blur(20px);
-  cursor: pointer;
-  transition: all 0.3s;
-  text-align: center;
-}
-.cat-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--main);
-  box-shadow: 0 10px 30px rgba(104,159,137,0.1);
-}
-.cat-icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-.cat-name {
-  font-size: 1.1rem;
-  color: var(--main);
-  margin-bottom: 5px;
-}
-.cat-count {
-  font-size: 0.8rem;
-  color: var(--text-dim);
+  grid-template-columns: 280px 1fr;
+  margin: 60px 0 0;
+  min-height: calc(100vh - 60px);
 }
 
-/* 知识笔记列表 */
-.section-title {
-  font-size: 1.5rem;
-  color: var(--main);
-  margin: 50px 0 20px;
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 24px;
+  overflow-y: auto;
+}
+.sidebar h3 {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.note-card {
-  background: var(--card-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 24px 28px;
-  backdrop-filter: blur(20px);
-  transition: all 0.3s;
+.tree-item {
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
-}
-.note-card:hover {
-  transform: translateX(8px);
-  border-color: var(--main);
-}
-.note-title {
-  font-size: 1.2rem;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-.note-excerpt {
   color: var(--text-dim);
   font-size: 0.9rem;
-  margin-bottom: 12px;
+  margin-bottom: 2px;
+  transition: all 0.2s;
+}
+.tree-item:hover { background: var(--bg-hover); color: var(--text); }
+.tree-item.active {
+  background: var(--main-glow);
+  color: var(--main);
+}
+.tree-child {
+  padding-left: 24px;
+}
+
+.content {
+  padding: 40px;
+  overflow-y: auto;
+}
+.content-header {
+  margin-bottom: 32px;
+}
+.content-header h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+.content-header p {
+  color: var(--text-dim);
+}
+
+.search-box {
+  margin-bottom: 24px;
+}
+.search-box input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  outline: none;
+}
+.search-box input:focus {
+  border-color: var(--main);
+}
+
+.note-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.note-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.note-card:hover {
+  background: var(--bg-hover);
+  transform: translateX(4px);
+}
+.note-card h4 {
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+}
+.note-card p {
+  color: var(--text-dim);
+  font-size: 0.9rem;
   line-height: 1.6;
 }
 .note-meta {
-  display: flex;
-  gap: 16px;
+  margin-top: 12px;
   font-size: 0.8rem;
   color: var(--text-dim);
-}
-.note-tag {
-  display: inline-block;
-  padding: 2px 10px;
-  background: rgba(104,159,137,0.1);
-  border-radius: 100px;
-  color: var(--main);
-  font-size: 0.75rem;
+  display: flex;
+  gap: 16px;
 }
 
-.footer {
-  text-align: center;
-  padding: 60px 0 30px;
-  color: var(--text-dim);
-  font-size: 0.85rem;
-  opacity: 0.5;
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <a href="/home/" class="back-link">← 返回元门户</a>
-  
-  <h1 class="page-title">元知识</h1>
-  <p class="page-subtitle">个人知识库 · 学习笔记 · 知识的结构化存储与连接</p>
 
-  <!-- 搜索栏 -->
-  <div class="search-bar">
-    <input type="text" class="search-input" placeholder="搜索知识笔记...">
+<nav class="top-nav">
+  <div class="nav-left">
+    <a href="/home/" class="back-btn">← 返回门廊</a>
+    <div class="nav-title">知识求索</div>
   </div>
+</nav>
 
-  <!-- 知识分类 -->
-  <div class="cats-grid">
-    <div class="cat-card">
-      <div class="cat-icon">💻</div>
-      <div class="cat-name">编程开发</div>
-      <div class="cat-count">12 篇笔记</div>
+<div class="layout">
+  <aside class="sidebar">
+    <h3>知识体系</h3>
+    <div class="tree-item active" onclick="selectTopic(this, '全部')">📚 全部笔记</div>
+    <div class="tree-item" onclick="selectTopic(this, '哲学')">☯ 哲学思考</div>
+    <div class="tree-child">
+      <div class="tree-item" onclick="selectTopic(this, '道家')">老子与道家</div>
+      <div class="tree-item" onclick="selectTopic(this, '禅宗')">禅宗与观照</div>
     </div>
-    <div class="cat-card">
-      <div class="cat-icon">🌌</div>
-      <div class="cat-name">哲学思考</div>
-      <div class="cat-count">8 篇笔记</div>
+    <div class="tree-item" onclick="selectTopic(this, '技术')">⚙️ 技术笔记</div>
+    <div class="tree-child">
+      <div class="tree-item" onclick="selectTopic(this, '前端')">前端开发</div>
+      <div class="tree-item" onclick="selectTopic(this, '架构')">系统架构</div>
     </div>
-    <div class="cat-card">
-      <div class="cat-icon">🎨</div>
-      <div class="cat-name">设计美学</div>
-      <div class="cat-count">6 篇笔记</div>
-    </div>
-    <div class="cat-card">
-      <div class="cat-icon">📚</div>
-      <div class="cat-name">读书笔记</div>
-      <div class="cat-count">15 篇笔记</div>
-    </div>
-  </div>
+    <div class="tree-item" onclick="selectTopic(this, '生活')">🌿 生活随笔</div>
+  </aside>
 
-  <!-- 最近笔记 -->
-  <h2 class="section-title">📝 最近更新</h2>
-  <div class="notes-list">
-    <div class="note-card">
-      <div class="note-title">Hexo 博客部署踩坑记录</div>
-      <div class="note-excerpt">从本地预览到上线部署，遇到了路径问题、编码问题、404问题，以及Supabase区域迁移的完整过程...</div>
-      <div class="note-meta">
-        <span class="note-tag">编程</span>
-        <span>2026-09-20</span>
-        <span>· 5 分钟阅读</span>
+  <main class="content">
+    <div class="content-header">
+      <h1 id="contentTitle">全部笔记</h1>
+      <p>探索知识的边界，记录思考的痕迹</p>
+    </div>
+
+    <div class="search-box">
+      <input type="text" placeholder="搜索笔记..." id="searchInput">
+    </div>
+
+    <div class="note-list">
+      <div class="note-card" onclick="showToast('打开笔记：道与空')">
+        <h4>道与空：从有无相生说起</h4>
+        <p>老子说"三十辐共一毂，当其无，有车之用"。空不是没有，而是让功能成为可能的那个空间。</p>
+        <div class="note-meta">
+          <span>🏷️ 哲学</span>
+          <span>📅 2026-09-20</span>
+          <span>⏱️ 5分钟阅读</span>
+        </div>
+      </div>
+
+      <div class="note-card" onclick="showToast('打开笔记：系统架构的克制之道')">
+        <h4>系统架构的克制之道</h4>
+        <p>最好的架构不是加了多少功能，而是砍掉了多少不必要的功能。每个模块只做一件事，做到极致。</p>
+        <div class="note-meta">
+          <span>🏷️ 技术</span>
+          <span>📅 2026-09-18</span>
+          <span>⏱️ 8分钟阅读</span>
+        </div>
+      </div>
+
+      <div class="note-card" onclick="showToast('打开笔记：观照的功夫')">
+        <h4>观照的功夫：不评判的觉察</h4>
+        <p>观照不是思考，不是分析，只是看着。就像看着云从天空飘过，不追不留。这是最朴素也最深刻的修行。</p>
+        <div class="note-meta">
+          <span>🏷️ 哲学</span>
+          <span>📅 2026-09-15</span>
+          <span>⏱️ 3分钟阅读</span>
+        </div>
       </div>
     </div>
-    <div class="note-card">
-      <div class="note-title">元艺术风格的设计语言</div>
-      <div class="note-excerpt">深色玻璃拟态、三维空间交互、高饱和局部色点缀、悬浮面板设计——未来感UI的核心要素...</div>
-      <div class="note-meta">
-        <span class="note-tag">设计</span>
-        <span>2026-09-19</span>
-        <span>· 8 分钟阅读</span>
-      </div>
-    </div>
-    <div class="note-card">
-      <div class="note-title">大道元灵：以衡为核的思想体系</div>
-      <div class="note-excerpt">万我归一，在不同角色与视角中寻找平衡。元不是起点，是对原点的回归与超越...</div>
-      <div class="note-meta">
-        <span class="note-tag">哲学</span>
-        <span>2026-09-18</span>
-        <span>· 12 分钟阅读</span>
-      </div>
-    </div>
-    <div class="note-card">
-      <div class="note-title">Supabase 免费版使用指南</div>
-      <div class="note-excerpt">每个Organization最多2个免费项目，7天无访问自动暂停，多组织可以变相扩容...</div>
-      <div class="note-meta">
-        <span class="note-tag">编程</span>
-        <span>2026-09-17</span>
-        <span>· 6 分钟阅读</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    大道元灵 · 元知识 · Est. 2026
-  </div>
+  </main>
 </div>
 
 <script>
-// 卡片悬停效果
-document.querySelectorAll('.cat-card, .note-card').forEach(card => {
-  card.addEventListener('mouseenter', () => {
-    card.style.transform = card.classList.contains('note-card') ? 'translateX(8px)' : 'translateY(-4px)';
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
-});
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.style.cssText = 
+    position: fixed; top: 80px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--main); color: white;
+    padding: 12px 24px; border-radius: 99px;
+    font-size: 0.9rem; z-index: 1000;
+  ;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
 
-// 全局错误保护
-window.addEventListener('error', function(e) {
-  console.warn('页面错误:', e.message);
-  return true;
-});
-window.addEventListener('unhandledrejection', function(e) {
-  console.warn('Promise错误:', e.reason);
-  e.preventDefault();
-});
+function selectTopic(el, name) {
+  document.querySelectorAll('.tree-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('contentTitle').textContent = name;
+  showToast('切换到：' + name);
+}
 </script>
+
 </body>
 </html>

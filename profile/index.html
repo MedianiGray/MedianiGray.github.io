@@ -1,320 +1,669 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>个人中心 · 大道元灵</title>
+<title>个人中心</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
   --main: #689F89;
-  --main-deep: #4E7A68;
-  --main-glow: rgba(104, 159, 137, 0.3);
-  --bg-primary: #161d1b;
-  --bg-secondary: #1e2825;
-  --bg-card: rgba(255, 255, 255, 0.05);
-  --bg-card-hover: rgba(255, 255, 255, 0.08);
-  --text-primary: #e8eaf0;
-  --text-secondary: #9ba3b4;
-  --text-muted: #6b7385;
-  --border: rgba(255, 255, 255, 0.1);
-  --danger: #e06c6c;
+  --main-glow: rgba(104,159,137,0.2);
+  --bg: #0a0f0e;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-hover: rgba(255,255,255,0.06);
+  --text: #e8edf2;
+  --text-dim: #7a8595;
+  --border: rgba(255,255,255,0.08);
 }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
   min-height: 100vh;
 }
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 40px 20px;
+
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(10,15,14,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
 }
-.back-link {
-  display: inline-block;
-  color: var(--text-muted);
+.back-btn {
+  color: var(--text-dim);
   text-decoration: none;
-  margin-bottom: 30px;
   font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
 }
-.back-link:hover { color: var(--main); }
+.back-btn:hover { color: var(--main); border-color: var(--main); }
+.nav-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fff, var(--main));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.container {
+  max-width: 900px;
+  margin: 84px auto 40px;
+  padding: 0 24px;
+}
+
+/* 个人资料卡片 */
 .profile-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 40px;
+  border-radius: 20px;
+  padding: 32px;
   margin-bottom: 24px;
-  text-align: center;
+  display: flex;
+  gap: 24px;
+  align-items: center;
 }
 .avatar {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--main), var(--main-deep));
+  background: linear-gradient(135deg, var(--main), #4E7A68);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: white;
-  margin: 0 auto 20px;
+  font-weight: 600;
 }
+.profile-info { flex: 1; }
 .username {
-  font-size: 1.5rem;
-  margin-bottom: 8px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 .bio {
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  line-height: 1.8;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 12px;
 }
-.stats {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
+.role-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--main-glow);
+  color: var(--main);
+  border-radius: 99px;
+  font-size: 0.8rem;
 }
-.stat-item {
+.edit-btn {
+  padding: 10px 20px;
+  background: var(--main);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.edit-btn:hover { background: #5a8f79; }
+
+/* 统计数据 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
   text-align: center;
 }
-.stat-value {
-  font-size: 1.5rem;
+.stat-number {
+  font-size: 1.8rem;
   font-weight: 700;
   color: var(--main);
+  margin-bottom: 4px;
 }
 .stat-label {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-top: 4px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
 }
+
+/* Tab切换 */
 .tabs {
   display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--border);
+  gap: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 4px;
+  margin-bottom: 20px;
 }
 .tab {
-  padding: 12px 24px;
-  color: var(--text-muted);
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 99px;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
+  font-size: 0.9rem;
+  color: var(--text-dim);
   transition: all 0.2s;
 }
 .tab.active {
-  color: var(--main);
-  border-bottom-color: var(--main);
+  background: var(--main);
+  color: white;
 }
-.tab-content {
-  display: none;
+
+/* 内容列表 */
+.content-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.tab-content.active {
-  display: block;
-}
-.post-item {
+.content-item {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
-  margin-bottom: 12px;
-}
-.post-item h4 {
-  margin-bottom: 8px;
-}
-.post-item p {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-}
-.btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
   cursor: pointer;
-  font-size: 0.9rem;
   transition: all 0.2s;
 }
-.btn-primary {
+.content-item:hover {
+  background: var(--bg-hover);
+  transform: translateX(4px);
+}
+.content-item h4 {
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+}
+.content-item p {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.content-meta {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  display: flex;
+  gap: 16px;
+}
+
+/* 设置项 */
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.setting-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.setting-label { font-size: 0.95rem; }
+.setting-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+.toggle {
+  width: 48px;
+  height: 28px;
+  border-radius: 99px;
+  background: var(--border);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.toggle.on {
+  background: var(--main);
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+  transition: all 0.2s;
+}
+.toggle.on::after {
+  left: 23px;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 14px;
+  background: rgba(224,108,108,0.1);
+  border: 1px solid rgba(224,108,108,0.3);
+  color: #e06c6c;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-top: 24px;
+  transition: all 0.2s;
+}
+.logout-btn:hover {
+  background: rgba(224,108,108,0.2);
+}
+
+.toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
   background: var(--main);
   color: white;
+  padding: 12px 24px;
+  border-radius: 99px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 1000;
+  pointer-events: none;
 }
-.btn-primary:hover {
-  background: var(--main-deep);
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
-.btn-secondary {
-  background: var(--bg-card);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-}
-.login-prompt {
-  text-align: center;
-  padding: 60px 20px;
-}
-.login-prompt h2 {
-  margin-bottom: 16px;
-}
-.login-prompt p {
-  color: var(--text-secondary);
-  margin-bottom: 24px;
+
+@media (max-width: 768px) {
+  .profile-card { flex-direction: column; text-align: center; }
+  .stats-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
+
+<div class="toast" id="toast"></div>
+
+<nav class="top-nav">
+  <a href="/home/" class="back-btn">← 返回门廊</a>
+  <div class="nav-title">个人中心</div>
+</nav>
+
 <div class="container">
-  <a href="/" class="back-link">← 返回首页</a>
-  
-  <div id="login-prompt" class="login-prompt" style="display:none;">
-    <h2>请先登录</h2>
-    <p>登录后查看个人中心</p>
-    <a href="/admin/login.html" class="btn btn-primary">立即登录</a>
+  <!-- 个人资料卡片 -->
+  <div class="profile-card">
+    <div class="avatar">M</div>
+    <div class="profile-info">
+      <div class="username">MedianiGray</div>
+      <div class="bio">喜欢猫猫、黄昏与文字随笔，探索思想的边界</div>
+      <span class="role-badge">超级管理员</span>
+    </div>
+    <button class="edit-btn" onclick="showToast('编辑资料功能开发中')">编辑资料</button>
   </div>
 
-  <div id="profile-content" style="display:none;">
-    <div class="profile-card">
-      <div class="avatar" id="avatar">👤</div>
-      <h2 class="username" id="username">用户名</h2>
-      <div id="role-badge" style="display:inline-block;padding:4px 12px;border-radius:100px;font-size:0.8rem;margin-bottom:12px;"></div>
-      <p class="bio" id="bio">这个人很懒，什么都没写</p>
-      <div class="stats">
-        <div class="stat-item">
-          <div class="stat-value" id="stat-posts">0</div>
-          <div class="stat-label">我的文章</div>
+  <!-- 统计数据 -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">12</div>
+      <div class="stat-label">发布文章</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">48</div>
+      <div class="stat-label">获得点赞</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">23</div>
+      <div class="stat-label">收藏内容</div>
+    </div>
+  </div>
+
+  <!-- Tab切换 -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this, 'posts')">我的发布</div>
+    <div class="tab" onclick="switchTab(this, 'comments')">我的评论</div>
+    <div class="tab" onclick="switchTab(this, 'favorites')">我的收藏</div>
+    <div class="tab" onclick="switchTab(this, 'settings')">设置</div>
+  </div>
+
+  <!-- 我的发布 -->
+  <div class="content-list" id="postsTab">
+    <div class="content-item" onclick="showToast('打开文章：男孩和猫')">
+      <h4>男孩和猫</h4>
+      <p>傍晚的晚风卷着梧桐碎叶，轻轻撞在老居民楼的玻璃窗上。少年背着洗得发白的帆布书包，脚步放得很轻，怀里揣着一团柔软的灰白色影子。</p>
+      <div class="content-meta">
+        <span>📅 2026-09-20</span>
+        <span>👁️ 浏览 55</span>
+        <span>❤️ 点赞 12</span>
+      </div>
+    </div>
+
+    <div class="content-item" onclick="showToast('打开文章：第一篇测试文章')">
+      <h4>第一篇测试文章</h4>
+      <p>这里写文章正文，支持Markdown语法，测试博客系统的基本功能。</p>
+      <div class="content-meta">
+        <span>📅 2026-09-20</span>
+        <span>👁️ 浏览 32</span>
+        <span>❤️ 点赞 8</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 我的评论 -->
+  <div class="content-list" id="commentsTab" style="display:none">
+    <div class="content-item" onclick="showToast('打开评论')">
+      <h4>关于"道与空"的评论</h4>
+      <p>说得太好了！空不是没有，而是让功能成为可能的那个空间。这个角度很新颖。</p>
+      <div class="content-meta">
+        <span>📅 2小时前</span>
+        <span>💬 回复：观照与觉察</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 我的收藏 -->
+  <div class="content-list" id="favoritesTab" style="display:none">
+    <div class="content-item" onclick="showToast('打开收藏内容')">
+      <h4>有无相生：从系统设计看哲学</h4>
+      <p>每个功能都要有对应的"空"——可关闭、可撤销、可留白。这才是真正的克制。</p>
+      <div class="content-meta">
+        <span>📅 收藏于 昨天</span>
+        <span>🏷️ 哲学</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置 -->
+  <div id="settingsTab" style="display:none">
+    <div class="settings-list">
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">深色模式</div>
+          <div class="setting-desc">始终使用暗色主题</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value" id="stat-comments">0</div>
-          <div class="stat-label">我的评论</div>
+        <div class="toggle on" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">粒子效果</div>
+          <div class="setting-desc">在门廊主页显示漂浮粒子（有无相生）</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-value" id="stat-favorites">0</div>
-          <div class="stat-label">我的收藏</div>
+        <div class="toggle on" onclick="toggleSwitch(this)"></div>
+      </div>
+
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">自动旋转</div>
+          <div class="setting-desc">门廊主页相机自动缓慢旋转</div>
         </div>
+        <div class="toggle on" onclick="toggleSwitch(this)"></div>
       </div>
-    </div>
 
-    <div class="tabs">
-      <div class="tab active" data-tab="posts">我的文章</div>
-      <div class="tab" data-tab="comments">我的评论</div>
-      <div class="tab" data-tab="favorites">我的收藏</div>
-      <div class="tab" data-tab="settings">账号设置</div>
-    </div>
-
-    <div class="tab-content active" id="tab-posts">
-      <div id="my-posts">
-        <p style="color:var(--text-muted);text-align:center;padding:40px;">暂无文章</p>
-      </div>
-    </div>
-
-    <div class="tab-content" id="tab-comments">
-      <div id="my-comments">
-        <p style="color:var(--text-muted);text-align:center;padding:40px;">暂无评论</p>
-      </div>
-    </div>
-
-    <div class="tab-content" id="tab-favorites">
-      <div id="my-favorites">
-        <p style="color:var(--text-muted);text-align:center;padding:40px;">暂无收藏</p>
-      </div>
-    </div>
-
-    <div class="tab-content" id="tab-settings">
-      <div class="profile-card">
-        <h3 style="margin-bottom:20px;">编辑资料</h3>
-        <div style="text-align:left;max-width:400px;margin:0 auto;">
-          <div style="margin-bottom:16px;">
-            <label style="display:block;margin-bottom:8px;color:var(--text-secondary);">昵称</label>
-            <input type="text" id="edit-username" style="width:100%;padding:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);">
-          </div>
-          <div style="margin-bottom:16px;">
-            <label style="display:block;margin-bottom:8px;color:var(--text-secondary);">个人简介</label>
-            <textarea id="edit-bio" style="width:100%;padding:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);min-height:80px;"></textarea>
-          </div>
-          <button class="btn btn-primary" onclick="saveProfile()">保存修改</button>
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">声音效果</div>
+          <div class="setting-desc">点击和滚动的环境音</div>
         </div>
+        <div class="toggle" onclick="toggleSwitch(this)"></div>
       </div>
     </div>
+
+    <button class="logout-btn" onclick="logout()">退出登录</button>
   </div>
 </div>
 
 <script>
-const SUPABASE_URL = "https://nxrinxhhuhtexfzkwxbu.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_VyMh9BT9Tzm6uhM-Mkj5UA_WHm6ITiW";
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// 初始化Supabase
+const supabaseUrl = 'https://xyxrwstdhmauwrbrojnr.supabase.co';
+const supabaseKey = 'sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG';
+const sb = supabase.createClient(supabaseUrl, supabaseKey);
 
 let currentUser = null;
+let userProfile = null;
 
-// 检查登录状态
-sb.auth.getSession().then(({ data: { session } }) => {
-    if (session) {
-        currentUser = session.user;
-        document.getElementById('login-prompt').style.display = 'none';
-        document.getElementById('profile-content').style.display = 'block';
-        loadProfile();
-    } else {
-        document.getElementById('login-prompt').style.display = 'block';
-        document.getElementById('profile-content').style.display = 'none';
-    }
-});
-
-async function loadProfile() {
-    try {
-        const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-        if (profile) {
-            document.getElementById('username').textContent = profile.username || currentUser.email;
-            document.getElementById('bio').textContent = profile.bio || '这个人很懒，什么都没写';
-            document.getElementById('edit-username').value = profile.username || '';
-            document.getElementById('edit-bio').value = profile.bio || '';
-            
-            // 显示角色
-            const roleBadge = document.getElementById('role-badge');
-            const role = profile.role || 'user';
-            if (role === 'super_admin') {
-                roleBadge.textContent = '👑 超级管理员';
-                roleBadge.style.background = 'rgba(255, 215, 0, 0.15)';
-                roleBadge.style.color = '#ffd700';
-            } else if (role === 'admin') {
-                roleBadge.textContent = '⚙️ 管理员';
-                roleBadge.style.background = 'rgba(104, 159, 137, 0.15)';
-                roleBadge.style.color = 'var(--main)';
-            } else {
-                roleBadge.textContent = '👤 普通用户';
-                roleBadge.style.background = 'rgba(255, 255, 255, 0.05)';
-                roleBadge.style.color = 'var(--text-secondary)';
-            }
-        } else {
-            document.getElementById('username').textContent = currentUser.email;
-        }
-    } catch(e) {
-        console.log('加载资料失败:', e);
-    }
+// 页面加载时初始化
+async function init() {
+  const { data: { user } } = await sb.auth.getUser();
+  
+  if (!user) {
+    showToast('请先登录');
+    setTimeout(() => window.location.href = '/admin/login.html', 1500);
+    return;
+  }
+  
+  currentUser = user;
+  await loadUserProfile();
+  await loadUserStats();
+  await loadUserPosts();
+  await loadUserComments();
+  await loadUserFavorites();
 }
 
-async function saveProfile() {
-    const username = document.getElementById('edit-username').value;
-    const bio = document.getElementById('edit-bio').value;
-    try {
-        await sb.from('profiles').upsert({
-            id: currentUser.id,
-            username: username,
-            bio: bio,
-            updated_at: new Date().toISOString()
-        });
-        alert('✅ 资料已保存');
-        loadProfile();
-    } catch(e) {
-        alert('❌ 保存失败: ' + e.message);
+// 加载用户资料
+async function loadUserProfile() {
+  try {
+    const { data, error } = await sb
+      .from('profiles')
+      .select('*')
+      .eq('id', currentUser.id)
+      .single();
+    
+    if (error) throw error;
+    userProfile = data;
+    
+    // 更新页面显示
+    const username = data.username || currentUser.email.split('@')[0];
+    const avatarChar = username.charAt(0).toUpperCase();
+    const role = data.role || 'user';
+    const roleText = { 'super_admin': '超级管理员', 'admin': '管理员', 'user': '普通用户' }[role] || '普通用户';
+    
+    document.querySelector('.avatar').textContent = avatarChar;
+    document.querySelector('.username').textContent = username;
+    document.querySelector('.role-badge').textContent = roleText;
+    
+    if (data.bio) {
+      document.querySelector('.bio').textContent = data.bio;
     }
+  } catch (e) {
+    console.error('加载用户资料失败:', e);
+    // 使用默认值
+    const email = currentUser.email;
+    const username = email.split('@')[0];
+    document.querySelector('.avatar').textContent = username.charAt(0).toUpperCase();
+    document.querySelector('.username').textContent = username;
+  }
 }
 
-// Tab切换
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-    });
-});
+// 加载用户统计
+async function loadUserStats() {
+  try {
+    // 文章数
+    const { count: postCount } = await sb
+      .from('posts')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', currentUser.id);
+    
+    // 点赞数（从community_posts）
+    const { data: likedPosts } = await sb
+      .from('community_posts')
+      .select('likes')
+      .eq('user_id', currentUser.id);
+    
+    const totalLikes = likedPosts ? likedPosts.reduce((sum, p) => sum + (p.likes || 0), 0) : 0;
+    
+    // 收藏数
+    const { count: favCount } = await sb
+      .from('favorites')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', currentUser.id);
+    
+    // 更新统计
+    const stats = document.querySelectorAll('.stat-number');
+    if (stats[0]) stats[0].textContent = postCount || 0;
+    if (stats[1]) stats[1].textContent = totalLikes || 0;
+    if (stats[2]) stats[2].textContent = favCount || 0;
+  } catch (e) {
+    console.error('加载统计失败:', e);
+  }
+}
+
+// 加载用户文章
+async function loadUserPosts() {
+  try {
+    const { data, error } = await sb
+      .from('posts')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (error) throw error;
+    
+    const postsTab = document.getElementById('postsTab');
+    if (!data || data.length === 0) {
+      postsTab.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim);">还没有发布文章</div>';
+      return;
+    }
+    
+    postsTab.innerHTML = data.map(post => `
+      <div class="content-item" onclick="showToast('打开文章')">
+        <h4>${escapeHtml(post.title || '无标题')}</h4>
+        <p>${escapeHtml((post.content || '').substring(0, 100))}...</p>
+        <div class="content-meta">
+          <span>📅 ${formatDate(post.created_at)}</span>
+          <span>👁️ 浏览 ${post.views || 0}</span>
+          <span>❤️ 点赞 ${post.likes || 0}</span>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.error('加载文章失败:', e);
+  }
+}
+
+// 加载用户评论
+async function loadUserComments() {
+  try {
+    const { data, error } = await sb
+      .from('comments')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (error) throw error;
+    
+    const commentsTab = document.getElementById('commentsTab');
+    if (!data || data.length === 0) {
+      commentsTab.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim);">还没有评论</div>';
+      return;
+    }
+    
+    commentsTab.innerHTML = data.map(comment => `
+      <div class="content-item" onclick="showToast('打开评论')">
+        <h4>评论</h4>
+        <p>${escapeHtml(comment.content || '')}</p>
+        <div class="content-meta">
+          <span>📅 ${formatDate(comment.created_at)}</span>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.error('加载评论失败:', e);
+  }
+}
+
+// 加载用户收藏
+async function loadUserFavorites() {
+  try {
+    const { data, error } = await sb
+      .from('favorites')
+      .select('*, posts(title, content)')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (error) throw error;
+    
+    const favoritesTab = document.getElementById('favoritesTab');
+    if (!data || data.length === 0) {
+      favoritesTab.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim);">还没有收藏</div>';
+      return;
+    }
+    
+    favoritesTab.innerHTML = data.map(fav => {
+      const post = fav.posts || {};
+      return `
+        <div class="content-item" onclick="showToast('打开收藏')">
+          <h4>${escapeHtml(post.title || '收藏内容')}</h4>
+          <p>${escapeHtml((post.content || '').substring(0, 100))}...</p>
+          <div class="content-meta">
+            <span>📅 收藏于 ${formatDate(fav.created_at)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    console.error('加载收藏失败:', e);
+  }
+}
+
+// 工具函数
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text || '';
+  return div.innerHTML;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('zh-CN');
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function switchTab(el, tabName) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  
+  document.getElementById('postsTab').style.display = tabName === 'posts' ? 'flex' : 'none';
+  document.getElementById('commentsTab').style.display = tabName === 'comments' ? 'flex' : 'none';
+  document.getElementById('favoritesTab').style.display = tabName === 'favorites' ? 'flex' : 'none';
+  document.getElementById('settingsTab').style.display = tabName === 'settings' ? 'block' : 'none';
+}
+
+function toggleSwitch(el) {
+  el.classList.toggle('on');
+  showToast(el.classList.contains('on') ? '已开启' : '已关闭');
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  showToast('退出登录成功');
+  setTimeout(() => window.location.href = '/', 1000);
+}
+
+// 启动
+init();
 </script>
+
 </body>
 </html>
+

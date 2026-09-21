@@ -1,5 +1,5 @@
 /* ============================================
-   元博客艺术风格 · 未来感玻璃拟态
+   观照之境艺术风格 · 未来感玻璃拟态
    设计理念：空间化界面 + 3D半透明玻璃 + 悬浮面板
    ============================================ */
 
@@ -1093,6 +1093,100 @@ body,
   background: rgba(255, 255, 255, 0.05);
 }
 /* ============================================
+   观照之境 · 文章列表卡片流优化
+   ============================================ */
+
+/* 文章卡片 - 大卡片风格 */
+#recent-posts > .recent-post-item {
+    margin-bottom: 2rem !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    border: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+#recent-posts > .recent-post-item:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 24px 60px rgba(104, 159, 137, 0.15) !important;
+    border-color: rgba(104, 159, 137, 0.3) !important;
+}
+
+/* 文章封面 - 更大更突出 */
+#recent-posts > .recent-post-item .post_cover {
+    height: 240px !important;
+    overflow: hidden;
+}
+
+#recent-posts > .recent-post-item .post_cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+#recent-posts > .recent-post-item:hover .post_cover img {
+    transform: scale(1.05);
+}
+
+/* 文章内容区 */
+#recent-posts > .recent-post-item .post-info {
+    padding: 1.5rem 2rem !important;
+}
+
+/* 文章标题 */
+#recent-posts > .recent-post-item .post-title {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    font-family: 'Noto Serif SC', serif !important;
+    margin-bottom: 0.75rem !important;
+    letter-spacing: 0.02em;
+}
+
+/* 文章摘要 */
+#recent-posts > .recent-post-item .post-abbr {
+    color: var(--text-secondary) !important;
+    line-height: 1.8 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 1rem !important;
+}
+
+/* 文章信息（日期/分类/阅读时长） */
+#recent-posts > .recent-post-item .post-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* 侧栏卡片 - 统一玻璃风格 */
+#aside-content .card-widget {
+    border-radius: 16px !important;
+    margin-bottom: 1.5rem !important;
+}
+
+/* 左侧边栏 - 作者卡片 */
+#aside-content .card-widget:nth-child(1) {
+    background: linear-gradient(135deg, rgba(104, 159, 137, 0.1), var(--bg-card)) !important;
+}
+
+/* 分页按钮 */
+#pagination .page-number {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px !important;
+    margin: 0 0.25rem !important;
+}
+
+#pagination .page-number.current {
+    background: var(--meta-main) !important;
+    color: white !important;
+    border-color: var(--meta-main) !important;
+}
+
+/* ============================================
    文章阅读体验优化
    ============================================ */
 
@@ -1216,3 +1310,4 @@ body,
     font-size: 1rem;
   }
 }
+

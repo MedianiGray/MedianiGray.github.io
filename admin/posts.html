@@ -3,255 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章管理 · 元管理</title>
+    <title>文章管理</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --main: #689F89;
-            --main-deep: #4E7A68;
-            --main-glow: rgba(104, 159, 137, 0.3);
-            --bg-primary: #161d1b;
-            --bg-secondary: #1e2825;
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --bg-card-hover: rgba(255, 255, 255, 0.08);
-            --text-primary: #e8eaf0;
-            --text-secondary: #9ba3b4;
-            --text-muted: #6b7385;
-            --border: rgba(255, 255, 255, 0.1);
+            --main-glow: rgba(104,159,137,0.15);
+            --bg: #0a0f0e;
+            --bg-secondary: #121a18;
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-hover: rgba(255,255,255,0.06);
+            --text: #e8edf2;
+            --text-dim: #7a8595;
+            --border: rgba(255,255,255,0.08);
             --danger: #e06c6c;
+            --warning: #e0b36c;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
         }
         .sidebar {
-            position: fixed;
-            left: 0; top: 0; bottom: 0;
-            width: 240px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
-            padding: 1.5rem 0;
-            z-index: 100;
+            position: fixed; left: 0; top: 0; bottom: 0;
+            width: 240px; background: var(--bg-secondary);
+            border-right: 1px solid var(--border); padding: 24px 0; z-index: 100;
         }
-        .sidebar-logo { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
-        .sidebar-logo h2 { font-size: 1.2rem; color: var(--main); }
-        .sidebar-logo p { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .sidebar-logo { padding: 0 24px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+        .sidebar-logo h2 {
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #fff, var(--main));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .nav-section { padding: 16px 24px 8px; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
         .nav-item {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.75rem 1.5rem; color: var(--text-secondary);
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 24px; color: var(--text-dim);
             cursor: pointer; transition: all 0.2s; font-size: 0.9rem; text-decoration: none;
         }
-        .nav-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+        .nav-item:hover { background: var(--bg-hover); color: var(--text); }
         .nav-item.active { background: var(--main-glow); color: var(--main); border-right: 2px solid var(--main); }
-        .main { margin-left: 240px; padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .main { margin-left: 240px; padding: 32px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .header h1 { font-size: 1.5rem; }
+        .header-actions { display: flex; gap: 12px; align-items: center; }
+        .search-box {
+            padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text); font-size: 0.9rem; width: 200px;
+        }
+        .search-box:focus { outline: none; border-color: var(--main); }
         .btn {
-            padding: 0.75rem 1.5rem; border-radius: 8px; border: none;
-            cursor: pointer; font-size: 0.95rem; transition: all 0.2s;
+            padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text); cursor: pointer;
+            font-size: 0.9rem; transition: all 0.2s;
         }
-        .btn-primary { background: var(--main); color: white; }
-        .btn-primary:hover { background: var(--main-deep); }
-        .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
-        .btn-danger { background: rgba(224, 108, 108, 0.15); color: var(--danger); border: 1px solid rgba(224, 108, 108, 0.3); }
-        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
-        .table-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        th { color: var(--text-muted); font-weight: 500; font-size: 0.8rem; }
-        tr:hover { background: var(--bg-card-hover); }
+        .btn:hover { background: var(--bg-hover); }
+        .btn-primary { background: var(--main); border-color: var(--main); color: white; }
+        .btn-primary:hover { background: #5a8f79; }
+        .posts-list { display: flex; flex-direction: column; gap: 12px; }
+        .post-item {
+            display: flex; align-items: center; gap: 16px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 20px; transition: all 0.2s;
+        }
+        .post-item:hover { border-color: var(--main); }
+        .post-info { flex: 1; }
+        .post-title { font-weight: 600; font-size: 1rem; margin-bottom: 6px; }
+        .post-meta { display: flex; gap: 16px; font-size: 0.8rem; color: var(--text-dim); }
+        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; }
+        .status-published { background: rgba(104,159,137,0.15); color: var(--main); }
+        .status-draft { background: rgba(224,179,108,0.15); color: var(--warning); }
+        .post-actions { display: flex; gap: 8px; }
+        .action-btn {
+            padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+            background: transparent; color: var(--text-dim); cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s;
+        }
+        .action-btn:hover { background: var(--bg-hover); color: var(--text); }
+        .action-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 16px; }
+        .loading { text-align: center; padding: 40px; color: var(--text-dim); }
+        .toast {
+            position: fixed; top: 80px; right: 32px;
+            background: var(--main); color: white;
+            padding: 12px 24px; border-radius: 10px;
+            font-size: 0.9rem; z-index: 1000; animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2000;
+        }
         .modal {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 2rem;
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px; width: 600px; max-width: 90vw; max-height: 85vh; overflow-y: auto;
         }
-        .modal.active { display: flex; }
-        .modal-content {
-            background: var(--bg-secondary); border-radius: 16px; padding: 2rem;
-            width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto;
+        .modal h3 { margin-bottom: 16px; font-size: 1.2rem; }
+        .modal-field { margin-bottom: 16px; }
+        .modal-field label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-dim); }
+        .modal-field input, .modal-field select, .modal-field textarea {
+            width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text); font-size: 0.9rem; font-family: inherit;
         }
-        .modal-content h2 { margin-bottom: 1.5rem; }
-        .form-group { margin-bottom: 1.2rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: 0.75rem; background: var(--bg-card);
-            border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); font-size: 0.95rem;
-        }
-        .form-group textarea { min-height: 200px; font-family: monospace; }
-        @media (max-width: 768px) {
-            .sidebar { width: 60px; }
-            .sidebar-logo p, .nav-item span { display: none; }
-            .main { margin-left: 60px; padding: 1rem; }
+        .modal-field textarea { min-height: 200px; resize: vertical; line-height: 1.6; }
+        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
         }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <h2>元管理</h2>
-            <p>大道元灵 · 管理后台</p>
-        </div>
-        <nav>
-            <a class="nav-item" href="index.html"><span>📊</span><span>仪表盘</span></a>
-            <a class="nav-item active" href="posts.html"><span>📝</span><span>文章管理</span></a>
-            <a class="nav-item" href="pages.html"><span>📄</span><span>页面内容</span></a>
-            <a class="nav-item" href="comments.html"><span>💬</span><span>评论管理</span></a>
-            <a class="nav-item" href="settings.html"><span>⚙️</span><span>网站设置</span></a>
-            <a class="nav-item" href="#" onclick="logout()"><span>🚪</span><span>退出登录</span></a>
-        </nav>
-    </aside>
 
-    <main class="main">
-        <div class="header">
-            <h1>文章管理</h1>
-            <button class="btn btn-primary" onclick="openPostModal()">+ 新建文章</button>
-        </div>
-        <div class="table-card">
-            <table>
-                <thead>
-                    <tr>
-                        <th>标题</th>
-                        <th>分类</th>
-                        <th>浏览</th>
-                        <th>日期</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody id="posts-body">
-                    <tr><td colspan="5" style="text-align:center;color:var(--text-muted)">加载中...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
+<aside class="sidebar">
+    <div class="sidebar-logo"><h2>🌌 造物工作台</h2></div>
+    <div class="nav-section">概览</div>
+    <a href="/admin/" class="nav-item">📊 仪表盘</a>
+    <div class="nav-section">内容管理</div>
+    <a href="/admin/posts/" class="nav-item active">📝 文章管理</a>
+    <a href="/admin/comments/" class="nav-item">💬 评论管理</a>
+    <a href="/admin/pages/" class="nav-item">📄 页面管理</a>
+    <div class="nav-section">用户</div>
+    <a href="/admin/users/" class="nav-item">👥 用户管理</a>
+    <div class="nav-section">系统</div>
+    <a href="/admin/settings/" class="nav-item">⚙️ 系统设置</a>
+    <a href="/home/" class="nav-item">🏠 返回门廊</a>
+</aside>
 
-    <div class="modal" id="post-modal">
-        <div class="modal-content">
-            <h2 id="modal-title">编辑文章</h2>
-            <input type="hidden" id="post-id">
-            <div class="form-group">
-                <label>标题</label>
-                <input type="text" id="post-title" placeholder="文章标题">
-            </div>
-            <div class="form-group">
-                <label>分类</label>
-                <input type="text" id="post-category" placeholder="分类">
-            </div>
-            <div class="form-group">
-                <label>摘要</label>
-                <input type="text" id="post-excerpt" placeholder="文章摘要">
-            </div>
-            <div class="form-group">
-                <label>内容 (Markdown)</label>
-                <textarea id="post-content" placeholder="支持Markdown语法"></textarea>
-            </div>
-            <div style="display:flex;gap:1rem;">
-                <button class="btn btn-primary" onclick="savePost()">保存</button>
-                <button class="btn btn-secondary" onclick="closePostModal()">取消</button>
-            </div>
+<main class="main">
+    <div class="header">
+        <h1>文章管理</h1>
+        <div class="header-actions">
+            <input type="text" class="search-box" placeholder="搜索文章..." oninput="searchPosts(this.value)">
+            <button class="btn btn-primary" onclick="newPost()">+ 写新文章</button>
         </div>
     </div>
+    <div class="posts-list" id="postsList">
+        <div class="loading">加载中...</div>
+    </div>
+</main>
 
-    <script>
-        const SUPABASE_URL = "https://xyxrwstdhmauwrbrojnr.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG";
-        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<div id="modalContainer"></div>
 
-        sb.auth.getSession().then(({ data: { session } }) => {
-            if (!session) window.location.href = 'login.html';
-        });
+<script>
+const supabaseUrl = 'https://xyxrwstdhmauwrbrojnr.supabase.co';
+const supabaseKey = 'sb_publishable_Vu7vCurGlKENUEo2i8cl9w_jHo36hjG';
+const sb = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function loadPosts() {
-            const tbody = document.getElementById('posts-body');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">加载中...</td></tr>';
-            try {
-                const { data, error } = await sb.from('posts').select('*').order('created_at', { ascending: false });
-                if (error) throw error;
-                if (!data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">暂无文章</td></tr>';
-                    return;
-                }
-                tbody.innerHTML = '';
-                data.forEach(post => {
-                    const tr = document.createElement('tr');
-                    const date = new Date(post.created_at).toLocaleDateString('zh-CN');
-                    tr.innerHTML = `
-                        <td>${post.title}</td>
-                        <td>${post.category}</td>
-                        <td>${post.views || 0}</td>
-                        <td>${date}</td>
-                        <td>
-                            <button class="btn btn-sm btn-secondary" onclick='editPost(${JSON.stringify(post)})'>编辑</button>
-                            <button class="btn btn-sm btn-danger" onclick="deletePost('${post.id}')">删除</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--danger)">加载失败: ' + e.message + '</td></tr>';
-            }
+let currentUser = null;
+let allPosts = [];
+
+window.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) {
+        showToast('请先登录');
+        setTimeout(() => window.location.href = '/admin/login.html', 1500);
+        return;
+    }
+    currentUser = user;
+    await loadPosts();
+}
+
+async function loadPosts() {
+    const list = document.getElementById('postsList');
+    list.innerHTML = '<div class="loading">加载中...</div>';
+    try {
+        const { data, error } = await sb
+            .from('posts')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(50);
+        if (error) throw error;
+        allPosts = data || [];
+        renderPosts(allPosts);
+    } catch (e) {
+        console.error('加载文章失败:', e);
+        list.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>加载失败：' + escapeHtml(e.message) + '</p></div>';
+    }
+}
+
+function searchPosts(keyword) {
+    if (!keyword.trim()) { renderPosts(allPosts); return; }
+    const lower = keyword.toLowerCase();
+    const filtered = allPosts.filter(p => 
+        (p.title && p.title.toLowerCase().includes(lower)) ||
+        (p.category && p.category.toLowerCase().includes(lower))
+    );
+    renderPosts(filtered);
+}
+
+function renderPosts(posts) {
+    const list = document.getElementById('postsList');
+    if (posts.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="icon">📝</div><p>暂无文章，点击右上角写新文章</p></div>';
+        return;
+    }
+    list.innerHTML = posts.map(post => {
+        const title = post.title || '无标题';
+        const status = post.status || 'published';
+        const statusText = status === 'published' ? '已发布' : '草稿';
+        const statusClass = status === 'published' ? 'status-published' : 'status-draft';
+        const category = post.category || '未分类';
+        const views = post.views || 0;
+        const likes = post.likes_count || 0;
+        const date = formatDate(post.created_at);
+        const publishBtn = status === 'draft' 
+            ? '<button class="action-btn" onclick="publishPost(\'' + post.id + '\')">发布</button>' : '';
+        return `
+        <div class="post-item">
+            <div class="post-info">
+                <div class="post-title">${escapeHtml(title)}</div>
+                <div class="post-meta">
+                    <span>📅 ${date}</span>
+                    <span>🏷️ ${escapeHtml(category)}</span>
+                    <span>👁️ 浏览 ${views}</span>
+                    <span>❤️ 点赞 ${likes}</span>
+                </div>
+            </div>
+            <span class="status-badge ${statusClass}">${statusText}</span>
+            <div class="post-actions">
+                <button class="action-btn" onclick="editPost('${post.id}')">编辑</button>
+                ${publishBtn}
+                <button class="action-btn danger" onclick="deletePost('${post.id}')">删除</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function newPost() {
+    showPostEditor(null);
+}
+
+function editPost(postId) {
+    const post = allPosts.find(p => p.id === postId);
+    if (!post) return;
+    showPostEditor(post);
+}
+
+function showPostEditor(post) {
+    const isEdit = !!post;
+    const title = post?.title || '';
+    const category = post?.category || '';
+    const content = post?.content || '';
+    const excerpt = post?.excerpt || '';
+    const status = post?.status || 'draft';
+    
+    showModal(`
+        <h3>${isEdit ? '编辑文章' : '写新文章'}</h3>
+        <div class="modal-field">
+            <label>标题</label>
+            <input type="text" id="postTitle" value="${escapeHtml(title)}" placeholder="输入文章标题">
+        </div>
+        <div class="modal-field">
+            <label>分类</label>
+            <input type="text" id="postCategory" value="${escapeHtml(category)}" placeholder="如：思想文章、哲学随笔">
+        </div>
+        <div class="modal-field">
+            <label>摘要</label>
+            <input type="text" id="postExcerpt" value="${escapeHtml(excerpt)}" placeholder="一句话摘要">
+        </div>
+        <div class="modal-field">
+            <label>内容（支持Markdown）</label>
+            <textarea id="postContent" placeholder="在这里写文章内容...">${escapeHtml(content)}</textarea>
+        </div>
+        <div class="modal-field">
+            <label>状态</label>
+            <select id="postStatus">
+                <option value="draft" ${status === 'draft' ? 'selected' : ''}>草稿</option>
+                <option value="published" ${status === 'published' ? 'selected' : ''}>已发布</option>
+            </select>
+        </div>
+        <div class="modal-actions">
+            <button class="btn" onclick="closeModal()">取消</button>
+            <button class="btn btn-primary" onclick="savePost('${post?.id || ''}')">保存</button>
+        </div>
+    `);
+}
+
+async function savePost(postId) {
+    const title = document.getElementById('postTitle').value.trim();
+    const category = document.getElementById('postCategory').value.trim();
+    const excerpt = document.getElementById('postExcerpt').value.trim();
+    const content = document.getElementById('postContent').value;
+    const status = document.getElementById('postStatus').value;
+    
+    if (!title) { showToast('请输入标题'); return; }
+    
+    const slug = title.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-').replace(/^-|-$/g, '');
+    const now = new Date().toISOString();
+    
+    try {
+        if (postId) {
+            const { error } = await sb.from('posts').update({
+                title, slug, category, excerpt, content, status, updated_at: now
+            }).eq('id', postId);
+            if (error) throw error;
+            showToast('文章已更新');
+        } else {
+            const { error } = await sb.from('posts').insert({
+                title, slug, category, excerpt, content, status,
+                author_id: currentUser.id,
+                views: 0, likes_count: 0, comments_count: 0,
+                created_at: now, updated_at: now
+            });
+            if (error) throw error;
+            showToast('文章已创建');
         }
+        closeModal();
+        await loadPosts();
+    } catch(e) {
+        showToast('保存失败: ' + e.message);
+    }
+}
 
-        function openPostModal() {
-            document.getElementById('modal-title').textContent = '新建文章';
-            document.getElementById('post-id').value = '';
-            document.getElementById('post-title').value = '';
-            document.getElementById('post-category').value = '';
-            document.getElementById('post-excerpt').value = '';
-            document.getElementById('post-content').value = '';
-            document.getElementById('post-modal').classList.add('active');
-        }
+async function publishPost(id) {
+    try {
+        await sb.from('posts').update({ status: 'published', updated_at: new Date().toISOString() }).eq('id', id);
+        showToast('发布成功！');
+        await loadPosts();
+    } catch (e) {
+        showToast('发布失败: ' + e.message);
+    }
+}
 
-        function editPost(post) {
-            document.getElementById('modal-title').textContent = '编辑文章';
-            document.getElementById('post-id').value = post.id;
-            document.getElementById('post-title').value = post.title;
-            document.getElementById('post-category').value = post.category || '';
-            document.getElementById('post-excerpt').value = post.excerpt || '';
-            document.getElementById('post-content').value = post.content;
-            document.getElementById('post-modal').classList.add('active');
-        }
+async function deletePost(id) {
+    if (!confirm('确认删除这篇文章？此操作不可恢复。')) return;
+    try {
+        await sb.from('posts').delete().eq('id', id);
+        showToast('删除成功！');
+        await loadPosts();
+    } catch (e) {
+        showToast('删除失败: ' + e.message);
+    }
+}
 
-        function closePostModal() {
-            document.getElementById('post-modal').classList.remove('active');
-        }
+function showModal(html) {
+    const container = document.getElementById('modalContainer');
+    container.innerHTML = `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`;
+}
 
-        async function savePost() {
-            const id = document.getElementById('post-id').value;
-            const title = document.getElementById('post-title').value;
-            const category = document.getElementById('post-category').value;
-            const excerpt = document.getElementById('post-excerpt').value;
-            const content = document.getElementById('post-content').value;
-            if (!title || !content) { alert('标题和内容不能为空'); return; }
-            const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
-            try {
-                if (id) {
-                    await sb.from('posts').update({ title, category, excerpt, content, updated_at: new Date().toISOString() }).eq('id', id);
-                } else {
-                    await sb.from('posts').insert([{ title, slug, category, excerpt, content }]);
-                }
-                closePostModal();
-                loadPosts();
-                alert('保存成功');
-            } catch(e) { alert('保存失败: ' + e.message); }
-        }
+function closeModal() {
+    document.getElementById('modalContainer').innerHTML = '';
+}
 
-        async function deletePost(id) {
-            if (!confirm('确定删除这篇文章？')) return;
-            try {
-                await sb.from('posts').delete().eq('id', id);
-                loadPosts();
-            } catch(e) { alert('删除失败: ' + e.message); }
-        }
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleDateString('zh-CN');
+}
 
-        async function logout() {
-            await sb.auth.signOut();
-            window.location.href = 'login.html';
-        }
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+}
 
-        loadPosts();
-    </script>
+function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+}
+</script>
+
 </body>
 </html>
 

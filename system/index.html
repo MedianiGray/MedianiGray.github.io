@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统状态</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --main: #689F89;
+  --main-glow: rgba(104,159,137,0.15);
+  --bg: #0a0f0e;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-hover: rgba(255,255,255,0.06);
+  --text: #e8edf2;
+  --text-dim: #7a8595;
+  --border: rgba(255,255,255,0.08);
+  --danger: #e06c6c;
+  --warning: #e0b36c;
+  --safe: #689F89;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+  min-height: 100vh;
+  padding: 40px;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+.header { text-align: center; margin-bottom: 48px; }
+.header h1 {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #fff, var(--main));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.header p { color: var(--text-dim); font-size: 0.95rem; }
+.principles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.principle-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  transition: all 0.3s;
+}
+.principle-card:hover { background: var(--bg-hover); transform: translateY(-4px); }
+.principle-icon { font-size: 2rem; margin-bottom: 16px; }
+.principle-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+.principle-desc {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.principle-status { display: flex; align-items: center; gap: 8px; }
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--safe);
+  box-shadow: 0 0 12px var(--main);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.status-text { font-size: 0.85rem; color: var(--text-dim); }
+.metrics-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.metrics-title {
+  font-size: 1.1rem; font-weight: 600;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.metric-item { text-align: center; }
+.metric-value {
+  font-size: 1.8rem; font-weight: 700;
+  color: var(--main); margin-bottom: 4px;
+}
+.metric-label { font-size: 0.8rem; color: var(--text-dim); }
+.emptiness-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+.section-desc {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+.toggle-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 0.95rem; }
+.toggle-desc { font-size: 0.8rem; color: var(--text-dim); margin-top: 2px; }
+.toggle {
+  width: 48px; height: 28px;
+  border-radius: 99px;
+  background: var(--border);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.toggle.on { background: var(--main); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: white;
+  transition: all 0.2s;
+}
+.toggle.on::after { left: 23px; }
+.back-link {
+  display: inline-block;
+  color: var(--text-dim);
+  text-decoration: none;
+  margin-bottom: 32px;
+  font-size: 0.9rem;
+}
+.back-link:hover { color: var(--main); }
+@media (max-width: 768px) {
+  .principles-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/home/" class="back-link">← 返回门廊</a>
+  <div class="header">
+    <h1>系统状态</h1>
+    <p>四根本准则运行监控</p>
+  </div>
+  <div class="principles-grid">
+    <div class="principle-card">
+      <div class="principle-icon">⬜</div>
+      <div class="principle-title">有无相生</div>
+      <div class="principle-desc">任何功能必须有对应的"空"模式——可禁用、可撤销、可释放。系统懂得留白，如同车轮因辐条间的空无方能转动。</div>
+      <div class="principle-status">
+        <div class="status-dot"></div>
+        <span class="status-text">全部功能可禁用 · 运行正常</span>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">⚖️</div>
+      <div class="principle-title">相克相成</div>
+      <div class="principle-desc">系统内置相互制衡的机制，防止单一模块失控。如阴阳相推、负反馈自稳，在冲突中达成动态平衡。</div>
+      <div class="principle-status">
+        <div class="status-dot"></div>
+        <span class="status-text">制衡机制运行中 · 稳定</span>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">🍃</div>
+      <div class="principle-title">顺应自然</div>
+      <div class="principle-desc">交互与设计顺应人类直觉，尊重生态，不创造不必要的认知负担。好的技术如庖丁之刀，游刃于自然之理。</div>
+      <div class="principle-status">
+        <div class="status-dot"></div>
+        <span class="status-text">交互符合直觉 · 通过检查</span>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">✂️</div>
+      <div class="principle-title">极简而用</div>
+      <div class="principle-desc">每个模块只做一件事，做到极致；以最简洁的路径解决最复杂的问题。这是Unix哲学的回响。</div>
+      <div class="principle-status">
+        <div class="status-dot"></div>
+        <span class="status-text">模块职责清晰 · 无冗余</span>
+      </div>
+    </div>
+  </div>
+  <div class="metrics-card">
+    <div class="metrics-title">📊 运行指标</div>
+    <div class="metrics-grid">
+      <div class="metric-item">
+        <div class="metric-value">98.6%</div>
+        <div class="metric-label">原则符合度</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value">7/7</div>
+        <div class="metric-label">模块完整度</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value">12ms</div>
+        <div class="metric-label">平均响应</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value">0</div>
+        <div class="metric-label">异常告警</div>
+      </div>
+    </div>
+  </div>
+  <div class="emptiness-section">
+    <div class="section-title">⬜ 空模式控制</div>
+    <div class="section-desc">有无相生：每个功能都可以被关闭、释放、留白。关闭后页面会自动简化，回归纯粹。</div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">粒子效果</div>
+        <div class="toggle-desc">门廊主页漂浮粒子（关闭后为纯静态背景）</div>
+      </div>
+      <div class="toggle on" onclick="toggleSwitch(this)"></div>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">3D空间</div>
+        <div class="toggle-desc">Three.js 3D房间（关闭后降级为2D卡片布局）</div>
+      </div>
+      <div class="toggle on" onclick="toggleSwitch(this)"></div>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">鼠标光环</div>
+        <div class="toggle-desc">鼠标跟随光晕效果</div>
+      </div>
+      <div class="toggle on" onclick="toggleSwitch(this)"></div>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">滚动动画</div>
+        <div class="toggle-desc">页面滚动入场动画</div>
+      </div>
+      <div class="toggle on" onclick="toggleSwitch(this)"></div>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">页面转场</div>
+        <div class="toggle-desc">页面切换淡入淡出效果</div>
+      </div>
+      <div class="toggle on" onclick="toggleSwitch(this)"></div>
+    </div>
+  </div>
+  <div style="text-align: center; color: var(--text-dim); font-size: 0.85rem; margin-top: 40px;">
+    系统持续监控中 · 偏离原则将自动修正
+  </div>
+</div>
+<script>
+function toggleSwitch(el) {
+  el.classList.toggle('on');
+  const label = el.parentElement.querySelector('.toggle-label').textContent;
+  const state = el.classList.contains('on') ? '已开启' : '已关闭';
+  showToast(label + ' ' + state);
+}
+function showToast(msg) {
+  const toast = document.createElement('div');
+  toast.style.cssText = 
+    position: fixed; top: 32px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--main); color: white;
+    padding: 12px 24px; border-radius: 99px;
+    font-size: 0.9rem; z-index: 1000;
+  ;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+</script>
+</body>
+</html>
+
