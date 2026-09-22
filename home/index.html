@@ -308,8 +308,15 @@ let autoRotate = true;
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
+let downX = 0, downY = 0;
 
 renderer.domElement.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  autoRotate = false;
+  prevX = e.clientX;
+  prevY = e.clientY;
+  downX = e.clientX;
+  downY = e.clientY;
   isDragging = true;
   autoRotate = false;
   prevX = e.clientX;
@@ -333,6 +340,10 @@ renderer.domElement.addEventListener('mousemove', (e) => {
 renderer.domElement.addEventListener('mouseup', () => isDragging = false);
 
 renderer.domElement.addEventListener('click', (e) => {
+  // 区分点击和拖动：如果移动距离超过5像素，不算点击
+  const dx = e.clientX - downX;
+  const dy = e.clientY - downY;
+  if (Math.sqrt(dx*dx + dy*dy) > 5) return;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(doorMeshes, true);
   if (intersects.length > 0) {
@@ -406,4 +417,5 @@ animate();
 
 </body>
 </html>
+
 
