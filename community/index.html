@@ -570,7 +570,8 @@ async function publishPost() {
   }
   
   if (!currentUser) {
-    showToast('请先登录');
+    showToast('请先登录，3秒后跳转登录页...');
+setTimeout(() => window.location.href = '/admin/login.html?redirect=' + encodeURIComponent(window.location.pathname), 3000);
     return;
   }
   
@@ -733,5 +734,6 @@ init();
 
 </body>
 </html>
+
 
 

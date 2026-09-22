@@ -437,7 +437,8 @@ async function init() {
   const { data: { user } } = await sb.auth.getUser();
   
   if (!user) {
-    showToast('请先登录');
+    showToast('请先登录，3秒后跳转登录页...');
+setTimeout(() => window.location.href = '/admin/login.html?redirect=' + encodeURIComponent(window.location.pathname), 3000);
     setTimeout(() => window.location.href = '/admin/login.html', 1500);
     return;
   }
@@ -666,4 +667,5 @@ init();
 
 </body>
 </html>
+
 
