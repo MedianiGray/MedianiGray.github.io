@@ -623,7 +623,7 @@ async function loadPosts() {
   try {
     const { data, error } = await sb
       .from('community_posts')
-      .select('*, profiles(username)')
+      .select('*')
       .order('created_at', { ascending: false })
       .limit(20);
     
@@ -891,7 +891,7 @@ async function loadComments(postId) {
   try {
     const { data, error } = await sb
       .from('community_replies')
-      .select('*, profiles(username)')
+      .select('*')
       .eq('post_id', postId)
       .order('created_at', { ascending: true });
     
@@ -903,7 +903,7 @@ async function loadComments(postId) {
     }
     
     listEl.innerHTML = data.map(comment => {
-      const username = comment.profiles?.username || '匿名用户';
+      const username = '匿名用户';
       const avatarChar = username.charAt(0).toUpperCase();
       const timeAgo = formatTime(comment.created_at);
       return `
@@ -974,6 +974,7 @@ async function submitComment(postId) {
 
 </body>
 </html>
+
 
 
 
