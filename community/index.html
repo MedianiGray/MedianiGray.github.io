@@ -615,21 +615,44 @@ function getSamplePosts() {
         </div>
         <div class="post-mood">✨</div>
       </div>
-      <div class="post-content">今天傍晚的风很温柔，坐在窗边看了很久的云。突然觉得，所谓的"道"，也许就是这种不需要用力的状态。</div>
+      <div class="post-content">今天傍晚的风很温柔，坐在窗边看了很久的云。突然觉得，所谓的"道"，也许就是这种不需要用力的状态。不是刻意追求什么，只是允许一切自然发生。</div>
       <div class="post-actions">
         <div class="action-btn" onclick="toggleLike(this)">❤️ <span>24</span></div>
-        <div class="action-btn" onclick="toggleComments(this, 'sample-1')">💬 <span>8</span></div>
+        <div class="action-btn" onclick="showToast('示例数据：评论功能需要登录后才能使用')">💬 <span>8</span></div>
         <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
       </div>
-        <div class="comments-section" id="comments-sample-1">
-          <div class="comment-list" id="commentList-sample-1">
-            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
-          </div>
-          <div class="comment-input-area">
-            <input type="text" class="comment-input" id="commentInput-sample-1" placeholder="写下你的评论..." />
-            <button class="comment-submit" onclick="submitComment('sample-1')">发送</button>
-          </div>
+    </div>
+    <div class="post-card">
+      <div class="post-header">
+        <div class="avatar">沈</div>
+        <div class="post-user">
+          <div class="post-username">沈清言</div>
+          <div class="post-time">5小时前</div>
         </div>
+        <div class="post-mood">🤔</div>
+      </div>
+      <div class="post-content">读了《道德经》里"三十辐共一毂，当其无，有车之用"这一句，突然懂了为什么留白比填满更重要。我们总是在追求拥有更多，却忘了"空"才是让一切运转起来的关键。</div>
+      <div class="post-actions">
+        <div class="action-btn" onclick="toggleLike(this)">❤️ <span>56</span></div>
+        <div class="action-btn" onclick="showToast('示例数据：评论功能需要登录后才能使用')">💬 <span>12</span></div>
+        <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+      </div>
+    </div>
+    <div class="post-card">
+      <div class="post-header">
+        <div class="avatar">Med</div>
+        <div class="post-user">
+          <div class="post-username">MedianiGray</div>
+          <div class="post-time">昨天</div>
+        </div>
+        <div class="post-mood">💭</div>
+      </div>
+      <div class="post-content">做这个站的初衷，是想找一个安静的地方，把那些说不清道不明的感受写下来。不是为了给谁看，只是想给自己一个"观照"的空间。就像镜子一样，只是如实映照，不评判，不修饰。</div>
+      <div class="post-actions">
+        <div class="action-btn" onclick="toggleLike(this)">❤️ <span>89</span></div>
+        <div class="action-btn" onclick="showToast('示例数据：评论功能需要登录后才能使用')">💬 <span>23</span></div>
+        <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+      </div>
     </div>
   `;
 }
@@ -661,4 +684,5 @@ window.addEventListener('load', init);
 </script>
 </body>
 </html>
+
 
