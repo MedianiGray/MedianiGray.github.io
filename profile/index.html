@@ -301,15 +301,23 @@ body {
 </nav>
 
 <div class="container">
-  <!-- 个人资料卡片 -->
-  <div class="profile-card">
-    <div class="avatar">M</div>
+  <!-- 顶部Banner（大厂风格） -->
+  <div style="position:relative;height:180px;background:linear-gradient(135deg, #1a3a2a, #2d5a4a, #1a3a2a);border-radius:16px;overflow:hidden;margin-bottom:0;">
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 30% 50%, rgba(104,159,137,0.3) 0%, transparent 50%);"></div>
+  </div>
+  
+  <!-- 个人资料卡片（头像叠加在Banner上） -->
+  <div class="profile-card" style="margin-top:-60px;position:relative;z-index:10;">
+    <div class="avatar" style="width:80px;height:80px;font-size:2rem;border:4px solid var(--bg-card);">M</div>
     <div class="profile-info">
-      <div class="username">MedianiGray</div>
-      <div class="bio">喜欢猫猫、黄昏与文字随笔，探索思想的边界</div>
-      <span class="role-badge">超级管理员</span>
+      <div class="username" style="font-size:1.4rem;font-weight:700;">MedianiGray</div>
+      <div class="bio" style="margin-top:4px;">喜欢猫猫、黄昏与文字随笔，探索思想的边界</div>
+      <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+        <span class="role-badge" style="background:linear-gradient(135deg, rgba(104,159,137,0.3), rgba(74,124,102,0.3));border:1px solid var(--accent);padding:4px 12px;border-radius:16px;font-size:0.8rem;font-weight:600;">👑 超级管理员</span>
+        <span style="color:var(--text-dim);font-size:0.85rem;">📍 南宁</span>
+      </div>
     </div>
-    <button class="edit-btn" onclick="openEditModal()">编辑资料</button>
+    <button class="edit-btn" onclick="openEditModal()" style="background:var(--accent);color:white;border:none;">✏️ 编辑资料</button>
   </div>
 
   <!-- 编辑资料弹窗 -->
@@ -336,19 +344,23 @@ body {
     <button onclick="logout()" style="padding:10px 24px;background:transparent;border:1px solid rgba(220,80,80,0.3);color:#e06060;border-radius:8px;cursor:pointer;font-size:0.9rem;">退出登录</button>
   </div>
 
-  <!-- 统计数据 -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-number">12</div>
-      <div class="stat-label">发布文章</div>
+  <!-- 统计数据（大厂风格） -->
+  <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px;">
+    <div class="stat-card" style="text-align:center;padding:16px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);">
+      <div class="stat-number" style="font-size:1.5rem;font-weight:700;color:var(--accent);">12</div>
+      <div class="stat-label" style="font-size:0.8rem;color:var(--text-dim);margin-top:4px;">发布文章</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-number">48</div>
-      <div class="stat-label">获得点赞</div>
+    <div class="stat-card" style="text-align:center;padding:16px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);">
+      <div class="stat-number" style="font-size:1.5rem;font-weight:700;color:#e8a87c;">48</div>
+      <div class="stat-label" style="font-size:0.8rem;color:var(--text-dim);margin-top:4px;">获得点赞</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-number">23</div>
-      <div class="stat-label">收藏内容</div>
+    <div class="stat-card" style="text-align:center;padding:16px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);">
+      <div class="stat-number" style="font-size:1.5rem;font-weight:700;color:#85c1e9;">23</div>
+      <div class="stat-label" style="font-size:0.8rem;color:var(--text-dim);margin-top:4px;">收藏内容</div>
+    </div>
+    <div class="stat-card" style="text-align:center;padding:16px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);">
+      <div class="stat-number" style="font-size:1.5rem;font-weight:700;color:#d4a5e8;">156</div>
+      <div class="stat-label" style="font-size:0.8rem;color:var(--text-dim);margin-top:4px;">获得关注</div>
     </div>
   </div>
 
@@ -726,6 +738,7 @@ init();
 
 </body>
 </html>
+
 
 
 
