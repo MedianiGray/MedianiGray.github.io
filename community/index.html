@@ -906,18 +906,18 @@ async function loadComments(postId) {
       const username = comment.profiles?.username || '匿名用户';
       const avatarChar = username.charAt(0).toUpperCase();
       const timeAgo = formatTime(comment.created_at);
-      return 
+      return `
         <div class="comment-item">
-          <div class="comment-avatar"></div>
+          <div class="comment-avatar">${avatarChar}</div>
           <div class="comment-content">
             <div class="comment-header">
-              <span class="comment-username"></span>
-              <span class="comment-time"></span>
+              <span class="comment-username">${escapeHtml(username)}</span>
+              <span class="comment-time">${timeAgo}</span>
             </div>
-            <div class="comment-text"></div>
+            <div class="comment-text">${escapeHtml(comment.content || '')}</div>
           </div>
         </div>
-      ;
+      `;
     }).join('');
   } catch (e) {
     console.error('加载评论失败:', e);
@@ -958,7 +958,7 @@ async function submitComment(postId) {
     loadComments(postId);
     
     // 更新评论数
-    const countSpan = document.querySelector([onclick*=""] span);
+    const countSpan = document.querySelector(`[onclick*="${postId}"] span`);
     if (countSpan) {
       countSpan.textContent = parseInt(countSpan.textContent) + 1;
     }
@@ -974,6 +974,7 @@ async function submitComment(postId) {
 
 </body>
 </html>
+
 
 
 
