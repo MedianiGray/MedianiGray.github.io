@@ -299,6 +299,40 @@ body {
   .main-layout { grid-template-columns: 1fr; }
   .sidebar-left, .sidebar-right { display: none; }
 }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .feed-container {
+    padding: 10px !important;
+  }
+  .feed-card {
+    margin-bottom: 12px !important;
+    padding: 15px !important;
+  }
+  .feed-header {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .feed-actions {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .feed-container {
+    padding: 8px !important;
+  }
+  .feed-card {
+    padding: 12px !important;
+  }
+  .feed-title {
+    font-size: 1.1rem !important;
+  }
+  .feed-content {
+    font-size: 0.9rem !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -699,4 +733,5 @@ init();
 
 </body>
 </html>
+
 

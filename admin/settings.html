@@ -120,7 +120,49 @@
             .main { margin-left: 0; }
             .preview-bar { left: 0; }
         }
-    </style>
+    
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    width: 60px !important;
+    overflow: hidden;
+  }
+  .admin-sidebar .nav-text {
+    display: none !important;
+  }
+  .admin-main {
+    margin-left: 60px !important;
+    padding: 15px !important;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  .table-container {
+    overflow-x: auto !important;
+  }
+  table {
+    min-width: 600px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-sidebar {
+    width: 50px !important;
+  }
+  .admin-main {
+    margin-left: 50px !important;
+    padding: 10px !important;
+  }
+  .page-header {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .page-header h1 {
+    font-size: 1.3rem !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -602,4 +644,5 @@ function showToast(msg) {
 
 </body>
 </html>
+
 
