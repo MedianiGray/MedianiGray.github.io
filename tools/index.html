@@ -335,7 +335,35 @@ body {
       <p>两段文本差异对比，高亮显示不同之处</p>
       <span class="tool-tag">文本处理</span>
     </div>
-  </div>
+
+    <div class="tool-card" data-category="util" onclick="openTool('计算器')">
+      <div class="tool-icon">🧮</div>
+      <h3>计算器</h3>
+      <p>简洁美观的在线计算器，支持键盘输入</p>
+      <span class="tool-tag">实用工具</span>
+    </div>
+
+    <div class="tool-card" data-category="dev" onclick="openTool('二维码生成')">
+      <div class="tool-icon">📱</div>
+      <h3>二维码生成</h3>
+      <p>输入文本或链接，生成二维码，支持下载</p>
+      <span class="tool-tag">开发工具</span>
+    </div>
+
+    <div class="tool-card" data-category="util" onclick="openTool('记事本')">
+      <div class="tool-icon">📓</div>
+      <h3>记事本</h3>
+      <p>简洁的在线记事本，自动保存到本地</p>
+      <span class="tool-tag">实用工具</span>
+    </div>
+
+    <div class="tool-card" data-category="text" onclick="openTool('文本加密')">
+      <div class="tool-icon">🔒</div>
+      <h3>文本加密</h3>
+      <p>简单的文本加密解密工具，保护隐私信息</p>
+      <span class="tool-tag">文本处理</span>
+    </div>
+  </div>/div>
 </div>
 
 <div class="tool-modal" id="toolModal">
@@ -396,4 +424,5 @@ document.getElementById('toolModal').addEventListener('click', (e) => {
 
 </body>
 </html>
+
 
