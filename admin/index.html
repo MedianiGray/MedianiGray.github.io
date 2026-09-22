@@ -407,6 +407,28 @@ async function init() {
         return;
     }
     
+    // 检查是否是管理员或超级管理员
+    const role = user.role || 'user';
+    if (role === 'user') {
+        showToast('权限不足：只有管理员才能访问后台');
+        setTimeout(() => window.location.href = '/profile/', 2000);
+        return;
+    }
+    
+    // 根据角色显示不同的侧边栏
+    if (role === 'admin') {
+        // 管理员隐藏用户管理和系统设置
+        document.querySelector('a[href="/admin/users.html"]').style.display = 'none';
+        document.querySelector('a[href="/admin/settings.html"]').style.display = 'none';
+        document.querySelector('.nav-section:nth-of-type(4)').style.display = 'none';
+    }
+    
+    // 显示当前用户角色
+    const roleBadge = document.createElement('div');
+    roleBadge.style.cssText = 'position:fixed;bottom:20px;left:80px;background:rgba(104,159,137,0.2);border:1px solid var(--accent);border-radius:20px;padding:8px 16px;font-size:0.85rem;color:var(--accent);z-index:1000;';
+    roleBadge.innerHTML = role === 'super_admin' ? '👑 超级管理员' : '⚡ 管理员';
+    document.body.appendChild(roleBadge);
+    
     currentUser = user;
     await loadStats();
     await loadRecentActivity();
@@ -576,6 +598,7 @@ init();
 
 </body>
 </html>
+
 
 
 
