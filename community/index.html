@@ -498,6 +498,14 @@ let posts = [];
 async function init() {
   const { data: { user } } = await sb.auth.getUser();
   currentUser = user;
+
+  // 检查是否登录，未登录则跳转
+  if (!currentUser) {
+    showToast('请先登录，3秒后跳转登录页...');
+    setTimeout(() => window.location.href = '/admin/login.html?redirect=' + encodeURIComponent(window.location.pathname), 3000);
+    return;
+  }
+
   await loadPosts();
 }
 
