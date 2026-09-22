@@ -453,9 +453,52 @@ async function loadPosts() {
 function renderPosts() {
   const postsList = document.getElementById('postsList');
   if (posts.length === 0) {
-    postsList.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim);">还没有帖子，来发布第一条吧</div>';
+    postsList.innerHTML = getSamplePosts();
     return;
   }
+  
+  // 先渲染真实帖子
+  let html = posts.map(post => {
+    const username = '匿名用户';
+    const avatarChar = username.charAt(0).toUpperCase();
+    const timeAgo = formatTime(post.created_at);
+    const likes = post.likes || 0;
+    const comments = post.comments || 0;
+    
+    return `
+      <div class="post-card" data-id="${post.id}">
+        <div class="post-header">
+          <div class="avatar">${avatarChar}</div>
+          <div class="post-user">
+            <div class="post-username">${escapeHtml(username)}</div>
+            <div class="post-time">${timeAgo}</div>
+          </div>
+          <div class="post-mood">${post.mood || '😌'}</div>
+        </div>
+        <div class="post-content">${escapeHtml(post.content || '')}</div>
+        <div class="post-actions">
+          <div class="action-btn" onclick="toggleLike(this, '${post.id}')">❤️ <span>${likes}</span></div>
+          <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>${comments}</span></div>
+          <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+        <div class="comments-section" id="comments-${post.id}">
+          <div class="comment-list" id="commentList-${post.id}">
+            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
+          </div>
+          <div class="comment-input-area">
+            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
+            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  // 然后追加示例帖子
+  html += getSamplePosts();
+  
+  postsList.innerHTML = html;
+}
   postsList.innerHTML = posts.map(post => {
     const username = '匿名用户';
     const avatarChar = username.charAt(0).toUpperCase();
@@ -684,5 +727,6 @@ window.addEventListener('load', init);
 </script>
 </body>
 </html>
+
 
 
