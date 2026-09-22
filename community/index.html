@@ -508,17 +508,9 @@ body {
         </div>
         <div class="post-actions">
           <div class="action-btn liked" onclick="toggleLike(this)">❤️ <span>24</span></div>
-          <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>8</span></div>
+          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>8</span></div>
           <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
         </div>
-        <div class="comments-section" id="comments-${post.id}">
-          <div class="comment-list" id="commentList-${post.id}">
-            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
-          </div>
-          <div class="comment-input-area">
-            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
-            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
-          </div>
         </div>
       </div>
 
@@ -536,17 +528,9 @@ body {
         </div>
         <div class="post-actions">
           <div class="action-btn" onclick="toggleLike(this)">❤️ <span>42</span></div>
-          <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>15</span></div>
+          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>15</span></div>
           <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
         </div>
-        <div class="comments-section" id="comments-${post.id}">
-          <div class="comment-list" id="commentList-${post.id}">
-            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
-          </div>
-          <div class="comment-input-area">
-            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
-            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
-          </div>
         </div>
       </div>
 
@@ -564,17 +548,9 @@ body {
         </div>
         <div class="post-actions">
           <div class="action-btn" onclick="toggleLike(this)">❤️ <span>67</span></div>
-          <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>23</span></div>
+          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>23</span></div>
           <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
         </div>
-        <div class="comments-section" id="comments-${post.id}">
-          <div class="comment-list" id="commentList-${post.id}">
-            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
-          </div>
-          <div class="comment-input-area">
-            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
-            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
-          </div>
         </div>
       </div>
     </div>
