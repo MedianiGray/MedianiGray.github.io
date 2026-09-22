@@ -337,7 +337,7 @@ body {
     <div class="nav-title">同频相聚</div>
   </div>
   <div class="nav-right">
-    <button class="btn" onclick="showToast('请先登录')">登录</button>
+    <button class="btn" onclick="window.location.href='/admin/login.html?redirect=' + encodeURIComponent(window.location.pathname)">登录</button>
     <button class="btn btn-primary" onclick="document.querySelector('.composer textarea').focus()">发帖</button>
   </div>
 </nav>
@@ -661,3 +661,4 @@ window.addEventListener('load', init);
 </script>
 </body>
 </html>
+
