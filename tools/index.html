@@ -259,6 +259,20 @@ body {
       <span class="tool-tag">文本处理</span>
     </div>
 
+    <div class="tool-card" data-category="text" onclick="openTool('Base64编解码')">
+      <div class="tool-icon">🔐</div>
+      <h3>Base64 编解码</h3>
+      <p>字符串与 Base64 互相转换</p>
+      <span class="tool-tag">文本处理</span>
+    </div>
+
+    <div class="tool-card" data-category="dev" onclick="openTool('URL编解码')">
+      <div class="tool-icon">🔗</div>
+      <h3>URL 编解码</h3>
+      <p>URL 编码与解码</p>
+      <span class="tool-tag">开发工具</span>
+    </div>
+
     <div class="tool-card" data-category="util" onclick="openTool('密码生成器')">
       <div class="tool-icon">🎲</div>
       <h3>密码生成器</h3>
@@ -280,6 +294,34 @@ body {
       <span class="tool-tag">文本处理</span>
     </div>
 
+    <div class="tool-card" data-category="dev" onclick="openTool('颜色转换')">
+      <div class="tool-icon">🎨</div>
+      <h3>颜色转换</h3>
+      <p>HEX、RGB、HSL 颜色格式互转</p>
+      <span class="tool-tag">开发工具</span>
+    </div>
+
+    <div class="tool-card" data-category="util" onclick="openTool('单位换算')">
+      <div class="tool-icon">📏</div>
+      <h3>单位换算</h3>
+      <p>长度、重量、温度等常用单位换算</p>
+      <span class="tool-tag">实用工具</span>
+    </div>
+
+    <div class="tool-card" data-category="text" onclick="openTool('Markdown预览')">
+      <div class="tool-icon">✍️</div>
+      <h3>Markdown 预览</h3>
+      <p>实时预览 Markdown 渲染效果</p>
+      <span class="tool-tag">文本处理</span>
+    </div>
+
+    <div class="tool-card" data-category="dev" onclick="openTool('正则测试')">
+      <div class="tool-icon">🔍</div>
+      <h3>正则测试</h3>
+      <p>在线测试正则表达式</p>
+      <span class="tool-tag">开发工具</span>
+    </div>
+
     <div class="tool-card" data-category="util" onclick="openTool('番茄钟')">
       <div class="tool-icon">🍅</div>
       <h3>番茄钟</h3>
@@ -287,18 +329,13 @@ body {
       <span class="tool-tag">实用工具</span>
     </div>
 
-    <div class="tool-card" data-category="dev" onclick="openTool('二维码生成')">
-      <div class="tool-icon">📱</div>
-      <h3>二维码生成</h3>
-      <p>输入文本，生成二维码并下载</p>
-      <span class="tool-tag">开发工具</span>
+    <div class="tool-card" data-category="text" onclick="openTool('文本对比')">
+      <div class="tool-icon">📊</div>
+      <h3>文本对比</h3>
+      <p>两段文本差异对比</p>
+      <span class="tool-tag">文本处理</span>
     </div>
-
-    <div class="tool-card" style="text-align:center;padding:40px;color:var(--text-dim);border-style:dashed;">
-      <p>更多工具正在路上</p>
-      <p style="font-size:0.9rem;opacity:0.7;">保持极简，只做最有用的</p>
-    </div>
-  </div>/div>
+  </div>/div>/div>
 </div>
 
 <div class="tool-modal" id="toolModal">
@@ -359,6 +396,7 @@ document.getElementById('toolModal').addEventListener('click', (e) => {
 
 </body>
 </html>
+
 
 
 
