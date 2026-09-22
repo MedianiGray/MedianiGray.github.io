@@ -309,7 +309,26 @@ body {
       <div class="bio">喜欢猫猫、黄昏与文字随笔，探索思想的边界</div>
       <span class="role-badge">超级管理员</span>
     </div>
-    <button class="edit-btn" onclick="showToast('编辑资料功能开发中')">编辑资料</button>
+    <button class="edit-btn" onclick="openEditModal()">编辑资料</button>
+  </div>
+
+  <!-- 编辑资料弹窗 -->
+  <div id="editModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;justify-content:center;align-items:center;">
+    <div style="background:var(--bg-card);border-radius:16px;padding:32px;width:90%;max-width:400px;border:1px solid var(--border);">
+      <h3 style="margin:0 0 24px 0;color:var(--text);">编辑资料</h3>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;margin-bottom:8px;color:var(--text-dim);font-size:0.9rem;">昵称</label>
+        <input type="text" id="editName" style="width:100%;padding:12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;" placeholder="输入昵称">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;margin-bottom:8px;color:var(--text-dim);font-size:0.9rem;">简介</label>
+        <textarea id="editBio" style="width:100%;padding:12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;resize:none;height:100px;" placeholder="介绍一下自己..."></textarea>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
+        <button onclick="closeEditModal()" style="padding:10px 20px;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:8px;cursor:pointer;">取消</button>
+        <button onclick="saveProfile()" style="padding:10px 20px;background:var(--accent);border:none;color:white;border-radius:8px;cursor:pointer;">保存</button>
+      </div>
+    </div>
   </div>
 
   <!-- 统计数据 -->
@@ -655,6 +674,41 @@ function toggleSwitch(el) {
   showToast(el.classList.contains('on') ? '已开启' : '已关闭');
 }
 
+function openEditModal() {
+  document.getElementById('editModal').style.display = 'flex';
+  document.getElementById('editName').value = document.querySelector('.username').textContent;
+  document.getElementById('editBio').value = document.querySelector('.bio').textContent;
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+
+async function saveProfile() {
+  const name = document.getElementById('editName').value;
+  const bio = document.getElementById('editBio').value;
+  
+  const { error } = await sb
+    .from('profiles')
+    .update({ username: name, bio: bio })
+    .eq('id', currentUser.id);
+  
+  if (error) {
+    showToast('保存失败：' + error.message);
+    return;
+  }
+  
+  document.querySelector('.username').textContent = name;
+  document.querySelector('.bio').textContent = bio;
+  closeEditModal();
+  showToast('保存成功');
+}
+
+// 点击遮罩关闭弹窗
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if (e.target === this) closeEditModal();
+});
+
 async function logout() {
   await sb.auth.signOut();
   showToast('退出登录成功');
@@ -667,6 +721,7 @@ init();
 
 </body>
 </html>
+
 
 
 
