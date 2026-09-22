@@ -333,6 +333,100 @@ body {
     font-size: 0.9rem !important;
   }
 }
+
+/* 评论区域样式 */
+.comments-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+  display: none;
+}
+.comments-section.show {
+  display: block;
+}
+.comment-list {
+  margin-bottom: 15px;
+}
+.comment-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.comment-item:last-child {
+  border-bottom: none;
+}
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--main);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.comment-content {
+  flex: 1;
+}
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.comment-username {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.comment-time {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.comment-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.comment-input-area {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.comment-input {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.comment-input:focus {
+  border-color: var(--main);
+}
+.comment-submit {
+  background: var(--main);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.comment-submit:hover {
+  opacity: 0.9;
+}
+.comment-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 </style>
 </head>
 <body>
@@ -359,6 +453,15 @@ body {
       <div class="nav-item" onclick="switchNav(this, '我的回复')">💬 我的回复</div>
       <div class="nav-item" onclick="switchNav(this, '我收藏的')">⭐ 我收藏的</div>
     </div>
+        <div class="comments-section" id="comments-${post.id}">
+          <div class="comment-list" id="commentList-${post.id}">
+            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
+          </div>
+          <div class="comment-input-area">
+            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
+            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
+          </div>
+        </div>
     <div class="sidebar-section">
       <h3>心情频道</h3>
       <div class="nav-item" onclick="switchMoodFilter(this, '平静')">😌 平静</div>
@@ -405,8 +508,17 @@ body {
         </div>
         <div class="post-actions">
           <div class="action-btn liked" onclick="toggleLike(this)">❤️ <span>24</span></div>
-          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>8</span></div>
+          <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>8</span></div>
           <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+        <div class="comments-section" id="comments-${post.id}">
+          <div class="comment-list" id="commentList-${post.id}">
+            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
+          </div>
+          <div class="comment-input-area">
+            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
+            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
+          </div>
         </div>
       </div>
 
@@ -424,8 +536,17 @@ body {
         </div>
         <div class="post-actions">
           <div class="action-btn" onclick="toggleLike(this)">❤️ <span>42</span></div>
-          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>15</span></div>
+          <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>15</span></div>
           <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+        <div class="comments-section" id="comments-${post.id}">
+          <div class="comment-list" id="commentList-${post.id}">
+            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
+          </div>
+          <div class="comment-input-area">
+            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
+            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
+          </div>
         </div>
       </div>
 
@@ -443,8 +564,17 @@ body {
         </div>
         <div class="post-actions">
           <div class="action-btn" onclick="toggleLike(this)">❤️ <span>67</span></div>
-          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>23</span></div>
+          <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>23</span></div>
           <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+        <div class="comments-section" id="comments-${post.id}">
+          <div class="comment-list" id="commentList-${post.id}">
+            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
+          </div>
+          <div class="comment-input-area">
+            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
+            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
+          </div>
         </div>
       </div>
     </div>
@@ -559,8 +689,17 @@ function renderPosts() {
         <div class="post-content">${escapeHtml(post.content || '')}</div>
         <div class="post-actions">
           <div class="action-btn" onclick="toggleLike(this, '${post.id}')">❤️ <span>${likes}</span></div>
-          <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>${comments}</span></div>
+          <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>${comments}</span></div>
           <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
+        </div>
+        <div class="comments-section" id="comments-${post.id}">
+          <div class="comment-list" id="commentList-${post.id}">
+            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
+          </div>
+          <div class="comment-input-area">
+            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
+            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
+          </div>
         </div>
       </div>
     `;
@@ -672,9 +811,18 @@ function getSamplePosts() {
       <div class="post-content">今天傍晚的风很温柔，坐在窗边看了很久的云。突然觉得，所谓的"道"，也许就是这种不需要用力的状态。</div>
       <div class="post-actions">
         <div class="action-btn" onclick="toggleLike(this)">❤️ <span>24</span></div>
-        <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>8</span></div>
+        <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>8</span></div>
         <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
       </div>
+        <div class="comments-section" id="comments-${post.id}">
+          <div class="comment-list" id="commentList-${post.id}">
+            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
+          </div>
+          <div class="comment-input-area">
+            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
+            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
+          </div>
+        </div>
     </div>
     <div class="post-card">
       <div class="post-header">
@@ -688,9 +836,18 @@ function getSamplePosts() {
       <div class="post-content">读《道德经》时突然想明白："有无相生"不是哲学，是操作系统。你给用户的每一个功能，都要有对应的"空"——可关闭、可撤销、可留白。这才是真正的克制。</div>
       <div class="post-actions">
         <div class="action-btn" onclick="toggleLike(this)">❤️ <span>42</span></div>
-        <div class="action-btn" onclick="showToast('评论功能开发中')">💬 <span>15</span></div>
+        <div class="action-btn" onclick="toggleComments(this, '${post.id}')">💬 <span>15</span></div>
         <div class="action-btn" onclick="toggleFav(this)">⭐ 收藏</div>
       </div>
+        <div class="comments-section" id="comments-${post.id}">
+          <div class="comment-list" id="commentList-${post.id}">
+            <div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>
+          </div>
+          <div class="comment-input-area">
+            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="写下你的评论..." />
+            <button class="comment-submit" onclick="submitComment('${post.id}')">发送</button>
+          </div>
+        </div>
     </div>
   `;
 }
@@ -738,6 +895,105 @@ function toggleFav(el) {
 
 // 启动
 init();
+
+// 切换评论区域显示
+function toggleComments(btn, postId) {
+  const section = document.getElementById('comments-' + postId);
+  if (section.classList.contains('show')) {
+    section.classList.remove('show');
+  } else {
+    section.classList.add('show');
+    loadComments(postId);
+  }
+}
+
+// 加载评论列表
+async function loadComments(postId) {
+  const listEl = document.getElementById('commentList-' + postId);
+  listEl.innerHTML = '<div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">加载中...</div>';
+  
+  try {
+    const { data, error } = await sb
+      .from('community_replies')
+      .select('*, profiles(username)')
+      .eq('post_id', postId)
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    
+    if (!data || data.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">暂无评论</div>';
+      return;
+    }
+    
+    listEl.innerHTML = data.map(comment => {
+      const username = comment.profiles?.username || '匿名用户';
+      const avatarChar = username.charAt(0).toUpperCase();
+      const timeAgo = formatTime(comment.created_at);
+      return 
+        <div class="comment-item">
+          <div class="comment-avatar"></div>
+          <div class="comment-content">
+            <div class="comment-header">
+              <span class="comment-username"></span>
+              <span class="comment-time"></span>
+            </div>
+            <div class="comment-text"></div>
+          </div>
+        </div>
+      ;
+    }).join('');
+  } catch (e) {
+    console.error('加载评论失败:', e);
+    listEl.innerHTML = '<div style="text-align:center;padding:10px;color:var(--text-dim);font-size:0.85rem;">加载失败</div>';
+  }
+}
+
+// 提交评论
+async function submitComment(postId) {
+  const input = document.getElementById('commentInput-' + postId);
+  const content = input.value.trim();
+  
+  if (!content) {
+    showToast('请输入评论内容');
+    return;
+  }
+  
+  if (!currentUser) {
+    showToast('请先登录');
+    return;
+  }
+  
+  const btn = input.nextElementSibling;
+  btn.disabled = true;
+  btn.textContent = '发送中...';
+  
+  try {
+    const { data, error } = await sb
+      .from('community_replies')
+      .insert([
+        { user_id: currentUser.id, post_id: postId, content: content }
+      ]);
+    
+    if (error) throw error;
+    
+    showToast('评论成功');
+    input.value = '';
+    loadComments(postId);
+    
+    // 更新评论数
+    const countSpan = document.querySelector([onclick*=""] span);
+    if (countSpan) {
+      countSpan.textContent = parseInt(countSpan.textContent) + 1;
+    }
+  } catch (e) {
+    console.error('提交评论失败:', e);
+    showToast('评论失败: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '发送';
+  }
+}
 </script>
 
 </body>
